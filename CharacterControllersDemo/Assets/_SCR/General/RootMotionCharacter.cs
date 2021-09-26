@@ -28,6 +28,8 @@ namespace OliverLoescher
         private void OnAnimatorMove() 
         {
             rootMotion += animator.deltaPosition;
+
+            character.transform.rotation *= animator.deltaRotation;
         }
 
         private void FixedUpdate() 

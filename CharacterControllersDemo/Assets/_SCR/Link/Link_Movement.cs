@@ -23,7 +23,6 @@ public class Link_Movement : BaseState
     [SerializeField] private Transform cameraForward = null;
     [SerializeField] private OnGround grounded = null;
     [SerializeField] private Link_AnimController animController = null;
-    // private Rigidbody rigid;
 
     private float initalDrag;
 
@@ -31,32 +30,30 @@ public class Link_Movement : BaseState
     public override void Init(StateMachine pMachine)
     {
         base.Init(pMachine);
-        
-        // rigid = GetComponentInChildren<Rigidbody>();
-        // initalDrag = rigid.drag;
 
         _moveSpeed = moveSpeed;
     }
     
     public override void OnFixedUpdate()
     {
-        // Movement
         if (grounded.IsGrounded())
         {
-            // rigid.drag = initalDrag;
             if (input.moveInput != Vector2.zero)
             {
+                // Move values
                 Vector3 move = cameraForward.TransformDirection(input.moveInputVector3);
                 move = new Vector3(move.x, 0.0f, move.z);
-                // rigid.AddForce(move * _moveSpeed * Time.fixedDeltaTime, ForceMode.VelocityChange);
 
                 float angle = Vector3.Angle(transform.up, Vector3.ProjectOnPlane(grounded.GetAverageNormal(), transform.right));
                 float maxSpeed01 = 1 - (FuncUtil.SmoothStep(slowAngleRange, angle) * (1 - maxAngleSlow));
 
                 targetRotation = Quaternion.LookRotation(move);
+
+                // Movement
                 if (animController.GetSpeed01() > 0.1f || Quaternion.Angle(transform.rotation, targetRotation) < 30)
                     animController.SetSpeed01(input.moveInput.magnitude * maxSpeed01);
                 
+                // Rotation
                 float rotSpeed = Mathf.Lerp(rotationIdleDampening, rotationDampening, animController.GetSpeed01()); 
                 transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.fixedDeltaTime * rotSpeed);
             }
@@ -65,12 +62,5 @@ public class Link_Movement : BaseState
                 animController.SetSpeed01(0.0f);
             }            
         }
-        // Falling
-        else
-        {
-            // rigid.drag = 0.0f;
-        }
-
-        // Rotation
     }
 }

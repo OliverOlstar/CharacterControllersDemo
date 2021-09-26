@@ -15,6 +15,11 @@ public class Link_AnimController : MonoBehaviour
         animator = GetComponent<Animator>();
     }
 
+    public void TriggerTurnAround()
+    {
+        animator.SetTrigger("TurnAround");
+    }
+
     public void SetSpeed01(float pValue01)
     {
         targetSpeed = pValue01;
