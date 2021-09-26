@@ -125,6 +125,118 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Link"",
+            ""id"": ""bc355be7-5207-4369-bdfa-c9b14493fccb"",
+            ""actions"": [
+                {
+                    ""name"": ""Move"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""883e3417-553d-4bc5-8527-670178491f7e"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Crouch"",
+                    ""type"": ""Button"",
+                    ""id"": ""e24591cf-3d0b-4c14-8efb-183116035239"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""3d1dd41a-311a-4230-8964-990244fb44f8"",
+                    ""path"": ""<Gamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""WASD"",
+                    ""id"": ""a8ae51cd-9a5d-436b-a953-da5d0dd576d6"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""310dd839-304a-4ce1-8da2-7b814e72245d"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""dbe514ac-d1c6-4e71-808f-9adbb2fe4401"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""9f8f4148-7740-4561-9e77-b852553128fe"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""bdf0a6f3-50de-4fc0-a913-f18c23af2b3c"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""35354cd7-a469-4b5e-8a39-3462a460756c"",
+                    ""path"": ""<Keyboard>/c"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Crouch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""99799c37-b9dd-4ff1-927c-da08cb0d593e"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Crouch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -161,6 +273,10 @@ public class @PlayerInput : IInputActionCollection, IDisposable
         m_SimpleCar = asset.FindActionMap("SimpleCar", throwIfNotFound: true);
         m_SimpleCar_Move = m_SimpleCar.FindAction("Move", throwIfNotFound: true);
         m_SimpleCar_Drift = m_SimpleCar.FindAction("Drift", throwIfNotFound: true);
+        // Link
+        m_Link = asset.FindActionMap("Link", throwIfNotFound: true);
+        m_Link_Move = m_Link.FindAction("Move", throwIfNotFound: true);
+        m_Link_Crouch = m_Link.FindAction("Crouch", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -247,6 +363,47 @@ public class @PlayerInput : IInputActionCollection, IDisposable
         }
     }
     public SimpleCarActions @SimpleCar => new SimpleCarActions(this);
+
+    // Link
+    private readonly InputActionMap m_Link;
+    private ILinkActions m_LinkActionsCallbackInterface;
+    private readonly InputAction m_Link_Move;
+    private readonly InputAction m_Link_Crouch;
+    public struct LinkActions
+    {
+        private @PlayerInput m_Wrapper;
+        public LinkActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Move => m_Wrapper.m_Link_Move;
+        public InputAction @Crouch => m_Wrapper.m_Link_Crouch;
+        public InputActionMap Get() { return m_Wrapper.m_Link; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(LinkActions set) { return set.Get(); }
+        public void SetCallbacks(ILinkActions instance)
+        {
+            if (m_Wrapper.m_LinkActionsCallbackInterface != null)
+            {
+                @Move.started -= m_Wrapper.m_LinkActionsCallbackInterface.OnMove;
+                @Move.performed -= m_Wrapper.m_LinkActionsCallbackInterface.OnMove;
+                @Move.canceled -= m_Wrapper.m_LinkActionsCallbackInterface.OnMove;
+                @Crouch.started -= m_Wrapper.m_LinkActionsCallbackInterface.OnCrouch;
+                @Crouch.performed -= m_Wrapper.m_LinkActionsCallbackInterface.OnCrouch;
+                @Crouch.canceled -= m_Wrapper.m_LinkActionsCallbackInterface.OnCrouch;
+            }
+            m_Wrapper.m_LinkActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @Move.started += instance.OnMove;
+                @Move.performed += instance.OnMove;
+                @Move.canceled += instance.OnMove;
+                @Crouch.started += instance.OnCrouch;
+                @Crouch.performed += instance.OnCrouch;
+                @Crouch.canceled += instance.OnCrouch;
+            }
+        }
+    }
+    public LinkActions @Link => new LinkActions(this);
     private int m_KeyboardMouseSchemeIndex = -1;
     public InputControlScheme KeyboardMouseScheme
     {
@@ -269,5 +426,10 @@ public class @PlayerInput : IInputActionCollection, IDisposable
     {
         void OnMove(InputAction.CallbackContext context);
         void OnDrift(InputAction.CallbackContext context);
+    }
+    public interface ILinkActions
+    {
+        void OnMove(InputAction.CallbackContext context);
+        void OnCrouch(InputAction.CallbackContext context);
     }
 }
