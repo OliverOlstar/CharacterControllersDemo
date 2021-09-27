@@ -2,32 +2,35 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Link_TurnAround : BaseState
+namespace OliverLoescher.Link
 {
-    [SerializeField] private Link_InputBridge input = null;
-    [SerializeField] private Link_AnimController animController = null;
-    [SerializeField] private float animationLength = 0.4f;
-
-    public override void OnEnter()
+    public class Link_TurnAround : BaseState
     {
-        animController.TriggerTurnAround();
-        animController.SetSpeed01(1.0f);
+        [SerializeField] private Link_InputBridge input = null;
+        [SerializeField] private Link_AnimController animController = null;
+        [SerializeField] private float animationLength = 0.4f;
 
-        Invoke(nameof(ReturnToDefault), animationLength);
-    }
+        public override void OnEnter()
+        {
+            animController.TriggerTurnAround();
+            animController.SetSpeed01(1.0f);
 
-    public override void OnExit()
-    {
-        CancelInvoke(nameof(ReturnToDefault));
-    }
+            Invoke(nameof(ReturnToDefault), animationLength);
+        }
 
-    public override bool CanEnter()
-    {
-        return (animController.GetSpeed01() >= 0.75f && Vector3.Angle(transform.forward, input.moveInputVector3) >= 165);
-    }
+        public override void OnExit()
+        {
+            CancelInvoke(nameof(ReturnToDefault));
+        }
 
-    private void ReturnToDefault()
-    {
-        machine.ReturnToDefault();
+        public override bool CanEnter()
+        {
+            return (machine.IsDefaultState() && animController.GetSpeed01() >= 0.75f && Vector3.Angle(transform.forward, input.moveInputVector3) >= 165);
+        }
+
+        private void ReturnToDefault()
+        {
+            machine.ReturnToDefault();
+        }
     }
 }

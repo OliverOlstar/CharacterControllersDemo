@@ -2,23 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InputSystem : MonoBehaviour
+namespace OliverLoescher 
 {
-    public static PlayerInput Input
+    public class InputSystem : MonoBehaviour
     {
-        get
+        public static PlayerInput Input
         {
-            if (_Input == null)
+            get
             {
-                _Input = new PlayerInput();
+                if (_Input == null)
+                {
+                    _Input = new PlayerInput();
+                }
+                return _Input;
             }
-            return _Input;
-        }
 
-        set
-        {
-            _Input = value;
+            set
+            {
+                _Input = value;
+            }
         }
+        private static PlayerInput _Input = null;
     }
-    private static PlayerInput _Input = null;
 }

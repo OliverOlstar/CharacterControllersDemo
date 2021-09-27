@@ -3,32 +3,35 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public static class UnityEventsUtil
+namespace OliverLoescher 
 {
-    [System.Serializable] 
-    public class TransformEvent : UnityEvent<Transform> { }
+    public static class UnityEventsUtil
+    {
+        [System.Serializable] 
+        public class TransformEvent : UnityEvent<Transform> { }
 
-    [System.Serializable] 
-    public class TransformIntEvent : UnityEvent<Transform, int> { }
+        [System.Serializable] 
+        public class TransformIntEvent : UnityEvent<Transform, int> { }
 
-    [System.Serializable] 
-    public class RigidbodyEvent : UnityEvent<Rigidbody> { }
+        [System.Serializable] 
+        public class RigidbodyEvent : UnityEvent<Rigidbody> { }
 
-    [System.Serializable]
-    public class BoolEvent : UnityEvent<bool> { }
+        [System.Serializable]
+        public class BoolEvent : UnityEvent<bool> { }
 
-    [System.Serializable]
-    public class IntEvent : UnityEvent<int> { }
+        [System.Serializable]
+        public class IntEvent : UnityEvent<int> { }
 
-    [System.Serializable]
-    public class FloatEvent : UnityEvent<float> { }
+        [System.Serializable]
+        public class FloatEvent : UnityEvent<float> { }
 
-    [System.Serializable]
-    public class Vector3Event : UnityEvent<Vector3> { }
-    
-    [System.Serializable]
-    public class StringEvent : UnityEvent<string> { }
-    
-    [System.Serializable]
-    public class RaycastHitEvent : UnityEvent<RaycastHit> { }
+        [System.Serializable]
+        public class Vector3Event : UnityEvent<Vector3> { }
+        
+        [System.Serializable]
+        public class StringEvent : UnityEvent<string> { }
+        
+        [System.Serializable]
+        public class RaycastHitEvent : UnityEvent<RaycastHit> { }
+    }
 }

@@ -2,48 +2,64 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Animator))]
-public class Link_AnimController : MonoBehaviour
+namespace OliverLoescher.Link
 {
-    [Header("Animator")]
-    [SerializeField] private float speedDampening = 1.0f;
-    private float targetSpeed = 0.0f;
-    private Animator animator;
+    [RequireComponent(typeof(Animator))]
+    public class Link_AnimController : MonoBehaviour
+    {
+        [Header("Components")]
+        [SerializeField] private OnGround grounded = null;
 
-    void Start()
-    {
-        animator = GetComponent<Animator>();
-    }
+        [Header("Animator")]
+        [SerializeField] private float speedDampening = 1.0f;
+        private float targetSpeed = 0.0f;
+        private Animator animator;
 
-    public void TriggerTurnAround()
-    {
-        animator.SetTrigger("TurnAround");
-    }
-
-    public void SetSpeed01(float pValue01)
-    {
-        targetSpeed = pValue01;
-    }
-    public float GetSpeed01()
-    {
-        return animator.GetFloat("Speed");
-    }
-
-    private void Update() 
-    {
-        float s = animator.GetFloat("Speed");
-        if (targetSpeed != s)
+        void Start()
         {
-            if (Mathf.Abs(targetSpeed - s) < 0.001f)
+            animator = GetComponent<Animator>();
+        }
+
+        public void TriggerTurnAround()
+        {
+            animator.SetTrigger("TurnAround");
+        }
+
+        public void TriggerJump()
+        {
+            animator.SetTrigger("Jump");
+        }
+
+        public void SetSpeed01(float pValue01)
+        {
+            targetSpeed = pValue01;
+        }
+        public float GetSpeed01()
+        {
+            return animator.GetFloat("Speed");
+        }
+
+        private void Update() 
+        {
+            float s = animator.GetFloat("Speed");
+            if (targetSpeed != s)
             {
-                // Round if close enough
-                animator.SetFloat("Speed", (targetSpeed));
+                if (Mathf.Abs(targetSpeed - s) < 0.001f)
+                {
+                    // Round if close enough
+                    animator.SetFloat("Speed", (targetSpeed));
+                }
+                else
+                {
+                    // Lerp value
+                    animator.SetFloat("Speed", Mathf.Lerp(s, targetSpeed, Time.deltaTime * speedDampening));
+                }
             }
-            else
-            {
-                // Lerp value
-                animator.SetFloat("Speed", Mathf.Lerp(s, targetSpeed, Time.deltaTime * speedDampening));
-            }
+        }
+
+        private void FixedUpdate() 
+        {
+            animator.SetBool("Grounded", grounded.IsGrounded());
         }
     }
 }

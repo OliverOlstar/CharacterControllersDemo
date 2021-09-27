@@ -2,22 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FuncUtil : MonoBehaviour
+namespace OliverLoescher 
 {
-    public static Vector3 Horizontalize(Vector3 pVector, bool pNormalize = false)
+    public class FuncUtil : MonoBehaviour
     {
-        pVector.y = 0;
-        if (pNormalize)
-            pVector.Normalize();
-        return pVector;
-    }
+        public static Vector3 Horizontalize(Vector3 pVector, bool pNormalize = false)
+        {
+            pVector.y = 0;
+            if (pNormalize)
+                pVector.Normalize();
+            return pVector;
+        }
 
-    public static float SmoothStep(float pMin, float pMax, float pIn)
-    {
-        return Mathf.Clamp01((pIn - pMin) / (pMax - pMin));
-    }
-    public static float SmoothStep(Vector2 pMinMax, float pIn)
-    {
-        return SmoothStep(pMinMax.x, pMinMax.y, pIn);
+        public static float SmoothStep(float pMin, float pMax, float pIn)
+        {
+            return Mathf.Clamp01((pIn - pMin) / (pMax - pMin));
+        }
+        public static float SmoothStep(Vector2 pMinMax, float pIn)
+        {
+            return SmoothStep(pMinMax.x, pMinMax.y, pIn);
+        }
     }
 }

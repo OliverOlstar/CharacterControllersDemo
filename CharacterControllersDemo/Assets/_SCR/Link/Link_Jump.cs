@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 
-namespace OliverLoescher 
+namespace OliverLoescher.Link
 {
     public class Link_Jump : BaseState
     {
@@ -30,8 +30,7 @@ namespace OliverLoescher
 
         public override void OnEnter()
         {
-            // rigid.drag = 0.0f;
-            // rigid.velocity = (new Vector3(rigid.velocity.x, 0.0f, rigid.velocity.z).normalized * jumpForwardForce) + (Vector3.up * jumpUpForce);
+            animController.TriggerJump();
             rootMotion.DoJump(jumpUpForce, jumpForwardForce);
             canExitTime = Time.time + 0.5f;
         }
