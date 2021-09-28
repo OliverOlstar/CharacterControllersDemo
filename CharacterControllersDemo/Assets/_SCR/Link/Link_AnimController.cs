@@ -30,6 +30,16 @@ namespace OliverLoescher.Link
             animator.SetTrigger("Jump");
         }
 
+        public void TriggerRoll()
+        {
+            animator.SetTrigger("Roll");
+        }
+
+        public void SetCrouch(bool pBool)
+        {
+            animator.SetBool("Crouched", pBool);
+        }
+
         public void SetSpeed01(float pValue01)
         {
             targetSpeed = pValue01;

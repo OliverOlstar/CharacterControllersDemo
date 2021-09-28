@@ -6,8 +6,6 @@ namespace OliverLoescher.Link
 {
     public class Link_Crawl : BaseState
     {
-        [SerializeField] private float moveSpeed = 3.0f;
-        [SerializeField] private float moveBackwardSpeed = 2.0f;
         [SerializeField] private float rotateSpeed = 5.0f;
         [SerializeField] private float rotateBackwardSpeed = 4.0f;
         [SerializeField] private float colliderHeight = 1.5f;
@@ -17,6 +15,7 @@ namespace OliverLoescher.Link
         [SerializeField] private Transform cameraForward = null;
         [SerializeField] private CharacterController character = null;
         [SerializeField] private OnGround grounded = null;
+        [SerializeField] private Link_AnimController animController = null;
 
         private float initalCharacterHeight;
 
@@ -34,6 +33,8 @@ namespace OliverLoescher.Link
             character.height = colliderHeight;
             character.center = new Vector3(0.0f, (colliderHeight * 0.5f) - 1, 0.0f);
 
+            animController.SetCrouch(true);
+
             input.onCrouchCanceled.AddListener(OnCrouchCanceled);
         }
 
@@ -42,6 +43,8 @@ namespace OliverLoescher.Link
             character.height = initalCharacterHeight;
             character.center = new Vector3(0.0f, (initalCharacterHeight * 0.5f) - 1, 0.0f);
             
+            animController.SetCrouch(false);
+
             input.onCrouchCanceled.RemoveListener(OnCrouchCanceled);
             input.SetCrouch(false);
         }
@@ -64,10 +67,13 @@ namespace OliverLoescher.Link
                         {
                             transform.Rotate(new Vector3(0.0f, move.x * (forward ? rotateSpeed : -rotateBackwardSpeed) * Time.fixedDeltaTime, 0.0f), Space.World);
                         }
-
-                        float speed = (forward ? moveSpeed : -moveBackwardSpeed);
-                        // TODO MOVE PLAYER
+                        
+                        animController.SetSpeed01(forward ? 1.0f : -1.0f);
                     }
+                }
+                else
+                {
+                    animController.SetSpeed01(0.0f);
                 }
             }
             else

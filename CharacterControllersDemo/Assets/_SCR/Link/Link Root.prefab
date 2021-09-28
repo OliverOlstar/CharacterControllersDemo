@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e650ac86628a9bc4196bfeb77f7bbc19, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grounded: {fileID: 0}
+  grounded: {fileID: 1996765137647089474}
   speedDampening: 8
 --- !u!114 &919132147700149763
 MonoBehaviour:
@@ -30,8 +30,8 @@ MonoBehaviour:
   grounded: {fileID: 1996765137647089474}
   gravity: 9.81
   stepDown: 0.1
-  slopeLimit: 45
-  slideFriction: 0.3
+  slopeLimit: 35
+  slideFriction: 0.1
   pushPower: 2
 --- !u!1 &1996765136930574191
 GameObject:
@@ -224,7 +224,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lines:
   - startPosition: {x: 0, y: -0.75, z: 0}
-    distance: 0.4
+    distance: 0.8
   layerMask:
     serializedVersion: 2
     m_Bits: 64
@@ -242,10 +242,10 @@ CharacterController:
   m_Height: 2
   m_Radius: 0.35
   m_SlopeLimit: 45
-  m_StepOffset: 0.3
+  m_StepOffset: 0.16
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 0.1, z: 0}
 --- !u!114 &237105201
 MonoBehaviour:
   m_ObjectHideFlags: 0

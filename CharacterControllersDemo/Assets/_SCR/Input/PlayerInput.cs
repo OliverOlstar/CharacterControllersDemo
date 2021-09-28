@@ -145,6 +145,14 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Roll"",
+                    ""type"": ""Button"",
+                    ""id"": ""0cfe2365-b764-463a-bc79-3662ba4c5982"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -235,6 +243,28 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                     ""action"": ""Crouch"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3290aeef-6b49-4ff9-ad23-9ab5dd4fd021"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Roll"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3b360bd6-1ab7-4574-8f78-342ebc28cd63"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Roll"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -277,6 +307,7 @@ public class @PlayerInput : IInputActionCollection, IDisposable
         m_Link = asset.FindActionMap("Link", throwIfNotFound: true);
         m_Link_Move = m_Link.FindAction("Move", throwIfNotFound: true);
         m_Link_Crouch = m_Link.FindAction("Crouch", throwIfNotFound: true);
+        m_Link_Roll = m_Link.FindAction("Roll", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -369,12 +400,14 @@ public class @PlayerInput : IInputActionCollection, IDisposable
     private ILinkActions m_LinkActionsCallbackInterface;
     private readonly InputAction m_Link_Move;
     private readonly InputAction m_Link_Crouch;
+    private readonly InputAction m_Link_Roll;
     public struct LinkActions
     {
         private @PlayerInput m_Wrapper;
         public LinkActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Link_Move;
         public InputAction @Crouch => m_Wrapper.m_Link_Crouch;
+        public InputAction @Roll => m_Wrapper.m_Link_Roll;
         public InputActionMap Get() { return m_Wrapper.m_Link; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -390,6 +423,9 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                 @Crouch.started -= m_Wrapper.m_LinkActionsCallbackInterface.OnCrouch;
                 @Crouch.performed -= m_Wrapper.m_LinkActionsCallbackInterface.OnCrouch;
                 @Crouch.canceled -= m_Wrapper.m_LinkActionsCallbackInterface.OnCrouch;
+                @Roll.started -= m_Wrapper.m_LinkActionsCallbackInterface.OnRoll;
+                @Roll.performed -= m_Wrapper.m_LinkActionsCallbackInterface.OnRoll;
+                @Roll.canceled -= m_Wrapper.m_LinkActionsCallbackInterface.OnRoll;
             }
             m_Wrapper.m_LinkActionsCallbackInterface = instance;
             if (instance != null)
@@ -400,6 +436,9 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                 @Crouch.started += instance.OnCrouch;
                 @Crouch.performed += instance.OnCrouch;
                 @Crouch.canceled += instance.OnCrouch;
+                @Roll.started += instance.OnRoll;
+                @Roll.performed += instance.OnRoll;
+                @Roll.canceled += instance.OnRoll;
             }
         }
     }
@@ -431,5 +470,6 @@ public class @PlayerInput : IInputActionCollection, IDisposable
     {
         void OnMove(InputAction.CallbackContext context);
         void OnCrouch(InputAction.CallbackContext context);
+        void OnRoll(InputAction.CallbackContext context);
     }
 }

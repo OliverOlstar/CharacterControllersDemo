@@ -12,6 +12,9 @@ namespace OliverLoescher.Link
         public Vector2 moveInput { get; private set; } = new Vector2();
         public Vector3 moveInputVector3 => new Vector3(moveInput.x, 0.0f, moveInput.y);
 
+        // Roll
+        [HideInInspector] public UnityEvent onRollPerformed = new UnityEvent();
+
         // Crouch
         public bool toggleCrouch = true;
         public bool crouchInput { get; private set; } = false;
@@ -22,6 +25,7 @@ namespace OliverLoescher.Link
         private void Awake() 
         {
             InputSystem.Input.Link.Move.performed += OnMove;
+            InputSystem.Input.Link.Roll.performed += OnRollPerformed;
             InputSystem.Input.Link.Crouch.performed += OnCrouchPerformed;
             InputSystem.Input.Link.Crouch.canceled += OnCrouchCanceled;
         }
@@ -62,6 +66,11 @@ namespace OliverLoescher.Link
                 else
                     onCrouchCanceled?.Invoke();
             }
+        }
+
+        public void OnRollPerformed(InputAction.CallbackContext ctx)
+        {
+            onRollPerformed?.Invoke();
         }
     }
 }

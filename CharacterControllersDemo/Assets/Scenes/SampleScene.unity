@@ -123,15 +123,15 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!114 &237105203 stripped
+--- !u!114 &173797400 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1996765137647089474, guid: fd16f4fa4e4f847499ba079dc937478d, type: 3}
+  m_CorrespondingSourceObject: {fileID: 919132147700149759, guid: fd16f4fa4e4f847499ba079dc937478d, type: 3}
   m_PrefabInstance: {fileID: 1996765137283596536}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1e15d19c7d1e8fb40a796f867c0fd05f, type: 3}
+  m_Script: {fileID: 11500000, guid: e650ac86628a9bc4196bfeb77f7bbc19, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &312296333
@@ -1364,26 +1364,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 948406220}
     m_Modifications:
-    - target: {fileID: 694828214, guid: fd16f4fa4e4f847499ba079dc937478d, type: 3}
-      propertyPath: m_Center.y
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 694828214, guid: fd16f4fa4e4f847499ba079dc937478d, type: 3}
-      propertyPath: m_StepOffset
-      value: 0.16
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132147700149759, guid: fd16f4fa4e4f847499ba079dc937478d, type: 3}
-      propertyPath: grounded
-      value: 
-      objectReference: {fileID: 237105203}
-    - target: {fileID: 919132147700149763, guid: fd16f4fa4e4f847499ba079dc937478d, type: 3}
-      propertyPath: slopeLimit
-      value: 35
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132147700149763, guid: fd16f4fa4e4f847499ba079dc937478d, type: 3}
-      propertyPath: slideFriction
-      value: 0.1
-      objectReference: {fileID: 0}
     - target: {fileID: 1996765136930574176, guid: fd16f4fa4e4f847499ba079dc937478d, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -1436,14 +1416,14 @@ PrefabInstance:
       propertyPath: cameraForward
       value: 
       objectReference: {fileID: 1687258585}
-    - target: {fileID: 1996765137647089474, guid: fd16f4fa4e4f847499ba079dc937478d, type: 3}
-      propertyPath: lines.Array.data[0].distance
-      value: 0.8
-      objectReference: {fileID: 0}
     - target: {fileID: 1996765137647089477, guid: fd16f4fa4e4f847499ba079dc937478d, type: 3}
       propertyPath: cameraForward
       value: 
       objectReference: {fileID: 1687258585}
+    - target: {fileID: 1996765137647089477, guid: fd16f4fa4e4f847499ba079dc937478d, type: 3}
+      propertyPath: animController
+      value: 
+      objectReference: {fileID: 173797400}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fd16f4fa4e4f847499ba079dc937478d, type: 3}
 --- !u!4 &2349642610005091509 stripped

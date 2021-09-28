@@ -53,13 +53,10 @@ namespace OliverLoescher
         {
             // Gravity
             velocity.y -= gravity * Time.fixedDeltaTime;
-            // Vector3 displacement = velocity + FuncUtil.Horizontalize(hitPoint, true) * slideFriction * Time.fixedDeltaTime;
-            velocity.x += (1f - hitNormal.y) * hitNormal.x * (1f - slideFriction);
-            velocity.z += (1f - hitNormal.y) * hitNormal.z * (1f - slideFriction);
 
             character.Move(velocity * Time.fixedDeltaTime);
 
-            if (CharacterGrounded() == true)
+            if (character.isGrounded == true)
             {
                 inAir = false;
                 rootMotion = Vector3.zero;
@@ -76,14 +73,12 @@ namespace OliverLoescher
                 character.Move(Vector3.down * stepDown);
             }
 
-            if (CharacterGrounded() == false)
+            if (character.isGrounded == false)
             {
                 inAir = true;
                 velocity = animator.velocity;
             }
         }
-
-        private bool CharacterGrounded() => (Vector3.Angle(Vector3.up, hitNormal) <= slopeLimit);
 
         public void DoJump(float pUp, float pForward)
         {
@@ -92,13 +87,8 @@ namespace OliverLoescher
             velocity.y = Mathf.Sqrt(2 * gravity * pUp);
         }
 
-        private Vector3 hitPoint = new Vector3(); 
-        private Vector3 hitNormal = new Vector3(); 
         public void OnControllerColliderHit(ControllerColliderHit hit)
         {
-            if (inAir)
-                hitPoint = (transform.position - hit.point).normalized;
-            hitNormal = hit.normal;
 
             Rigidbody body = hit.collider.attachedRigidbody;
 
