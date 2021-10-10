@@ -95,6 +95,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6662dece6447024baf9f6dfd685124a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onRollPerformed:
+    m_PersistentCalls:
+      m_Calls: []
   toggleCrouch: 1
   onCrouch:
     m_PersistentCalls:
@@ -120,6 +123,7 @@ GameObject:
   - component: {fileID: 1996765137647089474}
   - component: {fileID: 694828214}
   - component: {fileID: 237105201}
+  - component: {fileID: 437693392}
   m_Layer: 0
   m_Name: Link CharacterController
   m_TagString: Untagged
@@ -201,8 +205,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48f85c4d0395fa544bec05abdb85790d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 30
-  moveBackwardSpeed: 20
   rotateSpeed: 40
   rotateBackwardSpeed: 30
   colliderHeight: 1.5
@@ -210,6 +212,7 @@ MonoBehaviour:
   cameraForward: {fileID: 0}
   character: {fileID: 694828214}
   grounded: {fileID: 1996765137647089474}
+  animController: {fileID: 919132147700149759}
 --- !u!114 &1996765137647089474
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -261,6 +264,25 @@ MonoBehaviour:
   input: {fileID: 1996765136930574178}
   animController: {fileID: 919132147700149759}
   animationLength: 0.4
+--- !u!114 &437693392
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1996765137647089484}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6bc908c142b493419ab5e3b36888f37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  castLayerMask:
+    serializedVersion: 2
+    m_Bits: 64
+  forwardCastDistance: 1
+  forwardCastAllowedNormal: 0.2
+  downCastDistance: 2.3
+  downCastUp: 3
 --- !u!1 &1996765138203493787
 GameObject:
   m_ObjectHideFlags: 0

@@ -7,6 +7,8 @@ namespace OliverLoescher
     [RequireComponent(typeof(Animator))]
     public class RootMotionCharacter : MonoBehaviour
     {
+        public bool ignoreYValue = false;
+
         [Header("Root Motion")]
         [SerializeField] private CharacterController character = null;
         [SerializeField] private OnGround grounded = null;
@@ -39,7 +41,12 @@ namespace OliverLoescher
 
         private void FixedUpdate() 
         {
-            if (inAir)
+            if (ignoreYValue)
+            {
+                MoveRootMotion();
+                inAir = true;
+            }
+            else if (inAir)
             {
                 UpdateInAir();
             }
@@ -65,8 +72,7 @@ namespace OliverLoescher
 
         private void UpdateOnGround()
         {
-            character.Move(rootMotion);
-            rootMotion = Vector3.zero;
+            MoveRootMotion();
 
             if (grounded.IsGrounded())
             {
@@ -78,6 +84,12 @@ namespace OliverLoescher
                 inAir = true;
                 velocity = animator.velocity;
             }
+        }
+
+        private void MoveRootMotion()
+        {
+            character.Move(rootMotion);
+            rootMotion = Vector3.zero;
         }
 
         public void DoJump(float pUp, float pForward)

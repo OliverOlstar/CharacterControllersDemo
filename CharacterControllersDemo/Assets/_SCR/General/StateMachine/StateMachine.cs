@@ -76,6 +76,10 @@ namespace OliverLoescher
             SwitchState(defaultState);
         }
 
+        public bool IsState(BaseState pState)
+        {
+            return currState == pState;
+        }
         public bool IsDefaultState()
         {
             return currState == defaultState;

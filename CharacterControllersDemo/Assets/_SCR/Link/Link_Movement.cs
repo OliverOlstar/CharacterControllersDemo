@@ -34,8 +34,6 @@ namespace OliverLoescher.Link
             base.Init(pMachine);
 
             _moveSpeed = moveSpeed;
-
-            input.onRollPerformed.AddListener(animController.TriggerRoll);
         }
         
         public override void OnFixedUpdate()
