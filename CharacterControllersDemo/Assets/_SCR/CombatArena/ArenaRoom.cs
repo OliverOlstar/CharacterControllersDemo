@@ -4,17 +4,22 @@ using UnityEngine;
 
 public class ArenaRoom : MonoBehaviour
 {
-    [System.Serializable]
-    public class Edge
+    public List<ArenaRoomGenerator.Edge> edges = new List<ArenaRoomGenerator.Edge>();
+    public ArenaRoomGenerator.Edge[] GetEdgesRandomizedOrder()
     {
-        public ArenaRoom room = null;
-        public GameObject edgeObject = null;
+        if (edges.Count < 2)
+            return edges.ToArray();
 
-        public void Toggle(bool pClosed)
+        List<ArenaRoomGenerator.Edge> list = new List<ArenaRoomGenerator.Edge>(edges);
+        ArenaRoomGenerator.Edge[] rand = new ArenaRoomGenerator.Edge[edges.Count];
+
+        while (list.Count > 0)
         {
-            edgeObject.SetActive(pClosed);
+            int i = Random.Range(0, list.Count);
+            rand[list.Count - 1] = list[i];
+            list.RemoveAt(i);
         }
-    }
 
-    public List<Edge> edges = new List<Edge>();
+        return rand;
+    }
 }
