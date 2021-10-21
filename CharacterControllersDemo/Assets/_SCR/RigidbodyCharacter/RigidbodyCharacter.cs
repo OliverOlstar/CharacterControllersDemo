@@ -1,0 +1,108 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using Sirenix.OdinInspector;
+
+namespace OliverLoescher
+{
+    [RequireComponent(typeof(Rigidbody), typeof(OnGround))]
+    public class RigidbodyCharacter : MonoBehaviour
+    {
+        [SerializeField] private Transform cameraForward = null;
+        private Rigidbody rigid = null;
+        private OnGround grounded = null;
+        
+        [SerializeField, Min(0)] private float maxVelocity = 2.0f;
+        [SerializeField, Min(0)] private float acceleration = 5.0f;
+        [SerializeField, Min(0)] private float sprintMaxSpeed = 10.0f;
+        [SerializeField, Min(0)] private float sprintAcceleration = 10.0f;
+        [SerializeField, Min(0)] private float airAcceleration = 2.0f;
+        [SerializeField, Min(0)] private float airDrag = 0.0f;
+
+        private Vector2 moveInput = Vector2.zero;
+        private float accel = 0;
+        private float maxVel = 0;
+        private float initialDrag;
+        private bool isGrounded = false;
+        private bool isSprinting = false;
+
+        private void Start() 
+        {
+            rigid = GetComponent<Rigidbody>();
+            grounded = GetComponent<OnGround>();
+            
+            accel = acceleration;
+            maxVel = maxVelocity;
+            initialDrag = rigid.drag;
+        }
+
+        public void OnMoveInput(Vector2 pInput)
+        {
+            moveInput = pInput;
+        }
+
+        public void OnSprintInput(bool pBool)
+        {
+            isSprinting = pBool;
+            UpdateSpeeds();
+        }
+
+        private void FixedUpdate() 
+        {
+            if (grounded.IsGrounded())
+            {
+                if (isGrounded == false)
+                    OnGroundedEnter();
+            }
+            else
+            {
+                if (isGrounded == true)
+                    OnGroundedExit();
+            }
+
+            if (accel != 0 && moveInput != Vector2.zero && FuncUtil.Horizontalize(rigid.velocity).sqrMagnitude < Mathf.Pow(maxVel, 2))
+            {
+                // Move values
+                Vector3 move = cameraForward.TransformDirection(new Vector3(moveInput.x, 0.0f, moveInput.y));
+                move = new Vector3(move.x, 0.0f, move.z).normalized * moveInput.magnitude;
+
+                // Movement
+                rigid.AddForce(move * accel * Time.fixedDeltaTime, ForceMode.VelocityChange);
+            }
+        }
+
+        private void OnGroundedEnter()
+        {
+            isGrounded = true;
+            UpdateSpeeds();
+        }
+
+        private void OnGroundedExit()
+        {
+            isGrounded = false;
+            UpdateSpeeds();
+        }
+
+        private void UpdateSpeeds()
+        {
+            if (isGrounded == false)
+            {
+                accel = airAcceleration;
+                maxVel = maxVelocity;
+                rigid.drag = airDrag;
+            }
+            else if (isSprinting)
+            {
+                accel = sprintAcceleration;
+                maxVel = sprintMaxSpeed;
+                rigid.drag = initialDrag;
+            }
+            else
+            {
+                accel = acceleration;
+                maxVel = maxVelocity;
+                rigid.drag = initialDrag;
+            }
+        }
+    }
+}

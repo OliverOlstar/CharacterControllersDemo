@@ -267,6 +267,156 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""FPS"",
+            ""id"": ""0f7d2966-e324-44e4-9426-d200912c0f75"",
+            ""actions"": [
+                {
+                    ""name"": ""CameraMove"",
+                    ""type"": ""Value"",
+                    ""id"": ""a6d32359-5175-4fbd-971f-9939ee8b6138"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""CameraMoveDelta"",
+                    ""type"": ""Value"",
+                    ""id"": ""f5b2b997-8775-4178-9f55-70fd9b2f7be3"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Move"",
+                    ""type"": ""Value"",
+                    ""id"": ""7c86d7da-0fd5-4af9-bb06-a95588e9012d"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Sprint"",
+                    ""type"": ""Button"",
+                    ""id"": ""32986f7a-e8a5-44ac-af30-faf8503506e5"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""47b0e451-52f8-4e6c-b2e6-6202d662e202"",
+                    ""path"": ""<Gamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""CameraMove"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""261483c4-2d56-45a9-a0dc-b9b2b87c1770"",
+                    ""path"": ""<Mouse>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""CameraMoveDelta"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""WASD"",
+                    ""id"": ""b3cd4af5-f198-4585-a494-b1222d0c0aaf"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""795094ca-dd3e-4a36-9b8f-e67aafb27e66"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""1ee54d86-141a-4927-8c03-b90b3a615018"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""da0b7a7e-b353-4bd3-a7d1-ebf38c059fa5"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""38419013-8fbd-48f1-bc54-b359c71eeef0"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7d72b6ee-bd1d-4a69-92b1-e573608cc068"",
+                    ""path"": ""<Joystick>/stick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5a6e8cdb-ffcb-4c49-a95f-9b7b711e8265"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Sprint"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""11be1155-16e4-419d-a219-4752eb48d04b"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Sprint"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -308,6 +458,12 @@ public class @PlayerInput : IInputActionCollection, IDisposable
         m_Link_Move = m_Link.FindAction("Move", throwIfNotFound: true);
         m_Link_Crouch = m_Link.FindAction("Crouch", throwIfNotFound: true);
         m_Link_Roll = m_Link.FindAction("Roll", throwIfNotFound: true);
+        // FPS
+        m_FPS = asset.FindActionMap("FPS", throwIfNotFound: true);
+        m_FPS_CameraMove = m_FPS.FindAction("CameraMove", throwIfNotFound: true);
+        m_FPS_CameraMoveDelta = m_FPS.FindAction("CameraMoveDelta", throwIfNotFound: true);
+        m_FPS_Move = m_FPS.FindAction("Move", throwIfNotFound: true);
+        m_FPS_Sprint = m_FPS.FindAction("Sprint", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -443,6 +599,63 @@ public class @PlayerInput : IInputActionCollection, IDisposable
         }
     }
     public LinkActions @Link => new LinkActions(this);
+
+    // FPS
+    private readonly InputActionMap m_FPS;
+    private IFPSActions m_FPSActionsCallbackInterface;
+    private readonly InputAction m_FPS_CameraMove;
+    private readonly InputAction m_FPS_CameraMoveDelta;
+    private readonly InputAction m_FPS_Move;
+    private readonly InputAction m_FPS_Sprint;
+    public struct FPSActions
+    {
+        private @PlayerInput m_Wrapper;
+        public FPSActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
+        public InputAction @CameraMove => m_Wrapper.m_FPS_CameraMove;
+        public InputAction @CameraMoveDelta => m_Wrapper.m_FPS_CameraMoveDelta;
+        public InputAction @Move => m_Wrapper.m_FPS_Move;
+        public InputAction @Sprint => m_Wrapper.m_FPS_Sprint;
+        public InputActionMap Get() { return m_Wrapper.m_FPS; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(FPSActions set) { return set.Get(); }
+        public void SetCallbacks(IFPSActions instance)
+        {
+            if (m_Wrapper.m_FPSActionsCallbackInterface != null)
+            {
+                @CameraMove.started -= m_Wrapper.m_FPSActionsCallbackInterface.OnCameraMove;
+                @CameraMove.performed -= m_Wrapper.m_FPSActionsCallbackInterface.OnCameraMove;
+                @CameraMove.canceled -= m_Wrapper.m_FPSActionsCallbackInterface.OnCameraMove;
+                @CameraMoveDelta.started -= m_Wrapper.m_FPSActionsCallbackInterface.OnCameraMoveDelta;
+                @CameraMoveDelta.performed -= m_Wrapper.m_FPSActionsCallbackInterface.OnCameraMoveDelta;
+                @CameraMoveDelta.canceled -= m_Wrapper.m_FPSActionsCallbackInterface.OnCameraMoveDelta;
+                @Move.started -= m_Wrapper.m_FPSActionsCallbackInterface.OnMove;
+                @Move.performed -= m_Wrapper.m_FPSActionsCallbackInterface.OnMove;
+                @Move.canceled -= m_Wrapper.m_FPSActionsCallbackInterface.OnMove;
+                @Sprint.started -= m_Wrapper.m_FPSActionsCallbackInterface.OnSprint;
+                @Sprint.performed -= m_Wrapper.m_FPSActionsCallbackInterface.OnSprint;
+                @Sprint.canceled -= m_Wrapper.m_FPSActionsCallbackInterface.OnSprint;
+            }
+            m_Wrapper.m_FPSActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @CameraMove.started += instance.OnCameraMove;
+                @CameraMove.performed += instance.OnCameraMove;
+                @CameraMove.canceled += instance.OnCameraMove;
+                @CameraMoveDelta.started += instance.OnCameraMoveDelta;
+                @CameraMoveDelta.performed += instance.OnCameraMoveDelta;
+                @CameraMoveDelta.canceled += instance.OnCameraMoveDelta;
+                @Move.started += instance.OnMove;
+                @Move.performed += instance.OnMove;
+                @Move.canceled += instance.OnMove;
+                @Sprint.started += instance.OnSprint;
+                @Sprint.performed += instance.OnSprint;
+                @Sprint.canceled += instance.OnSprint;
+            }
+        }
+    }
+    public FPSActions @FPS => new FPSActions(this);
     private int m_KeyboardMouseSchemeIndex = -1;
     public InputControlScheme KeyboardMouseScheme
     {
@@ -471,5 +684,12 @@ public class @PlayerInput : IInputActionCollection, IDisposable
         void OnMove(InputAction.CallbackContext context);
         void OnCrouch(InputAction.CallbackContext context);
         void OnRoll(InputAction.CallbackContext context);
+    }
+    public interface IFPSActions
+    {
+        void OnCameraMove(InputAction.CallbackContext context);
+        void OnCameraMoveDelta(InputAction.CallbackContext context);
+        void OnMove(InputAction.CallbackContext context);
+        void OnSprint(InputAction.CallbackContext context);
     }
 }
