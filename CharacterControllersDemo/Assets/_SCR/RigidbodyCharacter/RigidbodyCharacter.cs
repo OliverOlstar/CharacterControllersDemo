@@ -14,10 +14,18 @@ namespace OliverLoescher
         
         [SerializeField, Min(0)] private float maxVelocity = 2.0f;
         [SerializeField, Min(0)] private float acceleration = 5.0f;
+
+        [Space]
         [SerializeField, Min(0)] private float sprintMaxSpeed = 10.0f;
         [SerializeField, Min(0)] private float sprintAcceleration = 10.0f;
+        
+        [Space]
         [SerializeField, Min(0)] private float airAcceleration = 2.0f;
         [SerializeField, Min(0)] private float airDrag = 0.0f;
+
+        [Header("Stamina")]
+        [SerializeField] private PlayerStamina stamina = null;
+        [SerializeField, ShowIf("@stamina != null")] private float staminaPerSecond = 25.0f;
 
         private Vector2 moveInput = Vector2.zero;
         private float accel = 0;
@@ -34,6 +42,12 @@ namespace OliverLoescher
             accel = acceleration;
             maxVel = maxVelocity;
             initialDrag = rigid.drag;
+
+            if (stamina != null)
+            {
+                stamina.OnStaminaIn.AddListener(OnStaminaIn);
+                stamina.OnStaminaOut.AddListener(OnStaminaOut);
+            }
         }
 
         public void OnMoveInput(Vector2 pInput)
@@ -60,14 +74,28 @@ namespace OliverLoescher
                     OnGroundedExit();
             }
 
-            if (accel != 0 && moveInput != Vector2.zero && FuncUtil.Horizontalize(rigid.velocity).sqrMagnitude < Mathf.Pow(maxVel, 2))
+            if (accel != 0 && moveInput != Vector2.zero)
             {
                 // Move values
                 Vector3 move = cameraForward.TransformDirection(new Vector3(moveInput.x, 0.0f, moveInput.y));
                 move = new Vector3(move.x, 0.0f, move.z).normalized * moveInput.magnitude;
+                move = move * accel * Time.fixedDeltaTime;
 
-                // Movement
-                rigid.AddForce(move * accel * Time.fixedDeltaTime, ForceMode.VelocityChange);
+                // Clamp to max speed
+                Vector3 vel = new Vector3(rigid.velocity.x, 0.0f, rigid.velocity.z);
+                if ((vel + move).sqrMagnitude >= Mathf.Pow(maxVel, 2))
+                {
+                    float maxMag = vel.magnitude;
+                    move = Vector3.ClampMagnitude(move + vel, vel.magnitude) - vel;
+                }
+                
+                // Stamina
+                if (isSprinting && isGrounded && !stamina.isOut && stamina != null)
+                    stamina.ModifyStamina(-Time.deltaTime * staminaPerSecond);
+
+                // Actually move
+                if (move != Vector3.zero)
+                    rigid.AddForce(move, ForceMode.VelocityChange);
             }
         }
 
@@ -83,6 +111,18 @@ namespace OliverLoescher
             UpdateSpeeds();
         }
 
+        public void OnStaminaOut()
+        {
+            if (isSprinting)
+                UpdateSpeeds();
+        }
+
+        public void OnStaminaIn()
+        {
+            if (isSprinting)
+                UpdateSpeeds();
+        }
+
         private void UpdateSpeeds()
         {
             if (isGrounded == false)
@@ -91,7 +131,7 @@ namespace OliverLoescher
                 maxVel = maxVelocity;
                 rigid.drag = airDrag;
             }
-            else if (isSprinting)
+            else if (isSprinting && !stamina.isOut)
             {
                 accel = sprintAcceleration;
                 maxVel = sprintMaxSpeed;

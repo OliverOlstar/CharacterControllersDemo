@@ -303,6 +303,14 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Jump"",
+                    ""type"": ""Button"",
+                    ""id"": ""b60ccba0-89d2-42a7-a08c-4193ecf954cb"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -415,6 +423,28 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                     ""action"": ""Sprint"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""416a367e-9076-45d4-86c8-a1faabaafe39"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5af331fa-746a-4f3d-a1b9-0ad88bde15aa"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -464,6 +494,7 @@ public class @PlayerInput : IInputActionCollection, IDisposable
         m_FPS_CameraMoveDelta = m_FPS.FindAction("CameraMoveDelta", throwIfNotFound: true);
         m_FPS_Move = m_FPS.FindAction("Move", throwIfNotFound: true);
         m_FPS_Sprint = m_FPS.FindAction("Sprint", throwIfNotFound: true);
+        m_FPS_Jump = m_FPS.FindAction("Jump", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -607,6 +638,7 @@ public class @PlayerInput : IInputActionCollection, IDisposable
     private readonly InputAction m_FPS_CameraMoveDelta;
     private readonly InputAction m_FPS_Move;
     private readonly InputAction m_FPS_Sprint;
+    private readonly InputAction m_FPS_Jump;
     public struct FPSActions
     {
         private @PlayerInput m_Wrapper;
@@ -615,6 +647,7 @@ public class @PlayerInput : IInputActionCollection, IDisposable
         public InputAction @CameraMoveDelta => m_Wrapper.m_FPS_CameraMoveDelta;
         public InputAction @Move => m_Wrapper.m_FPS_Move;
         public InputAction @Sprint => m_Wrapper.m_FPS_Sprint;
+        public InputAction @Jump => m_Wrapper.m_FPS_Jump;
         public InputActionMap Get() { return m_Wrapper.m_FPS; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -636,6 +669,9 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                 @Sprint.started -= m_Wrapper.m_FPSActionsCallbackInterface.OnSprint;
                 @Sprint.performed -= m_Wrapper.m_FPSActionsCallbackInterface.OnSprint;
                 @Sprint.canceled -= m_Wrapper.m_FPSActionsCallbackInterface.OnSprint;
+                @Jump.started -= m_Wrapper.m_FPSActionsCallbackInterface.OnJump;
+                @Jump.performed -= m_Wrapper.m_FPSActionsCallbackInterface.OnJump;
+                @Jump.canceled -= m_Wrapper.m_FPSActionsCallbackInterface.OnJump;
             }
             m_Wrapper.m_FPSActionsCallbackInterface = instance;
             if (instance != null)
@@ -652,6 +688,9 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                 @Sprint.started += instance.OnSprint;
                 @Sprint.performed += instance.OnSprint;
                 @Sprint.canceled += instance.OnSprint;
+                @Jump.started += instance.OnJump;
+                @Jump.performed += instance.OnJump;
+                @Jump.canceled += instance.OnJump;
             }
         }
     }
@@ -691,5 +730,6 @@ public class @PlayerInput : IInputActionCollection, IDisposable
         void OnCameraMoveDelta(InputAction.CallbackContext context);
         void OnMove(InputAction.CallbackContext context);
         void OnSprint(InputAction.CallbackContext context);
+        void OnJump(InputAction.CallbackContext context);
     }
 }

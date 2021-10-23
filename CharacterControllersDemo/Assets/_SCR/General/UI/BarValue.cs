@@ -14,10 +14,14 @@ public class BarValue : MonoBehaviour
     [Header("Colors")]
     [Tooltip("Leave null if color changing is not desired")]
     [SerializeField] private Image coloringImage = null;
+    [SerializeField] private Image secondColoringImage = null;
     [HideIf("@coloringImage == null"), SerializeField] private Color defaultColor = new Color(1.0f, 0.0f, 0.0f, 1.0f);
+    [HideIf("@secondColoringImage == null"), SerializeField] private Color secondDefaultColor = new Color(0.0f, 0.0f, 1.0f, 1.0f);
     [HideIf("@coloringImage == null || doHealColor == false"), SerializeField] private Color healColor = new Color(0.0f, 1.0f, 0.0f, 1.0f);
     [HideIf("@coloringImage == null"), SerializeField] private Color toggledColor = new Color(0.0f, 0.0f, 1.0f, 1.0f);
+    [HideIf("@secondColoringImage == null"), SerializeField] private Color secondToggledColor = new Color(0.0f, 0.0f, 1.0f, 1.0f);
     [HideIf("@coloringImage == null"), SerializeField] private Color inactiveColor = new Color(0.25f, 0.25f, 0.25f, 1.0f);
+    [HideIf("@secondColoringImage == null"), SerializeField] private Color secondInactiveColor = new Color(0.0f, 0.0f, 1.0f, 1.0f);
 
     [Header("Timings")]
     [SerializeField, Min(0)] private float delay = 0.75f;
@@ -33,6 +37,7 @@ public class BarValue : MonoBehaviour
 
     private bool isToggled = false;
     private Coroutine colorRoutine = null;
+    private Coroutine secondColorRoutine = null;
 
     private void Awake() 
     {
@@ -45,18 +50,26 @@ public class BarValue : MonoBehaviour
 
     private void OnEnable() 
     {
-        SetColor(isToggled ? toggledColor : defaultColor);
+        if (isToggled)
+            SetColor(toggledColor, secondToggledColor);
+        else
+            SetColor(defaultColor, secondDefaultColor);
     }
 
     private void OnDisable() 
     {
-        SetColor(inactiveColor);
+        if (colorRoutine != null)
+            StopCoroutine(colorRoutine);
+        SetColor(inactiveColor, secondInactiveColor, true);
     }
 
-    public void SetShielded(bool pBool)
+    public void SetToggled(bool pToggled)
     {
-        SetColor(pBool ? toggledColor : defaultColor);
-        isToggled = pBool;
+        isToggled = pToggled;
+        if (isToggled)
+            SetColor(toggledColor, secondToggledColor);
+        else
+            SetColor(defaultColor, secondDefaultColor);
     }
 
     public void SetValue(float pValue01)
@@ -79,7 +92,12 @@ public class BarValue : MonoBehaviour
             topBar.fillAmount = pValue01;
             
             if (doHealColor)
-                SetColor(isToggled ? toggledColor : defaultColor);
+            {
+                if (isToggled)
+                    SetColor(toggledColor, secondToggledColor);
+                else
+                    SetColor(defaultColor, secondDefaultColor);
+            }
         }
     }
 
@@ -105,28 +123,39 @@ public class BarValue : MonoBehaviour
         }
     }
 
-    public void SetColor(Color pColor)
+    public void SetColor(Color pColor, bool pInstant = false)
     {
-        if (coloringImage != null)
+        SetColor(coloringImage, pColor, colorRoutine, pInstant);
+    }
+
+    public void SetColor(Color pColor, Color pSecondColor, bool pInstant = false)
+    {
+        SetColor(coloringImage, pColor, colorRoutine, pInstant);
+        SetColor(secondColoringImage, pSecondColor, secondColorRoutine, pInstant);
+    }
+
+    private void SetColor(Image pImage, Color pColor, Coroutine pRoutine, bool pInstant = false)
+    {
+        if (pImage != null)
         {
-            if (doColorFades)
+            if (doColorFades && !pInstant)
             {
-                if (colorRoutine != null)
-                    StopCoroutine(colorRoutine);
-                colorRoutine = StartCoroutine(SetColorRoutine(pColor));
+                if (pRoutine != null)
+                    StopCoroutine(pRoutine);
+                pRoutine = StartCoroutine(SetColorRoutine(pImage, pColor));
             }
             else
             {
-                pColor.a = coloringImage.color.a;
-                coloringImage.color = pColor;
+                pColor.a = pImage.color.a;
+                pImage.color = pColor;
             }
         }
     }
 
-    private IEnumerator SetColorRoutine(Color pColor)
+    private IEnumerator SetColorRoutine(Image pImage, Color pColor)
     {
         // Check color
-        Color startColor = coloringImage.color;
+        Color startColor = pImage.color;
         if (startColor != pColor)
         {
             // Transition color
@@ -134,23 +163,9 @@ public class BarValue : MonoBehaviour
             while (progress01 < 1)
             {
                 progress01 += Time.deltaTime * inverseColorSeconds;
-                coloringImage.color = Color.Lerp(startColor, pColor, progress01);
+                pImage.color = Color.Lerp(startColor, pColor, progress01);
                 yield return null;
             }
         }
-        colorRoutine = null;
     }
-
-#if UNITY_EDITOR
-    private void OnDrawGizmosSelected() 
-    {
-        if (Application.isPlaying == false)
-        {
-            if (coloringImage != null)
-            {
-                coloringImage.color = defaultColor;
-            }
-        }
-    }
-#endif
 }

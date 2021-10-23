@@ -22,6 +22,11 @@ namespace OliverLoescher
         [SerializeField, Min(int.MinValue)] private float dodgeInputSeconds = 0.2f;
         [SerializeField, Min(0)] private float dodgeAgainDelay = 0.5f;
 
+        [Header("Stamina")]
+        [SerializeField] private PlayerStamina stamina = null;
+        [SerializeField, ShowIf("@stamina != null"), Min(0)] private float staminaUse = 50.0f;
+        [SerializeField, ShowIf("@stamina != null"), Min(0)] private float staminaRequired = 0.0f;
+
         private int currQuadrent = 0;
         private int lastQuadrent = 0;
         private bool isDodging = false;
@@ -47,7 +52,7 @@ namespace OliverLoescher
                 else if (lastQuadrent != 0) // Moved away from deadzone
                 {
                     // Returned to last quadrent, do dodge
-                    if (nextQuadrent == lastQuadrent)
+                    if (nextQuadrent == lastQuadrent && ValidStamina())
                     {
                         StartCoroutine(DodgeRoutine(nextQuadrent));
                     }
@@ -65,6 +70,9 @@ namespace OliverLoescher
             isDodging = true;
             DodgeStart?.Invoke();
             // rigid.useGravity = false;
+
+            if (stamina != null)
+                stamina.ModifyStamina(-staminaUse);
 
             Vector3 dir = FuncUtil.Horizontalize(GetQuadrentVector(pQuadrent), true);
             float inverseDodgeSeconds = 1 / dodgeSeconds;
@@ -147,6 +155,11 @@ namespace OliverLoescher
                     return cameraForward.right;
             }
             return Vector3.zero;
+        }
+
+        private bool ValidStamina()
+        {
+            return stamina == null || (stamina.GetStamina() >= staminaRequired && stamina.isOut == false);
         }
     }
 }

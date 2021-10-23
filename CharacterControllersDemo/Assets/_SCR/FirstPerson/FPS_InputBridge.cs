@@ -26,6 +26,9 @@ namespace OliverLoescher.FPS
         // Sprint
         public bool isSprinting { get; private set; } = false;
         public UnityEventsUtil.BoolEvent onSprint;
+        
+        // Sprint
+        public UnityEvent onJump;
 
         // Crouch
         // public bool toggleCrouch = true;
@@ -42,6 +45,7 @@ namespace OliverLoescher.FPS
             InputSystem.Input.FPS.Move.canceled += OnMove;
             InputSystem.Input.FPS.Sprint.performed += OnSprintPerformed;
             InputSystem.Input.FPS.Sprint.canceled += OnSprintCanceled;
+            InputSystem.Input.FPS.Jump.performed += OnJumpPerformed;
             // InputSystem.Input.FPS.Crouch.performed += OnCrouchPerformed;
             // InputSystem.Input.FPS.Crouch.canceled += OnCrouchCanceled;
         }
@@ -80,6 +84,11 @@ namespace OliverLoescher.FPS
         {
             isSprinting = false;
             onSprint?.Invoke(isSprinting);
+        }
+
+        private void OnJumpPerformed(InputAction.CallbackContext ctx)
+        {
+            onJump?.Invoke();
         }
 
         // private void OnCrouchPerformed(InputAction.CallbackContext ctx)
