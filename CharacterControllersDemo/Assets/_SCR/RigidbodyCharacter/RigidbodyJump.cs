@@ -31,13 +31,13 @@ namespace OliverLoescher
                 vel.y = jumpUpVelocity;
                 rigid.velocity = vel;
 
-                stamina.ModifyStamina(-staminaUse);
+                stamina.Modify(-staminaUse);
             }
         }
 
         private bool ValidStamina()
         {
-            return stamina == null || (stamina.GetStamina() >= staminaRequired && stamina.isOut == false);
+            return stamina == null || (stamina.Get() >= staminaRequired && stamina.isOut == false);
         }
     }
 }

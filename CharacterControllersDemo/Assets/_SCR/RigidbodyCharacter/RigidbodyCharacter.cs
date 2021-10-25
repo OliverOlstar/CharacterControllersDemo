@@ -45,8 +45,8 @@ namespace OliverLoescher
 
             if (stamina != null)
             {
-                stamina.OnStaminaIn.AddListener(OnStaminaIn);
-                stamina.OnStaminaOut.AddListener(OnStaminaOut);
+                stamina.onValueIn.AddListener(OnStaminaIn);
+                stamina.onValueOut.AddListener(OnStaminaOut);
             }
         }
 
@@ -91,7 +91,7 @@ namespace OliverLoescher
                 
                 // Stamina
                 if (isSprinting && isGrounded && !stamina.isOut && stamina != null)
-                    stamina.ModifyStamina(-Time.deltaTime * staminaPerSecond);
+                    stamina.Modify(-Time.deltaTime * staminaPerSecond);
 
                 // Actually move
                 if (move != Vector3.zero)

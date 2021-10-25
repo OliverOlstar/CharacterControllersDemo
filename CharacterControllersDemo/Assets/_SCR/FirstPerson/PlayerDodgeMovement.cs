@@ -72,7 +72,7 @@ namespace OliverLoescher
             // rigid.useGravity = false;
 
             if (stamina != null)
-                stamina.ModifyStamina(-staminaUse);
+                stamina.Modify(-staminaUse);
 
             Vector3 dir = FuncUtil.Horizontalize(GetQuadrentVector(pQuadrent), true);
             float inverseDodgeSeconds = 1 / dodgeSeconds;
@@ -159,7 +159,7 @@ namespace OliverLoescher
 
         private bool ValidStamina()
         {
-            return stamina == null || (stamina.GetStamina() >= staminaRequired && stamina.isOut == false);
+            return stamina == null || (stamina.Get() >= staminaRequired && stamina.isOut == false);
         }
     }
 }

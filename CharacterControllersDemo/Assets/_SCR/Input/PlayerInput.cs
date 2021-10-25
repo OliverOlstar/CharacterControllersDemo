@@ -311,6 +311,14 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Primary"",
+                    ""type"": ""Button"",
+                    ""id"": ""22eb34f7-b6c7-497d-a1d4-a7e6c17c133f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -445,6 +453,28 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                     ""action"": ""Jump"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d525f8ca-7b97-43ae-9912-b39433ffab63"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Primary"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0b5e77e4-eeb2-451f-96a3-f788cda21157"",
+                    ""path"": ""<Gamepad>/leftTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Primary"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -495,6 +525,7 @@ public class @PlayerInput : IInputActionCollection, IDisposable
         m_FPS_Move = m_FPS.FindAction("Move", throwIfNotFound: true);
         m_FPS_Sprint = m_FPS.FindAction("Sprint", throwIfNotFound: true);
         m_FPS_Jump = m_FPS.FindAction("Jump", throwIfNotFound: true);
+        m_FPS_Primary = m_FPS.FindAction("Primary", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -639,6 +670,7 @@ public class @PlayerInput : IInputActionCollection, IDisposable
     private readonly InputAction m_FPS_Move;
     private readonly InputAction m_FPS_Sprint;
     private readonly InputAction m_FPS_Jump;
+    private readonly InputAction m_FPS_Primary;
     public struct FPSActions
     {
         private @PlayerInput m_Wrapper;
@@ -648,6 +680,7 @@ public class @PlayerInput : IInputActionCollection, IDisposable
         public InputAction @Move => m_Wrapper.m_FPS_Move;
         public InputAction @Sprint => m_Wrapper.m_FPS_Sprint;
         public InputAction @Jump => m_Wrapper.m_FPS_Jump;
+        public InputAction @Primary => m_Wrapper.m_FPS_Primary;
         public InputActionMap Get() { return m_Wrapper.m_FPS; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -672,6 +705,9 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                 @Jump.started -= m_Wrapper.m_FPSActionsCallbackInterface.OnJump;
                 @Jump.performed -= m_Wrapper.m_FPSActionsCallbackInterface.OnJump;
                 @Jump.canceled -= m_Wrapper.m_FPSActionsCallbackInterface.OnJump;
+                @Primary.started -= m_Wrapper.m_FPSActionsCallbackInterface.OnPrimary;
+                @Primary.performed -= m_Wrapper.m_FPSActionsCallbackInterface.OnPrimary;
+                @Primary.canceled -= m_Wrapper.m_FPSActionsCallbackInterface.OnPrimary;
             }
             m_Wrapper.m_FPSActionsCallbackInterface = instance;
             if (instance != null)
@@ -691,6 +727,9 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                 @Jump.started += instance.OnJump;
                 @Jump.performed += instance.OnJump;
                 @Jump.canceled += instance.OnJump;
+                @Primary.started += instance.OnPrimary;
+                @Primary.performed += instance.OnPrimary;
+                @Primary.canceled += instance.OnPrimary;
             }
         }
     }
@@ -731,5 +770,6 @@ public class @PlayerInput : IInputActionCollection, IDisposable
         void OnMove(InputAction.CallbackContext context);
         void OnSprint(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
+        void OnPrimary(InputAction.CallbackContext context);
     }
 }

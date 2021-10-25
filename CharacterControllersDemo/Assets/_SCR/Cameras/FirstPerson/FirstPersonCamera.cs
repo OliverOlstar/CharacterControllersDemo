@@ -8,21 +8,21 @@ namespace OliverLoescher.Camera
 {
     public class FirstPersonCamera : MonoBehaviour
     {
-        [SerializeField] private OliverLoescher.FPS.FPS_InputBridge inputBridge = null;
         [SerializeField] private Transform cameraTransform = null;
         [SerializeField, MinMaxSlider(-90, 90, true)] private Vector2 cameraYClamp = new Vector2(-40, 50);
-
-        private void Start() 
-        {
-            inputBridge.onCameraMoveDelta.AddListener(OnCameraMoveDelta);
-        }
+        private Vector2 moveInput = new Vector2();
 
         private void Update() 
         {
-            if (inputBridge.cameraMoveInput != Vector2.zero)
+            if (moveInput != Vector2.zero)
             {
-                RotateCamera(inputBridge.cameraMoveInput * Time.deltaTime);
+                RotateCamera(moveInput * Time.deltaTime);
             }
+        }
+
+        public void OnCameraMove(Vector2 pInput)
+        {
+            moveInput = pInput;
         }
 
         public void OnCameraMoveDelta(Vector2 pInput)
