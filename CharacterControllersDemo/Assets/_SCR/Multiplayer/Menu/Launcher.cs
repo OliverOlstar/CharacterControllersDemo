@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Photon.Pun;
+using UnityEngine.UI;
 using TMPro;
+using Photon.Pun;
 using Photon.Realtime;
 
 namespace OliverLoescher.Multiplayer
@@ -25,7 +26,9 @@ namespace OliverLoescher.Multiplayer
         }
 #endregion    
 
+        [SerializeField] private Button[] titleButtons = new Button[0];
         [SerializeField] private TMP_InputField niknameInputField = null;
+        [SerializeField] private Button roomNameButton = null;
         [SerializeField] private TMP_InputField roomNameInputField = null;
         [SerializeField] private TMP_Text errorText = null;
         [SerializeField] private TMP_Text roomNameText = null;
@@ -35,8 +38,14 @@ namespace OliverLoescher.Multiplayer
         [SerializeField] private GameObject playerListPrefab = null;
         [SerializeField] private GameObject[] roomHostObjects = new GameObject[0];
 
+        private List<RoomListItem> roomListItems = new List<RoomListItem>();
+
         void Start()
         {
+            // Clear list
+            foreach (Transform child in roomListContent)
+                Destroy(child.gameObject);
+
             Debug.Log("[Launcher.cs] Connecting to Master");
             PhotonNetwork.ConnectUsingSettings();
         }
@@ -46,13 +55,63 @@ namespace OliverLoescher.Multiplayer
             Debug.Log("[Launcher.cs] OnConnectedToMaster()");
             PhotonNetwork.JoinLobby();
             PhotonNetwork.AutomaticallySyncScene = true;
+
+            if (string.IsNullOrWhiteSpace(niknameInputField.text))
+            {
+                string name = PlayerPrefs.GetString("Nikname", "");
+                niknameInputField.text = name;
+                UpdateNikname(name);
+            }
         }
 
         public override void OnJoinedLobby()
         {
             UI.MenuManager.Instance.OpenMenu("Title");
             Debug.Log("[Launcher.cs] OnJoinedLobby()");
-            PhotonNetwork.NickName = "Player " + Random.Range(1, 100).ToString("00");
+        }
+
+        public void UpdateNikname(string pName)
+        {
+            if (string.IsNullOrWhiteSpace(pName))
+            {
+                foreach (Button b in titleButtons)
+                    b.interactable = false;                
+            }
+            else
+            {
+                foreach (Button b in titleButtons)
+                    b.interactable = true;   
+
+                if (roomNameInputField.text == "" || roomNameInputField.text == PhotonNetwork.NickName + "'s Room")
+                    roomNameInputField.text = pName + "'s Room";
+
+                PhotonNetwork.NickName = pName;
+                PlayerPrefs.SetString("Nikname", pName);
+            }
+        }
+
+        public void UpdateRoomName(string pName)
+        {
+            if (string.IsNullOrWhiteSpace(pName))
+            {
+                // Name IsNullOrWhiteSpace
+                roomNameButton.interactable = false;
+            }
+            else
+            {
+                // Name is already in use
+                foreach (RoomListItem room in roomListItems)
+                {
+                    if (room.GetInfo().Name == pName)
+                    {
+                        roomNameButton.interactable = false;
+                        return;
+                    }
+                }
+
+                // Name is good!!!
+                roomNameButton.interactable = true;
+            }
         }
 
         public void CreateRoom()
@@ -124,19 +183,45 @@ namespace OliverLoescher.Multiplayer
 
         public override void OnRoomListUpdate(List<RoomInfo> roomList)
         {
-            //Debug.Log("[Launcher.cs] OnRoomListUpdate() " + roomList.Count);
-            // Clear list
-            foreach (Transform child in roomListContent)
-                Destroy(child.gameObject);
+            Debug.Log("[Launcher.cs] OnRoomListUpdate() " + roomList.Count);
+            foreach (RoomInfo info in roomList)
+                Debug.Log(info.Name + " - " + info.RemovedFromList);
 
             // Fill list
             for (int i = 0; i < roomList.Count; i++)
             {
+                RoomListItem currRoom = null;
+                foreach (RoomListItem room in roomListItems)
+                {
+                    if (roomList[i].Name == room.GetInfo().Name)
+                    {
+                        currRoom = room;
+                        break;
+                    }
+                }
+
                 if (roomList[i].RemovedFromList)
-                    continue;
-                GameObject o = Instantiate(roomListPrefab, roomListContent);
-                o.GetComponent<RoomListItem>().Init(roomList[i]);
+                {
+                    // Remove from local list
+                    if (currRoom != null) // If in list
+                    {
+                        roomListItems.Remove(currRoom);
+                        Destroy(currRoom.gameObject);
+                    }
+                }
+                else
+                {
+                    // Else add it to the list
+                    if (currRoom == null) // If not already
+                    {
+                        RoomListItem item = Instantiate(roomListPrefab, roomListContent).GetComponent<RoomListItem>();
+                        item.Init(roomList[i]);
+                        roomListItems.Add(item);
+                    }
+                }
             }
+
+            UpdateRoomName(roomNameInputField.text);
         }
 
         public override void OnPlayerEnteredRoom(Player newPlayer)
@@ -148,6 +233,12 @@ namespace OliverLoescher.Multiplayer
         {
             GameObject o = Instantiate(playerListPrefab, playerListContent);
             o.GetComponent<PlayerListItem>().Init(pPlayer);
+        }
+
+        public void QuitGame()
+        {
+            PhotonNetwork.Disconnect();
+            Application.Quit();
         }
     }
 }

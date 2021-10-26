@@ -17,6 +17,11 @@ namespace OliverLoescher.Multiplayer
             nameText.text = info.Name;
         }
 
+        public RoomInfo GetInfo()
+        {
+            return info;
+        }
+
         public void OnClick()
         {
             Launcher.Instance.JoinRoom(info);
