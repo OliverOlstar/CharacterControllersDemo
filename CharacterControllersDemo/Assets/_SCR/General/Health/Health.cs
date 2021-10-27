@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 using Sirenix.OdinInspector;
+using Photon.Pun;
 
 namespace OliverLoescher
 {
@@ -15,6 +16,9 @@ namespace OliverLoescher
         [ColorPalette("UI")] public Color deathColor = Color.grey;
         [ColorPalette("UI")] public Color damageColor = Color.red;
         [ColorPalette("UI")] public Color healColor = Color.green;
+
+        [Header("Photon")]
+        [SerializeField] private PhotonView photonView = null;
 
         protected override void Start() 
         {
@@ -32,15 +36,29 @@ namespace OliverLoescher
 
         protected virtual void Init() { }
 
-        public virtual void Damage(int pValue, GameObject pSender, Vector3 pPoint, Vector3 pDirection, Color pColor)
+        public virtual void Damage(float pValue, GameObject pSender, Vector3 pPoint, Vector3 pDirection, Color pColor)
         {
-            Modify(-pValue);
+            if (photonView != null)
+            {
+                photonView.RPC("RPC_Damage", RpcTarget.All, pValue);
+            }
+            else
+            {
+                Modify(-pValue);
+            }
         }
 
         [Button()]
-        public virtual void Damage(int pValue, GameObject pSender, Vector3 pPoint, Vector3 pDirection)
+        public virtual void Damage(float pValue, GameObject pSender, Vector3 pPoint, Vector3 pDirection)
         {
-            Modify(-pValue);
+            if (photonView != null)
+            {
+                photonView.RPC("RPC_Damage", RpcTarget.All, pValue);
+            }
+            else
+            {
+                Modify(-pValue);
+            }
         }
 
         public virtual void Death() 
@@ -60,8 +78,19 @@ namespace OliverLoescher
         public void Respawn()
         {
             value = maxValue;
-            UIBar.InitValue(1);
+            if (UIBar != null)
+                UIBar.InitValue(1);
             isOut = false;
+        }
+
+        [PunRPC]
+        private void RPC_Damage(float pValue)
+        {
+            if (!photonView.IsMine)
+                return;
+
+            Debug.Log("Damaged RPC " + pValue, gameObject);
+            // Modify(-pValue);
         }
     }
 }

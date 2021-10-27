@@ -36,26 +36,23 @@ namespace OliverLoescher
             }
         }
 
-        public void Damage(int pValue, GameObject pAttacker, Vector3 pPoint, Vector3 pDirection, Color pColor)
+        public void Damage(float pValue, GameObject pAttacker, Vector3 pPoint, Vector3 pDirection, Color pColor)
         {
             pValue = DamageMultipler(pValue);
             Debug.Log("[DamageReciever.cs] Damage()1 - Damage: " + pValue);
             parent.Damage(pValue, pAttacker, pPoint, pDirection, pColor);
         }
 
-        public void Damage(int pValue, GameObject pAttacker, Vector3 pPoint, Vector3 pDirection)
+        public void Damage(float pValue, GameObject pAttacker, Vector3 pPoint, Vector3 pDirection)
         {
             pValue = DamageMultipler(pValue);
             Debug.Log("[DamageReciever.cs] Damage()2 - Damage: " + pValue);
             parent.Damage(pValue, pAttacker, pPoint, pDirection);
         }
 
-        private int DamageMultipler(int pValue)
+        private float DamageMultipler(float pValue)
         {
-            if (damageMultiplier != 1)
-                return Mathf.RoundToInt((float)pValue * damageMultiplier);
-            else
-                return pValue;
+            return pValue * damageMultiplier;
         }
 
         public GameObject GetGameObject()

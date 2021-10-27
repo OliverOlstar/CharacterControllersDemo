@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: Untitled
   description: 
-  fireType: 0
-  bulletType: 0
+  fireType: 2
+  bulletType: 2
   burstFireCount: 5
   bulletsPerShot: 1
   damage: 1
@@ -27,17 +27,17 @@ MonoBehaviour:
   lifeTime: {x: 4, y: 4.5}
   shootForce: {x: 23, y: 23}
   bulletGravity: 1.5
-  range: 5
-  hitFXPrefab: {fileID: 0}
+  range: 25
+  hitFXPrefab: {fileID: 7706684984111978519, guid: abb7ebaa9d2a280409e9543ff95e31f8, type: 3}
   layerMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 65
   secondsBetweenShots: 0.1
-  spreadType: 3
+  spreadType: 1
   spreadVector: {x: 0.2, y: 0.2}
   spreadVectorMax: {x: 0.5, y: 0.5}
-  spreadRadius: 0.2
-  spreadRadiusMax: 0.5
+  spreadRadius: 2
+  spreadRadiusMax: 20
   spreadIncrease: 0.4
   spreadDecrease: 0.6
   recoilForce: {x: 0, y: 0, z: 0}

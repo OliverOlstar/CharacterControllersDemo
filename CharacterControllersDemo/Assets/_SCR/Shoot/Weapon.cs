@@ -202,7 +202,7 @@ public class Weapon : MonoBehaviour
             // Damage my script if possible
             IDamageable a = hit.collider.GetComponent<IDamageable>();
             if (a != null)
-                a.Damage((int)data.damage, sender, hit.point, hit.normal);
+                a.Damage(data.damage, sender, hit.point, hit.normal);
         }
     }
 

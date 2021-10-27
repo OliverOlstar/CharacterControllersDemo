@@ -20,7 +20,7 @@ namespace OliverLoescher
         [SerializeField, ShowIf("@canRunOut && doRecharge")] private bool canRechargeBackIn = true;
 
         [Header("Recharge")]
-        [SerializeField, Min(0.0f)] private float rechargeValueTo = 100.0f;
+        [SerializeField, Min(0.0f), ShowIf("@doRecharge")] private float rechargeValueTo = 100.0f;
         [SerializeField, Min(0.0f), ShowIf("@doRecharge")] private float rechargeDelay = 1.0f;
         [SerializeField, Min(0.0f), ShowIf("@doRecharge")] private float rechargeRate = 20.0f;
 
@@ -46,7 +46,9 @@ namespace OliverLoescher
         protected virtual void Start() 
         {
             maxValue = value;
-            UIBar.InitValue(1.0f);
+
+            if (UIBar != null)
+                UIBar.InitValue(1.0f);
         }
 
         public float Get() { return value; }
@@ -117,7 +119,8 @@ namespace OliverLoescher
                 value += Time.deltaTime * rechargeRate;
                 value = Mathf.Min(value, maxValue);
 
-                UIBar.SetValue(value / maxValue);
+                if (UIBar != null)
+                    UIBar.SetValue(value / maxValue);
 
                 yield return null;
             }
@@ -128,7 +131,8 @@ namespace OliverLoescher
 
         public virtual void OnValueChanged(float pValue, float pChange)
         {
-            UIBar.SetValue(pValue / maxValue);
+            if (UIBar != null)
+                UIBar.SetValue(pValue / maxValue);
 
             onValueChangedEvent?.Invoke(pValue, pChange);
             onValueChanged?.Invoke(pValue, pChange);
@@ -149,7 +153,8 @@ namespace OliverLoescher
         public virtual void OnValueOut()
         {
             isOut = true;
-            UIBar.SetToggled(true);
+            if (UIBar != null)
+                UIBar.SetToggled(true);
 
             onValueOutEvent?.Invoke();
             onValueOut?.Invoke();
@@ -158,7 +163,8 @@ namespace OliverLoescher
         public virtual void OnValueIn()
         {
             isOut = false;
-            UIBar.SetToggled(false);
+            if (UIBar != null)
+                UIBar.SetToggled(false);
 
             onValueInEvent?.Invoke();
             onValueIn?.Invoke();
@@ -166,7 +172,8 @@ namespace OliverLoescher
 
         public virtual void OnMaxValueChanged(float pMaxValue, float pChange)
         {
-            UIBar.SetValue(value / pMaxValue);
+            if (UIBar != null)
+                UIBar.SetValue(value / pMaxValue);
             
             onMaxValueChangedEvent?.Invoke(pMaxValue, pChange);
             onMaxValueChanged?.Invoke(pMaxValue, pChange);
