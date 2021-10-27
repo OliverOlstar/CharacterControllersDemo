@@ -8,6 +8,9 @@ namespace OliverLoescher
 {
     public class CharacterValue : MonoBehaviour
     {
+        public delegate void ValueChangeEvent(float pValue, float pChange);
+        public delegate void ValueEvent();
+
         // [Tooltip("Zero counts as infinite")]
         [SerializeField, Min(0.0f)] protected float value = 100.0f;
         protected float maxValue = 100.0f;
@@ -24,21 +27,26 @@ namespace OliverLoescher
         [Header("UI")]
         [SerializeField] protected BarValue UIBar = null;
 
-        [FoldoutGroup("Events")] public UnityEventsUtil.FloatEvent onValueChanged;
-        [FoldoutGroup("Events")] public UnityEventsUtil.FloatEvent onValueLowered;
-        [FoldoutGroup("Events")] public UnityEventsUtil.FloatEvent onValueRaised;
+        public ValueChangeEvent onValueChangedEvent;
+        public ValueChangeEvent onValueLoweredEvent;
+        public ValueChangeEvent onValueRaisedEvent;
+        public ValueEvent onValueOutEvent;
+        public ValueEvent onValueInEvent;
+        public ValueChangeEvent onMaxValueChangedEvent;
+
+        [FoldoutGroup("Events")] public UnityEventsUtil.DoubleFloatEvent onValueChanged;
+        [FoldoutGroup("Events")] public UnityEventsUtil.DoubleFloatEvent onValueLowered;
+        [FoldoutGroup("Events")] public UnityEventsUtil.DoubleFloatEvent onValueRaised;
         [FoldoutGroup("Events"), ShowIf("@canRunOut")] public UnityEvent onValueOut;
         [FoldoutGroup("Events"), ShowIf("@canRunOut && doRecharge && canRechargeBackIn")] public UnityEvent onValueIn;
-        [FoldoutGroup("Events")] public UnityEventsUtil.FloatEvent onMaxValueChanged;
-
-        // OnValueOut (when can not recharge)
+        [FoldoutGroup("Events")] public UnityEventsUtil.DoubleFloatEvent onMaxValueChanged;
 
         public bool isOut { get; protected set; } = false;
 
         protected virtual void Start() 
         {
             maxValue = value;
-            UIBar.SetValue(1.0f);
+            UIBar.InitValue(1.0f);
         }
 
         public float Get() { return value; }
@@ -48,30 +56,31 @@ namespace OliverLoescher
         }
         public void Set(float pValue)
         {
+            float change = Mathf.Abs(value - pValue);
+
             bool lower = pValue < value;
             value = Mathf.Clamp(pValue, 0.0f, maxValue);
 
-            onValueChanged?.Invoke(value);
             if (lower)
             {
                 if (canRunOut && isOut == false && value == 0.0f)
                 {
-                    ValueOut();
+                    OnValueOut();
                 }
                 else
                 {
-                    onValueLowered?.Invoke(value);
+                    OnValueLowered(value, change);
                 }
             }
             else
             {
                 if (canRechargeBackIn && isOut == true && value == maxValue)
                 {
-                    ValueIn();
+                    OnValueIn();
                 }
                 else
                 {
-                    onValueRaised?.Invoke(value);
+                    OnValueRaised(value, change);
                 }
             }
 
@@ -81,8 +90,7 @@ namespace OliverLoescher
                 StartCoroutine(RechargeRoutine());
             }
             
-            UIBar.SetValue(value / maxValue);
-            onValueChanged?.Invoke(value);
+            OnValueChanged(value, change);
         }
 
         public float GetMax() { return maxValue; }
@@ -92,11 +100,12 @@ namespace OliverLoescher
         }
         public void SetMax(float pValue)
         {
+            float change = Mathf.Abs(maxValue - pValue);
+            
             maxValue = pValue;
             value = Mathf.Clamp(pValue, 0.0f, maxValue);
             
-            UIBar.SetValue(value / maxValue);
-            onMaxValueChanged?.Invoke(maxValue);
+            OnMaxValueChanged(maxValue, change);
         }
 
         private IEnumerator RechargeRoutine()
@@ -114,23 +123,53 @@ namespace OliverLoescher
             }
 
             if (canRechargeBackIn && isOut)
-                ValueIn();
+                OnValueIn();
         }
 
-        private void ValueOut()
+        public virtual void OnValueChanged(float pValue, float pChange)
         {
-            onValueOut?.Invoke();
+            UIBar.SetValue(pValue / maxValue);
+
+            onValueChangedEvent?.Invoke(pValue, pChange);
+            onValueChanged?.Invoke(pValue, pChange);
+        }
+
+        public virtual void OnValueLowered(float pValue, float pChange)
+        {
+            onValueLoweredEvent?.Invoke(pValue, pChange);
+            onValueLowered?.Invoke(pValue, pChange);
+        }
+
+        public virtual void OnValueRaised(float pValue, float pChange)
+        {
+            onValueRaisedEvent?.Invoke(pValue, pChange);
+            onValueRaised?.Invoke(pValue, pChange);
+        }
+
+        public virtual void OnValueOut()
+        {
             isOut = true;
-
             UIBar.SetToggled(true);
+
+            onValueOutEvent?.Invoke();
+            onValueOut?.Invoke();
         }
 
-        private void ValueIn()
+        public virtual void OnValueIn()
         {
-            onValueIn?.Invoke();
             isOut = false;
-
             UIBar.SetToggled(false);
+
+            onValueInEvent?.Invoke();
+            onValueIn?.Invoke();
+        }
+
+        public virtual void OnMaxValueChanged(float pMaxValue, float pChange)
+        {
+            UIBar.SetValue(value / pMaxValue);
+            
+            onMaxValueChangedEvent?.Invoke(pMaxValue, pChange);
+            onMaxValueChanged?.Invoke(pMaxValue, pChange);
         }
     }
 }

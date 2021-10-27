@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 5bd4f02bb7d63e244b3387967673f1ee, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 6def88fa98484c54296eff0749070414, type: 3}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -128,15 +128,60 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   topBar: {fileID: 8660643480458000540}
   bottemBar: {fileID: 8660643481660087207}
+  backgroudBar: {fileID: 8660643482377299469}
   coloringImage: {fileID: 8660643480458000540}
+  secondColoringImage: {fileID: 0}
+  defaultColor: {r: 0.9, g: 0.31500003, b: 0.31500003, a: 1}
+  secondDefaultColor: {r: 0, g: 0, b: 1, a: 1}
   healColor: {r: 0, g: 1, b: 0, a: 1}
-  damageColor: {r: 1, g: 0, b: 0, a: 1}
-  shieldColor: {r: 0, g: 0, b: 1, a: 1}
+  toggledColor: {r: 0.31500003, g: 0.31500003, b: 0.9, a: 1}
+  secondToggledColor: {r: 0, g: 0, b: 1, a: 1}
   inactiveColor: {r: 0.25, g: 0.25, b: 0.25, a: 1}
+  secondInactiveColor: {r: 0, g: 0, b: 1, a: 1}
   delay: 0.75
   seconds: 1
-  colorSeconds: 0.1
-  doColorFades: 0
+  colorSeconds: 0.3
+  fadeInSeconds: 0.25
+  fadeOutDelay: 2
+  fadeOutSeconds: 1
+  useCurve: 0
+  valueCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0.25
+      outSlope: 0.25
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.2
+      value: 0.05
+      inSlope: 0.71875
+      outSlope: 0.71875
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 1.1875
+      outSlope: 1.1875
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  doHealColor: 0
+  doColorFades: 1
+  doFadeIn: 0
+  doFadeBackOut: 0
 --- !u!1 &8660643481660087209
 GameObject:
   m_ObjectHideFlags: 0
@@ -202,7 +247,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 5bd4f02bb7d63e244b3387967673f1ee, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 6def88fa98484c54296eff0749070414, type: 3}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -277,8 +322,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 5bd4f02bb7d63e244b3387967673f1ee, type: 3}
-  m_Type: 0
+  m_Sprite: {fileID: 21300000, guid: 6def88fa98484c54296eff0749070414, type: 3}
+  m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 0

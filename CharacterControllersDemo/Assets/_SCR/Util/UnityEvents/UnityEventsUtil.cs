@@ -26,6 +26,9 @@ namespace OliverLoescher
         public class FloatEvent : UnityEvent<float> { }
 
         [System.Serializable]
+        public class DoubleFloatEvent : UnityEvent<float, float> { }
+
+        [System.Serializable]
         public class Vector2Event : UnityEvent<Vector2> { }
 
         [System.Serializable]

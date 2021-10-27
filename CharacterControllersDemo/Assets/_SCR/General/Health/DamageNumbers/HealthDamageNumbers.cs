@@ -1,45 +1,48 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using OliverLoescher;
 
-[RequireComponent(typeof(Health))]
-public class HealthDamageNumbers : MonoBehaviour
+namespace OliverLoescher
 {
-    private Health health;
-
-    private void Awake() 
+    [RequireComponent(typeof(Health))]
+    public class HealthDamageNumbers : MonoBehaviour
     {
-        health = GetComponent<Health>();
+        [SerializeField] private Vector3 offset = Vector3.up * 2;
 
-        health.onValueLowered.AddListener(OnDamaged);
-        health.onValueRaised.AddListener(OnHealed);
-        health.onValueOut.AddListener(OnDeath);
-    }
+        private Health health;
 
-    public void OnDamaged(float pValue)
-    {
-        // Color c = pBool ? CritDamagedColor : DamagedColor;
-        DisplayNumber(Mathf.CeilToInt(pValue), health.damageColor);
-    }
+        private void Awake() 
+        {
+            health = GetComponent<Health>();
 
-    public void OnHealed(float pValue)
-    {
-        DisplayNumber(Mathf.CeilToInt(pValue), health.healColor);
-    }
+            health.onValueLowered.AddListener(OnDamaged);
+            health.onValueRaised.AddListener(OnHealed);
+            health.onValueOut.AddListener(OnDeath);
+        }
 
-    public void OnDeath()
-    {
-        DisplayNumber("DEATH", health.deathColor);
-    }
+        public void OnDamaged(float pValue, float pChange)
+        {
+            DisplayNumber(Mathf.CeilToInt(pChange), health.damageColor);
+        }
 
-    public void DisplayNumber(int pValue, Color pColor)
-    {
-        DisplayNumber((Mathf.Abs(pValue) * 15).ToString(), pColor);
-    }
+        public void OnHealed(float pValue, float pChange)
+        {
+            DisplayNumber(Mathf.CeilToInt(pChange), health.healColor);
+        }
 
-    public void DisplayNumber(string pText, Color pColor)
-    {
-        DamageNumbers.Instance.DisplayNumber(pText, transform.position + Vector3.up * 2, pColor);
+        public void OnDeath()
+        {
+            DisplayNumber("DEATH", health.deathColor);
+        }
+
+        public void DisplayNumber(int pValue, Color pColor)
+        {
+            DisplayNumber((Mathf.Abs(pValue)).ToString(), pColor);
+        }
+
+        public void DisplayNumber(string pText, Color pColor)
+        {
+            DamageNumbers.Instance.DisplayNumber(pText, transform.position + offset, pColor);
+        }
     }
 }

@@ -47,21 +47,10 @@ public class Projectile : PoolElement
     {
         if (lastHitFrame != currentFrame) // if death of natural cause (lifeTime) and not because of a hit
         {
-            // if (data.bulletExplosion != WeaponData.BulletExplosion.Null) // Explode
-            //     DoExplosion(transform.position);
-            // else
-                PlayParticle(impactParticle, transform.position);
+            PlayParticle(impactParticle, transform.position);
         }
-        // else
-        // {
-        //     if (data.bulletExplosion == WeaponData.BulletExplosion.ExplodeOnDeath) // Explode
-        //         DoExplosion(transform.position);
-        // }
 
         activeSelf = false;
-
-        // homingTrigger.gameObject.SetActive(false);
-        // homingTrigger.Clear();
 
         CancelInvoke();
         base.ReturnToPool();
@@ -85,13 +74,6 @@ public class Projectile : PoolElement
         rigidbody.velocity = pForce;
         transform.position += transform.forward * spawnOffsetZ;
 
-        // if (data.bulletHoming != WeaponData.BulletHoming.Null)
-        // {
-        //     homingTrigger.homing = data.bulletHoming;
-        //     homingTrigger.SetTrigger(data.homingTriggerDistance, data.homingTriggerRadius);
-        //     homingTrigger.gameObject.SetActive(true);
-        // }
-
         startPos = transform.position;
         previousPosition = transform.position;
 
@@ -109,28 +91,6 @@ public class Projectile : PoolElement
             rigidbody.AddForce(Vector3.down * data.bulletGravity * Time.fixedDeltaTime, ForceMode.VelocityChange);
             updateRot = true;
         }
-
-        // if (data.bulletHoming != WeaponData.BulletHoming.Null)
-        // {
-        //     // Update transform because childing causing this script to pick up OnTriggerEnter()
-        //     homingTrigger.transform.position = transform.position;
-        //     homingTrigger.transform.rotation = transform.rotation;
-
-        //     if (homingTrigger.targets.Count > 0)
-        //     {
-        //         if (data.homingMovement == WeaponData.BulletHomingMovement.RotateVelocity)
-        //         {
-        //             Vector3 dir = homingTrigger.targets[0].position - transform.position;
-        //             rigidbody.velocity = Vector3.RotateTowards(rigidbody.velocity, dir, data.homingDegPerSecond * Mathf.Deg2Rad * Time.fixedDeltaTime, 0);
-        //         }
-        //         else // WeaponData.BulletHomingMovement.AddForce
-        //         {
-        //             Vector3 f = (homingTrigger.targets[0].position - transform.position).normalized * data.homingForce * Time.fixedDeltaTime;
-        //             rigidbody.AddForce(f, ForceMode.VelocityChange);
-        //         }
-        //         updateRot = true;
-        //     }
-        // }
 
         if (updateRot)
         {
@@ -172,10 +132,7 @@ public class Projectile : PoolElement
         if (canDamage == false || currentFrame < 1 || other.isTrigger || other == lastHitCollider || other.gameObject == sender)
             return;
 
-        // if (data.bulletExplosion != WeaponData.BulletExplosion.ExplodeOnHit)
-            DamageOther(other, point);
-        // else
-        //     DoExplosion(point);
+        DamageOther(other, point);
 
         lastHitFrame = currentFrame;
         lastHitCollider = other;
@@ -186,7 +143,7 @@ public class Projectile : PoolElement
 
     private void DamageOther(Collider other, Vector3 point)
     {
-        // Debug.Log("[Projectile.cs] DamageOther " + other.name, other.gameObject);
+        Debug.Log("[Projectile.cs] DamageOther(" + other.name + ")", other);
         Rigidbody otherRb = other.GetComponentInParent<Rigidbody>();
         if (otherRb != null)
             otherRb.AddForceAtPosition(rigidbody.velocity.normalized * data.hitForce, point);

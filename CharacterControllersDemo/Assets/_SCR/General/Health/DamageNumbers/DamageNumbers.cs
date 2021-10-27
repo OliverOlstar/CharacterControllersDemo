@@ -54,7 +54,8 @@ public class DamageNumbers : MonoBehaviour
         texts[index].text = pText;
         //textsMat[index].SetColor("_EmissionColor", pColor);
 
-        pPosition += new Vector3(Random.Range(-randomOffset, randomOffset), 0, Random.Range(-randomOffset, randomOffset));
+        Vector2 offset = Random.insideUnitCircle * randomOffset * 0.5f;
+        pPosition += new Vector3(offset.x, 0, offset.y);
 
         if (textRoutines[index] != null)
             StopCoroutine(textRoutines[index]);

@@ -10,6 +10,8 @@ public class BarValue : MonoBehaviour
 
     [SerializeField] private Image topBar = null;
     [SerializeField] private Image bottemBar = null;
+    [SerializeField, ShowIf("@doFadeIn")] private Image backgroudBar = null;
+    private Coroutine moveRoutine = null;
 
     [Header("Colors")]
     [Tooltip("Leave null if color changing is not desired")]
@@ -24,28 +26,68 @@ public class BarValue : MonoBehaviour
     [HideIf("@secondColoringImage == null"), SerializeField] private Color secondInactiveColor = new Color(0.0f, 0.0f, 1.0f, 1.0f);
 
     [Header("Timings")]
-    [SerializeField, Min(0)] private float delay = 0.75f;
+    [SerializeField, Min(0.0f)] private float delay = 0.75f;
     [Tooltip("Seconds for bar to fill from 0% to 100% (0% to 50% will take half the amount of seconds)")]
-    [SerializeField, Min(0.00001f)] private float seconds = 1.0f;
+    [SerializeField, DisableInPlayMode, Min(0.00001f)] private float seconds = 1.0f;
     private float inverseSeconds;
-    [ShowIf("@doColorFades && coloringImage != null"), SerializeField, Min(0.00001f)] private float colorSeconds = 0.1f;
+
+    [Space]
+    [ShowIf("@doColorFades && coloringImage != null"), DisableInPlayMode, SerializeField, Min(0.00001f)] private float colorSeconds = 0.1f;
     private float inverseColorSeconds;
 
+    [Space]
+    [SerializeField, DisableInPlayMode, ShowIf("@doFadeIn"), Min(0.0f)] private float fadeInSeconds = 1.0f;
+    private float inverseFadeInSeconds;
+    [SerializeField, Min(0.0f), ShowIf("@doFadeIn && fadeOutType != FadeOutType.Null")] private float fadeOutDelay = 2.0f;
+    [SerializeField, DisableInPlayMode, ShowIf("@doFadeIn && fadeOutType != FadeOutType.Null"), Min(0.0f)] private float fadeOutSeconds = 1.0f;
+    private float inverseFadeOutSeconds;
+
     [Header("Options")]
+    [SerializeField] private bool useCurve = false;
+    [SerializeField, ShowIf("@useCurve")] private AnimationCurve valueCurve = new AnimationCurve(new Keyframe(0.0f, 0.0f, -1.0f, 1.0f), new Keyframe(1.0f, 1.0f, -1.0f, 1.0f));
     [HideIf("@coloringImage == null"), SerializeField] private bool doHealColor = false;
     [HideIf("@coloringImage == null"), SerializeField] private bool doColorFades = false;
+    [SerializeField] private bool doFadeIn = false;
+    [SerializeField, ShowIf("@doFadeIn")] private FadeOutType fadeOutType = FadeOutType.Null;
 
     private bool isToggled = false;
+
     private Coroutine colorRoutine = null;
     private Coroutine secondColorRoutine = null;
+
+    private Coroutine fadeRoutine = null;
+    private bool isFadedOut = false;
+    private float fadeOutTime = 0.0f;
 
     private void Awake() 
     {
         inverseSeconds = 1 / seconds;
         inverseColorSeconds = 1 / colorSeconds;
+        inverseFadeInSeconds = 1 / fadeInSeconds;
+        inverseFadeOutSeconds = 1 / fadeOutSeconds;
 
-        topBar.fillAmount = 1;
-        bottemBar.fillAmount = 1;
+        InitValue(1.0f);
+    }
+
+    public void InitValue(float pValue01)
+    {
+        if (useCurve)
+            pValue01 = valueCurve.Evaluate(pValue01);
+
+        if (moveRoutine != null)
+            StopCoroutine(moveRoutine);
+
+        bottemBar.fillAmount = pValue01;
+        topBar.fillAmount = pValue01;
+        
+        SetColor(defaultColor, secondDefaultColor, true);
+
+        FadeInit();
+    }
+
+    private void Update() 
+    {
+        UpdateFade();
     }
 
     private void OnEnable() 
@@ -76,11 +118,15 @@ public class BarValue : MonoBehaviour
     {
         if (enabled == false) { return; }
 
-        StopAllCoroutines();
+        if (useCurve)
+            pValue01 = valueCurve.Evaluate(pValue01);
+
+        if (moveRoutine != null)
+            StopCoroutine(moveRoutine);
 
         if (pValue01 > topBar.fillAmount)
         {
-            StartCoroutine(TopBarRoutine(pValue01));
+            moveRoutine = StartCoroutine(TopBarRoutine(pValue01));
             bottemBar.fillAmount = pValue01;
 
             if (doHealColor)
@@ -88,7 +134,7 @@ public class BarValue : MonoBehaviour
         }
         else
         {
-            StartCoroutine(BottemBarRoutine(pValue01));
+            moveRoutine = StartCoroutine(BottemBarRoutine(pValue01));
             topBar.fillAmount = pValue01;
             
             if (doHealColor)
@@ -99,6 +145,8 @@ public class BarValue : MonoBehaviour
                     SetColor(defaultColor, secondDefaultColor);
             }
         }
+        
+        ResetFade();
     }
 
     private IEnumerator TopBarRoutine(float pValue01)
@@ -123,6 +171,7 @@ public class BarValue : MonoBehaviour
         }
     }
 
+#region Color
     public void SetColor(Color pColor, bool pInstant = false)
     {
         SetColor(coloringImage, pColor, colorRoutine, pInstant);
@@ -146,8 +195,7 @@ public class BarValue : MonoBehaviour
             }
             else
             {
-                pColor.a = pImage.color.a;
-                pImage.color = pColor;
+                SetImageColor(pImage, pColor);
             }
         }
     }
@@ -163,9 +211,100 @@ public class BarValue : MonoBehaviour
             while (progress01 < 1)
             {
                 progress01 += Time.deltaTime * inverseColorSeconds;
-                pImage.color = Color.Lerp(startColor, pColor, progress01);
+                SetImageColor(pImage, Color.Lerp(startColor, pColor, progress01));
                 yield return null;
             }
         }
     }
+
+    // This is called any time the color of the image is to be set
+    private void SetImageColor(Image pImage, Color pColor)
+    {
+        pColor.a = pImage.color.a;
+        pImage.color = pColor;
+    }
+#endregion
+
+#region Fading
+    private void FadeInit()
+    {
+        if (doFadeIn) // If should do any fading
+        {
+            SetImageAlpha(topBar, 0.0f);
+            SetImageAlpha(bottemBar, 0.0f);
+            SetImageAlpha(backgroudBar, 0.0f);
+            isFadedOut = true;
+        }
+        else
+        {
+            fadeOutType = FadeOutType.Null;
+        }
+    }
+
+    private void ResetFade()
+    {
+        if (doFadeIn) // If should do any fading
+        {
+            if (isFadedOut) // Fade In
+            {
+                if (fadeRoutine != null)
+                    StopCoroutine(fadeRoutine);
+                fadeRoutine = StartCoroutine(FadeRoutine(false, inverseFadeInSeconds));
+            }
+             
+            if (fadeOutType != FadeOutType.Null) // Fade Out
+            {
+                fadeOutTime = Time.time + fadeOutDelay;
+            }
+        }
+    }
+
+    private void UpdateFade()
+    {
+        if (fadeOutType == FadeOutType.Always || (topBar.fillAmount == 1 && fadeOutType == FadeOutType.OnlyWhenMax))
+            if (isFadedOut == false && Time.time >= fadeOutTime) // Fade Out
+            {
+                if (fadeRoutine != null)
+                    StopCoroutine(fadeRoutine);
+                fadeRoutine = StartCoroutine(FadeRoutine(true, inverseFadeOutSeconds));
+            }
+    }
+
+    private IEnumerator FadeRoutine(bool pOut, float pInverseSeconds)
+    {
+        isFadedOut = pOut;
+
+        // Fade
+        float progress01 = 0;
+        while (progress01 < 1)
+        {
+            progress01 += Time.deltaTime * pInverseSeconds;
+            float v;
+
+            if (pOut)
+                v = Mathf.Lerp(1, 0, progress01);
+            else
+                v = Mathf.Lerp(0, 1, progress01);
+
+            SetImageAlpha(topBar, v);
+            SetImageAlpha(bottemBar, v);
+            SetImageAlpha(backgroudBar, v);
+            yield return null;
+        }
+    }
+
+    private void SetImageAlpha(Image pImage, float pAlpha)
+    {
+        Color c = pImage.color;
+        c.a = pAlpha;
+        pImage.color = c;
+    }
+
+    public enum FadeOutType
+    {
+        Null,
+        OnlyWhenMax,
+        Always
+    }
+#endregion
 }
