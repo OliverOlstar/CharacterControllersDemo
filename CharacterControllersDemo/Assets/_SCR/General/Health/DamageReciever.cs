@@ -39,14 +39,12 @@ namespace OliverLoescher
         public void Damage(float pValue, GameObject pAttacker, Vector3 pPoint, Vector3 pDirection, Color pColor)
         {
             pValue = DamageMultipler(pValue);
-            Debug.Log("[DamageReciever.cs] Damage()1 - Damage: " + pValue);
             parent.Damage(pValue, pAttacker, pPoint, pDirection, pColor);
         }
 
         public void Damage(float pValue, GameObject pAttacker, Vector3 pPoint, Vector3 pDirection)
         {
             pValue = DamageMultipler(pValue);
-            Debug.Log("[DamageReciever.cs] Damage()2 - Damage: " + pValue);
             parent.Damage(pValue, pAttacker, pPoint, pDirection);
         }
 

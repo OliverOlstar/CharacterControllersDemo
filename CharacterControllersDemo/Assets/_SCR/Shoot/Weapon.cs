@@ -125,7 +125,7 @@ public class Weapon : MonoBehaviour
             // Recoil
             if (recoilBody != null && data.recoilForce != Vector3.zero)
             {
-                recoilBody.AddForceAtPosition(transform.TransformDirection(data.recoilForce), muzzle.position, ForceMode.VelocityChange);
+                recoilBody.AddForceAtPosition(muzzle.TransformDirection(data.recoilForce), muzzle.position, ForceMode.VelocityChange);
             }
 
             // Spread

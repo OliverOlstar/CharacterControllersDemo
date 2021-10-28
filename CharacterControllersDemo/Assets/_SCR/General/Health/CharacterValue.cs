@@ -6,6 +6,7 @@ using Sirenix.OdinInspector;
 
 namespace OliverLoescher
 {
+    [DisallowMultipleComponent]
     public class CharacterValue : MonoBehaviour
     {
         public delegate void ValueChangeEvent(float pValue, float pChange);
@@ -25,7 +26,7 @@ namespace OliverLoescher
         [SerializeField, Min(0.0f), ShowIf("@doRecharge")] private float rechargeRate = 20.0f;
 
         [Header("UI")]
-        [SerializeField] protected BarValue UIBar = null;
+        [SerializeField] protected List<BarValue> UIBars = new List<BarValue>();
 
         public ValueChangeEvent onValueChangedEvent;
         public ValueChangeEvent onValueLoweredEvent;
@@ -47,8 +48,18 @@ namespace OliverLoescher
         {
             maxValue = value;
 
-            if (UIBar != null)
-                UIBar.InitValue(1.0f);
+            for (int i = 0; i < UIBars.Count; i++)
+            {
+                if (UIBars[i] == null)
+                {
+                    UIBars.RemoveAt(i);
+                    i--;
+                }
+                else
+                {
+                    UIBars[i].InitValue(1.0f);
+                }
+            }
         }
 
         public float Get() { return value; }
@@ -119,8 +130,8 @@ namespace OliverLoescher
                 value += Time.deltaTime * rechargeRate;
                 value = Mathf.Min(value, maxValue);
 
-                if (UIBar != null)
-                    UIBar.SetValue(value / maxValue);
+                foreach (BarValue bar in UIBars)
+                    bar.SetValue(value / maxValue);
 
                 yield return null;
             }
@@ -131,8 +142,8 @@ namespace OliverLoescher
 
         public virtual void OnValueChanged(float pValue, float pChange)
         {
-            if (UIBar != null)
-                UIBar.SetValue(pValue / maxValue);
+            foreach (BarValue bar in UIBars)
+                bar.SetValue(pValue / maxValue);
 
             onValueChangedEvent?.Invoke(pValue, pChange);
             onValueChanged?.Invoke(pValue, pChange);
@@ -153,8 +164,8 @@ namespace OliverLoescher
         public virtual void OnValueOut()
         {
             isOut = true;
-            if (UIBar != null)
-                UIBar.SetToggled(true);
+            foreach (BarValue bar in UIBars)
+                bar.SetToggled(true);
 
             onValueOutEvent?.Invoke();
             onValueOut?.Invoke();
@@ -163,8 +174,8 @@ namespace OliverLoescher
         public virtual void OnValueIn()
         {
             isOut = false;
-            if (UIBar != null)
-                UIBar.SetToggled(false);
+            foreach (BarValue bar in UIBars)
+                bar.SetToggled(false);
 
             onValueInEvent?.Invoke();
             onValueIn?.Invoke();
@@ -172,8 +183,8 @@ namespace OliverLoescher
 
         public virtual void OnMaxValueChanged(float pMaxValue, float pChange)
         {
-            if (UIBar != null)
-                UIBar.SetValue(value / pMaxValue);
+            foreach (BarValue bar in UIBars)
+                bar.SetValue(value / pMaxValue);
             
             onMaxValueChangedEvent?.Invoke(pMaxValue, pChange);
             onMaxValueChanged?.Invoke(pMaxValue, pChange);

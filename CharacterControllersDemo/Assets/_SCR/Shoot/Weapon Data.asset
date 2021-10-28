@@ -40,7 +40,7 @@ MonoBehaviour:
   spreadRadiusMax: 20
   spreadIncrease: 0.4
   spreadDecrease: 0.6
-  recoilForce: {x: 0, y: 0, z: 0}
+  recoilForce: {x: 0, y: 0, z: -0.6}
   hitForce: 8
   ammoType: 2
   totalAmmo: 12

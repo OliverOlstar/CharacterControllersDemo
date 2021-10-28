@@ -11,6 +11,7 @@ public class PhotonViewPlayerInstance : MonoBehaviour
 
     [SerializeField] private CinemachineVirtualCamera myCamera = null;
     [SerializeField] private Rigidbody myRigidbody = null;
+    [SerializeField] private OliverLoescher.DamageFlash damageFlash = null;
     [SerializeField] private GameObject[] destroyObjectsIfNotMine = new GameObject[0];
     [SerializeField] private GameObject[] destroyObjectsIfMine = new GameObject[0];
 
@@ -23,14 +24,15 @@ public class PhotonViewPlayerInstance : MonoBehaviour
             myRigidbody.isKinematic = true;
             foreach (GameObject go in destroyObjectsIfNotMine)
             {
-                Destroy(go);
+                DestroyImmediate(go);
             }
         }
         else
         {
+            DestroyImmediate(damageFlash);
             foreach (GameObject go in destroyObjectsIfMine)
             {
-                Destroy(go);
+                DestroyImmediate(go);
             }
         }
     }

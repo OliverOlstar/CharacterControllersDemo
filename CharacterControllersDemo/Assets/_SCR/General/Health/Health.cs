@@ -38,14 +38,7 @@ namespace OliverLoescher
 
         public virtual void Damage(float pValue, GameObject pSender, Vector3 pPoint, Vector3 pDirection, Color pColor)
         {
-            if (photonView != null)
-            {
-                photonView.RPC("RPC_Damage", RpcTarget.All, pValue);
-            }
-            else
-            {
-                Modify(-pValue);
-            }
+            Damage(pValue, pSender, pPoint, pDirection);
         }
 
         [Button()]
@@ -53,12 +46,10 @@ namespace OliverLoescher
         {
             if (photonView != null)
             {
-                photonView.RPC("RPC_Damage", RpcTarget.All, pValue);
+                photonView.RPC("RPC_Damage", RpcTarget.Others, pValue);
             }
-            else
-            {
-                Modify(-pValue);
-            }
+
+            Modify(-pValue);
         }
 
         public virtual void Death() 
@@ -78,19 +69,19 @@ namespace OliverLoescher
         public void Respawn()
         {
             value = maxValue;
-            if (UIBar != null)
-                UIBar.InitValue(1);
+            foreach (BarValue bar in UIBars)
+                bar.InitValue(1);
             isOut = false;
         }
 
         [PunRPC]
-        private void RPC_Damage(float pValue)
+        private void RPC_Damage(float pValue, PhotonMessageInfo pInfo)
         {
-            if (!photonView.IsMine)
-                return;
+            // if (!photonView.IsMine)
+            //     return;
 
-            Debug.Log("Damaged RPC " + pValue, gameObject);
-            // Modify(-pValue);
+            Debug.Log(pInfo.Sender.NickName + " Damaged " + photonView.Owner.NickName + ": " + pValue, gameObject);
+            Modify(-pValue);
         }
     }
 }
