@@ -419,8 +419,7 @@ MonoBehaviour:
   rechargeValueTo: 100
   rechargeDelay: 1
   rechargeRate: 110
-  UIBars:
-  - {fileID: 0}
+  UIBars: []
   onValueChanged:
     m_PersistentCalls:
       m_Calls: []

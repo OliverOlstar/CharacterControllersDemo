@@ -477,6 +477,118 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Simple2D"",
+            ""id"": ""05feaf8d-442f-425b-b909-c250f07e4b0d"",
+            ""actions"": [
+                {
+                    ""name"": ""Move"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""d7dedb0b-5bc1-4570-9c8f-6268da55e617"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Jump"",
+                    ""type"": ""Button"",
+                    ""id"": ""2f8c227a-26ce-4ec6-9c79-36244d45f50f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""267f654d-8cf5-4250-8766-528658026fb7"",
+                    ""path"": ""<Gamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""WASD"",
+                    ""id"": ""71128c83-089f-46e8-a1c8-fc147ed3b47c"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""e631dd95-ade6-4bfd-b4fb-c287e54b0911"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""e1c784ea-b94c-4a5f-993f-4ec7bdef59ed"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""a7ace4f1-19ab-4543-a8ef-9a0fe84a7852"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""4fc57d00-8a1c-4590-bb6b-a07bf8e911fa"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""18fc9b31-85d8-4a11-8968-a2e7cdddabe6"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""dabaa6aa-d91b-41e5-8068-2eb65f4f430a"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -526,6 +638,10 @@ public class @PlayerInput : IInputActionCollection, IDisposable
         m_FPS_Sprint = m_FPS.FindAction("Sprint", throwIfNotFound: true);
         m_FPS_Jump = m_FPS.FindAction("Jump", throwIfNotFound: true);
         m_FPS_Primary = m_FPS.FindAction("Primary", throwIfNotFound: true);
+        // Simple2D
+        m_Simple2D = asset.FindActionMap("Simple2D", throwIfNotFound: true);
+        m_Simple2D_Move = m_Simple2D.FindAction("Move", throwIfNotFound: true);
+        m_Simple2D_Jump = m_Simple2D.FindAction("Jump", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -734,6 +850,47 @@ public class @PlayerInput : IInputActionCollection, IDisposable
         }
     }
     public FPSActions @FPS => new FPSActions(this);
+
+    // Simple2D
+    private readonly InputActionMap m_Simple2D;
+    private ISimple2DActions m_Simple2DActionsCallbackInterface;
+    private readonly InputAction m_Simple2D_Move;
+    private readonly InputAction m_Simple2D_Jump;
+    public struct Simple2DActions
+    {
+        private @PlayerInput m_Wrapper;
+        public Simple2DActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Move => m_Wrapper.m_Simple2D_Move;
+        public InputAction @Jump => m_Wrapper.m_Simple2D_Jump;
+        public InputActionMap Get() { return m_Wrapper.m_Simple2D; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(Simple2DActions set) { return set.Get(); }
+        public void SetCallbacks(ISimple2DActions instance)
+        {
+            if (m_Wrapper.m_Simple2DActionsCallbackInterface != null)
+            {
+                @Move.started -= m_Wrapper.m_Simple2DActionsCallbackInterface.OnMove;
+                @Move.performed -= m_Wrapper.m_Simple2DActionsCallbackInterface.OnMove;
+                @Move.canceled -= m_Wrapper.m_Simple2DActionsCallbackInterface.OnMove;
+                @Jump.started -= m_Wrapper.m_Simple2DActionsCallbackInterface.OnJump;
+                @Jump.performed -= m_Wrapper.m_Simple2DActionsCallbackInterface.OnJump;
+                @Jump.canceled -= m_Wrapper.m_Simple2DActionsCallbackInterface.OnJump;
+            }
+            m_Wrapper.m_Simple2DActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @Move.started += instance.OnMove;
+                @Move.performed += instance.OnMove;
+                @Move.canceled += instance.OnMove;
+                @Jump.started += instance.OnJump;
+                @Jump.performed += instance.OnJump;
+                @Jump.canceled += instance.OnJump;
+            }
+        }
+    }
+    public Simple2DActions @Simple2D => new Simple2DActions(this);
     private int m_KeyboardMouseSchemeIndex = -1;
     public InputControlScheme KeyboardMouseScheme
     {
@@ -771,5 +928,10 @@ public class @PlayerInput : IInputActionCollection, IDisposable
         void OnSprint(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnPrimary(InputAction.CallbackContext context);
+    }
+    public interface ISimple2DActions
+    {
+        void OnMove(InputAction.CallbackContext context);
+        void OnJump(InputAction.CallbackContext context);
     }
 }

@@ -42,6 +42,12 @@ namespace OliverLoescher.Multiplayer
         {
             if (pScene.buildIndex == 1) // Game scene
             {
+                // if (PhotonNetwork.IsConnected == false)
+                // {
+                //     SceneManager.LoadScene(0);
+                //     return;
+                // }
+
                 PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerManager"), Vector3.zero, Quaternion.identity);
             }
         }
