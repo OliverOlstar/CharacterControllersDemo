@@ -12,7 +12,7 @@ namespace OliverLoescher
         [DisableInPlayMode] [SerializeField] private GameObject parentObject = null;
         [SerializeField] private float damageMultiplier = 1.0f;
 
-        private void Start() 
+        private void Awake() 
         {
             if (parentObject == null)
             {

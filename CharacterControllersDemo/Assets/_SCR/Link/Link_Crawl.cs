@@ -51,7 +51,7 @@ namespace OliverLoescher.Link
         
         public override void OnFixedUpdate()
         {
-            if (grounded.IsGrounded())
+            if (grounded.isGrounded)
             {
                 if (input.moveInput != Vector2.zero)
                 {
@@ -84,7 +84,7 @@ namespace OliverLoescher.Link
 
         public void OnCrouchPerformed()
         {
-            if (grounded.IsGrounded() && machine.IsDefaultState())
+            if (grounded.isGrounded && machine.IsDefaultState())
             {
                 machine.SwitchState(this);
             }

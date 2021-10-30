@@ -38,7 +38,7 @@ namespace OliverLoescher.Link
         
         public override void OnFixedUpdate()
         {
-            if (grounded.IsGrounded())
+            if (grounded.isGrounded)
             {
                 if (input.moveInput != Vector2.zero)
                 {

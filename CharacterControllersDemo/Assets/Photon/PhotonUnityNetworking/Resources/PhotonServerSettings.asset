@@ -38,6 +38,11 @@ MonoBehaviour:
   - DestroyRpc
   - RPC_Damage
   - RPC_SpawnOtherPlayer
+  - RPC_Shoot
+  - RPC_ShootFailed
+  - RPC_ShootProjectile
+  - RPC_ShootRaycast
+  - RPC_ShootRaycastMissed
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 0

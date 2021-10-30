@@ -13,16 +13,14 @@ namespace OliverLoescher.Multiplayer
             public static RoomManager Instance = null;
             private void Awake() 
             {
-                if (Instance == null)
+                if (Instance != null)
                 {
-                    DontDestroyOnLoad(gameObject);
-                    Instance = this;
+                    Debug.LogError("[RoomManager.cs] Instance != null, destroying other", gameObject);
+                    Destroy(Instance);
                 }
-                else if (Instance != this)
-                {
-                    Debug.LogError("[RoomManager.cs] Instance != null, destroying self", gameObject);
-                    Destroy(this);
-                }
+                
+                DontDestroyOnLoad(gameObject);
+                Instance = this;
             }
     #endregion    
 
@@ -42,13 +40,19 @@ namespace OliverLoescher.Multiplayer
         {
             if (pScene.buildIndex == 1) // Game scene
             {
-                // if (PhotonNetwork.IsConnected == false)
-                // {
-                //     SceneManager.LoadScene(0);
-                //     return;
-                // }
+                if (PhotonNetwork.IsConnected == false)
+                {
+                    SceneManager.LoadScene(0);
+                    return;
+                }
 
                 PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerManager"), Vector3.zero, Quaternion.identity);
+            }
+            else if (pScene.buildIndex == 0)
+            {
+                if (Instance == this)
+                    Instance = null;
+                Destroy(gameObject);
             }
         }
     }

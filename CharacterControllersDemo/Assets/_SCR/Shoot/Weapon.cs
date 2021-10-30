@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using Sirenix.OdinInspector;
 using UnityEditor;
+using Photon.Pun;
 
 public class Weapon : MonoBehaviour
 {
@@ -14,10 +15,11 @@ public class Weapon : MonoBehaviour
     private float nextCanShootTime = 0;
     private int burstFireActiveCount = 0;
 
-    [Header("Refences")]
+    [Header("References")]
     [SerializeField] protected Transform[] muzzlePoints = new Transform[1];
     [SerializeField] private ParticleSystem muzzleFlash = null;
     [ShowIf("@muzzleFlash != null")] [SerializeField] private Vector3 muzzleFlashRelOffset = new Vector3();
+    [SerializeField] private PhotonView photonView = null;
 
     [Space]
     public GameObject sender = null;
@@ -157,39 +159,48 @@ public class Weapon : MonoBehaviour
 
             // Event
             OnFailedShoot?.Invoke();
+            
+            // Multiplayer
+            if (photonView != null && photonView.IsMine)
+                photonView.RPC("RPC_ShootFailed", RpcTarget.Others);
         }        
     }
 
     protected virtual void SpawnProjectile(Transform pMuzzle)
     {
-        GameObject projectile;
+        // GameObject projectile;
 
         // Spawn projectile
-        if (data.projecilePoolKey != "")
-        {
-            projectile = ObjectPoolDictionary.dictionary[data.projecilePoolKey].CheckOutObject(true);
-            if (projectile == null)
-                return;
-        }
-        else
-        {
-            projectile = Instantiate(data.projectilePrefab);
-        }
+        // if (data.projecilePoolKey != "")
+        // {
+        //     projectile = ObjectPoolDictionary.dictionary[data.projecilePoolKey].CheckOutObject(true);
+        //     if (projectile == null)
+        //         return;
+        // }
+        // else
+        // {
+        //     projectile = Instantiate(data.projectileMultiplayerPrefab);
+        // }
         
-        projectile.transform.position = pMuzzle.position;
-        projectile.transform.rotation = pMuzzle.rotation * Quaternion.Euler(GetSpreadVector());
+        // projectile.transform.position = pMuzzle.position;
+        // projectile.transform.rotation = pMuzzle.rotation * Quaternion.Euler(GetSpreadVector());
 
-        Projectile projectileScript = projectile.GetComponentInChildren<Projectile>();
-        projectileScript.data = data;
+        // Projectile projectileScript = projectile.GetComponentInChildren<Projectile>();
+        // projectileScript.data = data;
 
-        projectileScript.sender = sender;
+        // projectileScript.sender = sender;
 
-        projectileScript.Init(Random.Range(data.shootForce.x, data.shootForce.y) * projectile.transform.forward);
+        Vector3 force = Random.Range(data.shootForce.x, data.shootForce.y) * (GetSpreadQuaternion() * pMuzzle.forward);
+        // projectileScript.Init(force);
+
+        // Multiplayer
+        if (photonView != null && photonView.IsMine)
+            photonView.RPC("RPC_ShootProjectile", RpcTarget.All, pMuzzle.position, force);
     }
 
     protected virtual void SpawnRaycast(Transform pMuzzle)
     {
-        Vector3 dir = pMuzzle.forward + (GetSpreadVector() * 0.01f);
+        Vector3 dir = GetSpreadQuaternion() * pMuzzle.forward;
         if (Physics.Raycast(pMuzzle.position, dir, out RaycastHit hit, data.range, data.layerMask, QueryTriggerInteraction.Ignore)) 
         {
             ApplyParticleFX(hit.point, Quaternion.FromToRotation(Vector3.forward, hit.normal), hit.collider);
@@ -203,6 +214,16 @@ public class Weapon : MonoBehaviour
             IDamageable a = hit.collider.GetComponent<IDamageable>();
             if (a != null)
                 a.Damage(data.damage, sender, hit.point, hit.normal);
+
+            // Multiplayer
+            if (photonView != null && photonView.IsMine)
+                photonView.RPC("RPC_ShootRaycast", RpcTarget.Others, pMuzzle, data.hitForce * dir, hit.point, hit.normal, hit.collider);
+        }
+        else
+        {
+            // Multiplayer Missed
+            if (photonView != null && photonView.IsMine)
+                photonView.RPC("RPC_ShootRaycastMissed", RpcTarget.Others, pMuzzle);
         }
     }
 
@@ -278,24 +299,24 @@ public class Weapon : MonoBehaviour
     }
 
     private float spread01 = 0.0f;
-    protected Vector3 GetSpreadVector()
+    protected Quaternion GetSpreadQuaternion()
     {
         if (data.spreadType == WeaponData.SpreadType.Ellipse) // Ellipse
         {
             Vector2 spread = Vector2.Lerp(data.spreadVector, data.spreadVectorMax, spread01);
-            return GetRandomPointInEllipse(spread.y * 2.0f, spread.x * 2.0f);
+            return Quaternion.Euler(GetRandomPointInEllipse(spread.y * 2.0f, spread.x * 2.0f));
         }
         else if (data.spreadType == WeaponData.SpreadType.Circle) // Circle
         {
             float spread = Mathf.Lerp(data.spreadRadius, data.spreadRadiusMax, spread01);
-            return GetRandomPointOnCircle(spread);
+            return Quaternion.Euler(GetRandomPointOnCircle(spread));
         }
         else if (data.spreadType == WeaponData.SpreadType.Square) // Square
         {
-            return new Vector3(Random.Range(-data.spreadVector.y, data.spreadVector.y), Random.Range(-data.spreadVector.x, data.spreadVector.x), 0);
+            return Quaternion.Euler(Random.Range(-data.spreadVector.y, data.spreadVector.y), Random.Range(-data.spreadVector.x, data.spreadVector.x), 0);
         }
 
-        return Vector3.zero; // Null
+        return Quaternion.identity; // Null
     }
 
     private Vector2 GetRandomPointOnCircle(float pRadius) 

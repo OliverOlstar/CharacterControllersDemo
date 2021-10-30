@@ -22,12 +22,6 @@ public class Projectile : PoolElement
     [Header("Impact")]
     public ParticleSystem impactParticle = null;
 
-    // [Header("Explosive")]
-    // public ParticleSystem explosiveParticle = null;
-
-    // [Header("Homing")]
-    // public ProjectileHomingTrigger homingTrigger = null;
-
     [Header("Floating Numbers")]
     [ColorPalette("UI")] [SerializeField] private Color hitColor = new Color(1, 0, 0, 1);
     [ColorPalette("UI")] [SerializeField] private Color critColor = new Color(1, 1, 0, 1);
@@ -237,6 +231,7 @@ public class Projectile : PoolElement
             pParticle.gameObject.SetActive(true);
             pParticle.Play();
             pParticle.transform.position = pPosition;
+            pParticle.transform.SetParent(null);
         }
     }
 

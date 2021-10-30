@@ -4875,7 +4875,7 @@ GameObject:
   - component: {fileID: 2717361216034556284}
   - component: {fileID: 4656803423598380119}
   m_Layer: 0
-  m_Name: Projectile
+  m_Name: ProjectileMultiplayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4927,7 +4927,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 1
   m_Constraints: 0
-  m_CollisionDetection: 3
+  m_CollisionDetection: 0
 --- !u!114 &4656803423598380119
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4941,7 +4941,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: 2c1fc01046dadaf48a971378550671bb, type: 2}
-  collider: {fileID: 2141175902751734953}
+  collider: {fileID: 0}
   audio: {fileID: 0}
   sender: {fileID: 0}
   impactParticle: {fileID: 7239728992803658000}
@@ -4959,7 +4959,6 @@ GameObject:
   - component: {fileID: 2103047870674041899}
   - component: {fileID: 9027557903474178413}
   - component: {fileID: 2927487217479838854}
-  - component: {fileID: 2141175902751734953}
   m_Layer: 0
   m_Name: Model
   m_TagString: Untagged
@@ -5030,17 +5029,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &2141175902751734953
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7622678248100296470}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}

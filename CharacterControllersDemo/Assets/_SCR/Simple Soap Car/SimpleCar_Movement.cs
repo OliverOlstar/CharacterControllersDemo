@@ -47,7 +47,7 @@ namespace OliverLoescher.SoapCar
 
         private void FixedUpdate() 
         {
-            if (grounded.IsGrounded())
+            if (grounded.isGrounded)
             {
                 bool movingForward = Vector3.Dot(FuncUtil.Horizontalize(transform.forward), FuncUtil.Horizontalize(rigid.velocity)) >= 0;
                 bool inputingForward = moveInput.y >= 0;

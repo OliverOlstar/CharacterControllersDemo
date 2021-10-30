@@ -74,7 +74,7 @@ namespace OliverLoescher
         {
             MoveRootMotion();
 
-            if (grounded.IsGrounded())
+            if (grounded.isGrounded)
             {
                 character.Move(Vector3.down * stepDown);
             }

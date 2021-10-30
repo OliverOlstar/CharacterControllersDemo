@@ -41,7 +41,7 @@ namespace OliverLoescher.Link
             {
                 Vector3 start = transform.position + (transform.forward * jumpCheckDistance) + (Vector3.up * jumpCheckUp);
                 Vector3 end = start + (Vector3.down * jumpCheckDown);
-                if (grounded.IsGrounded() && Physics.Linecast(start, end, jumpLayermask) == false)
+                if (grounded.isGrounded && Physics.Linecast(start, end, jumpLayermask) == false)
                 {
                     return true;
                 }
@@ -51,7 +51,7 @@ namespace OliverLoescher.Link
 
         public override bool CanExit()
         {
-            return (Time.time > canExitTime && grounded.IsGrounded());
+            return (Time.time > canExitTime && grounded.isGrounded);
         }
 
         private void OnDrawGizmosSelected()
@@ -66,7 +66,7 @@ namespace OliverLoescher.Link
             }
 
             // Jump Line
-            if (grounded.IsGrounded())
+            if (grounded.isGrounded)
                 debugGroundPoint = transform.position;
 
             Vector3 velocity = Vector3.up * jumpForwardForce + FuncUtil.Horizontalize(transform.forward) * Mathf.Sqrt(2 * 9.81f * jumpUpForce);

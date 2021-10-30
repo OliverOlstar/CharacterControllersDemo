@@ -16,14 +16,14 @@ public class PhotonViewPlayerInstance : MonoBehaviour
     [SerializeField] private GameObject[] destroyObjectsIfNotMine = new GameObject[0];
     [SerializeField] private GameObject[] destroyObjectsIfMine = new GameObject[0];
 
-    private void Awake() 
+    private void Start() 
     {
         photonView = GetComponent<PhotonView>();
         if (photonView.IsMine == false)
         {
-            if (rigid == false)
+            if (rigid != null)
                 rigid.isKinematic = true;
-            if (rigid2D == false)
+            if (rigid2D != null)
                 rigid2D.isKinematic = true;
 
             foreach (GameObject go in destroyObjectsIfNotMine)

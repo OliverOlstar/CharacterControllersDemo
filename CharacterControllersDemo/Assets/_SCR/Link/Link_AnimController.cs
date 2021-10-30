@@ -94,7 +94,7 @@ namespace OliverLoescher.Link
 
         private void FixedUpdate() 
         {
-            animator.SetBool("Grounded", grounded.IsGrounded());
+            animator.SetBool("Grounded", grounded.isGrounded);
         }
     }
 }

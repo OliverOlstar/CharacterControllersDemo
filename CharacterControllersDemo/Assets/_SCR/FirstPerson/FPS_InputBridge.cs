@@ -50,7 +50,8 @@ namespace OliverLoescher.FPS
 
         private PhotonView photonView;
 
-        private void Awake() 
+#region Initialize
+        private void Start() 
         {
             photonView = GetComponentInParent<PhotonView>();
 
@@ -70,15 +71,36 @@ namespace OliverLoescher.FPS
             }
         }
 
+        private void OnDestroy() 
+        {
+            if (photonView == null || photonView.IsMine)
+            {
+                InputSystem.Input.FPS.CameraMove.performed -= OnCameraMove;
+                InputSystem.Input.FPS.CameraMoveDelta.performed -= OnCameraMoveDelta;
+                InputSystem.Input.FPS.Move.performed -= OnMove;
+                InputSystem.Input.FPS.Move.canceled -= OnMove;
+                InputSystem.Input.FPS.Sprint.performed -= OnSprintPerformed;
+                InputSystem.Input.FPS.Sprint.canceled -= OnSprintCanceled;
+                InputSystem.Input.FPS.Jump.performed -= OnJumpPerformed;
+                // InputSystem.Input.FPS.Crouch.performed -= OnCrouchPerformed;
+                // InputSystem.Input.FPS.Crouch.canceled -= OnCrouchCanceled;
+                InputSystem.Input.FPS.Primary.performed -= OnPrimaryPerformed;
+                InputSystem.Input.FPS.Primary.canceled -= OnPrimaryCanceled;
+            }
+        }
+
         private void OnEnable()
         {
             InputSystem.Input.FPS.Enable();
+            Cursor.lockState = CursorLockMode.Locked;
         }
 
         private void OnDisable() 
         {
             InputSystem.Input.FPS.Disable();
+            Cursor.lockState = CursorLockMode.None;
         }
+#endregion
 
         private Vector2 ConvertCameraValues(InputAction.CallbackContext ctx, Vector2 pAxisMult, float pMult)
         {

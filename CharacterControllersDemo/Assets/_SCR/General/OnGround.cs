@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
+using Sirenix.OdinInspector;
 
 namespace OliverLoescher 
 {
@@ -32,26 +34,51 @@ namespace OliverLoescher
 
         [SerializeField] private Linecast[] lines = new Linecast[1];
         [SerializeField] private LayerMask layerMask = new LayerMask();
+        [SerializeField, ShowIf("@lines.Length == 1")] private bool childToGround = false;
+        private Transform initalParent;
 
-        private float lastFrameTime = 0.0f;
-        private bool lastFrameGrounded = false;
-        
-        public bool IsGrounded()
+        public bool isGrounded { get; private set; }
+        [FoldoutGroup("Events")] public UnityEvent OnEnter;
+        [FoldoutGroup("Events")] public UnityEvent OnExit;
+
+        private void Start() 
         {
-            if (Time.time == lastFrameTime)
+            initalParent = transform.parent;
+
+            if (lines.Length != 1)
+                childToGround = false;
+        }
+
+        private void FixedUpdate() 
+        {
+            if (IsGrounded() != isGrounded)
             {
-                // Incase grounded has already been check this frame
-                return lastFrameGrounded;
-            }
-            else
-            {
-                foreach (Linecast line in lines)
+                isGrounded = !isGrounded;
+                if (isGrounded == true)
                 {
-                    if (line.Check(transform, layerMask))
-                        return true;
+                    if (childToGround && lines[0].hitInfo.transform.gameObject.isStatic == false)
+                        transform.SetParent(lines[0].hitInfo.transform);
+
+                    OnEnter?.Invoke();
                 }
-                return false;
+                else
+                {
+                    if (childToGround)
+                        transform.SetParent(initalParent);
+
+                    OnExit?.Invoke();
+                }
             }
+        }
+
+        private bool IsGrounded()
+        {
+            foreach (Linecast line in lines)
+            {
+                if (line.Check(transform, layerMask))
+                    return true;
+            }
+            return false;
         }
 
         public Vector3 GetAverageNormal()

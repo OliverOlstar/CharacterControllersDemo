@@ -48,6 +48,9 @@ namespace OliverLoescher
                 stamina.onValueIn.AddListener(OnStaminaIn);
                 stamina.onValueOut.AddListener(OnStaminaOut);
             }
+
+            grounded.OnEnter.AddListener(OnGroundedEnter);
+            grounded.OnExit.AddListener(OnGroundedExit);
         }
 
         public void OnMoveInput(Vector2 pInput)
@@ -63,7 +66,7 @@ namespace OliverLoescher
 
         private void FixedUpdate() 
         {
-            if (grounded.IsGrounded())
+            if (grounded.isGrounded)
             {
                 if (isGrounded == false)
                     OnGroundedEnter();
