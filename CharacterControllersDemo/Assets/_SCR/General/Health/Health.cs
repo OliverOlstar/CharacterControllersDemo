@@ -44,7 +44,11 @@ namespace OliverLoescher
         [Button()]
         public virtual void Damage(float pValue, GameObject pSender, Vector3 pPoint, Vector3 pDirection)
         {
-            if (photonView != null && photonView.IsMine)
+            if (photonView == null)
+            {
+                Modify(-pValue);
+            }
+            else if (photonView.IsMine)
             {
                 photonView.RPC("RPC_Damage", RpcTarget.Others, pValue);
                 Modify(-pValue);
