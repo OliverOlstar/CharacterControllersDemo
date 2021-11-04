@@ -22,5 +22,14 @@ namespace OliverLoescher
         {
             return SmoothStep(pMinMax.x, pMinMax.y, pIn);
         }
+        
+        public static float SafeAngle(float pAngle)
+        {
+            if (pAngle > 180)
+            {
+                pAngle -= 360;
+            }
+            return pAngle;
+        }
     }
 }

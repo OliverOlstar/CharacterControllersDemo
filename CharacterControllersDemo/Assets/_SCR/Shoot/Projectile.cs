@@ -137,7 +137,7 @@ public class Projectile : PoolElement
 
     private void DamageOther(Collider other, Vector3 point)
     {
-        Debug.Log("[Projectile.cs] DamageOther(" + other.name + ")", other);
+        // Debug.Log("[Projectile.cs] DamageOther(" + other.name + ")", other);
         Rigidbody otherRb = other.GetComponentInParent<Rigidbody>();
         if (otherRb != null)
             otherRb.AddForceAtPosition(rigidbody.velocity.normalized * data.hitForce, point);
