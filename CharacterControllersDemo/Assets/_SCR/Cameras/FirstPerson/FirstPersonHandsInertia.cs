@@ -18,13 +18,28 @@ namespace OliverLoescher.Camera
         [SerializeField,Range(0, 0.01f)] private float targetMagnitude = 5.0f;
         [SerializeField] private float moveDampening = 1.0f;
         [SerializeField] private Vector3 moveRelOffset = Vector3.zero;
+
         private Vector3 initalRelOffset;
         private float moveValue = 0.0f;
+
+        [Space] // Bounce
+        [SerializeField] private OnGround grounded = null;
+        [SerializeField] private AnimationCurve bounceCurve = new AnimationCurve(new Keyframe(0.0f, 0.0f), new Keyframe(1.0f, 1.0f));
+        [SerializeField] private float bounceFrequncy = 0.1f;
+
+        private float bounceProgress = 0.0f;
+        private bool doBounce = true;
 
         private void Start() 
         {
             lastRotation = transform.parent.eulerAngles;
             initalRelOffset = transform.localPosition;
+
+            if (grounded != null)
+            {
+                grounded.OnEnter.AddListener( delegate{ doBounce = true;} );
+                grounded.OnExit.AddListener( delegate{ doBounce = false;} );
+            }
         }
 
         private void LateUpdate() 
@@ -38,8 +53,17 @@ namespace OliverLoescher.Camera
             transform.localRotation = Quaternion.Euler(rot);
 
             float v = rigid.velocity.sqrMagnitude * targetMagnitude;
+
+            Vector3 bounceOffset = Vector3.zero;
+            if (doBounce == true)
+            {
+                bounceProgress += Time.deltaTime * bounceFrequncy * v;
+                bounceOffset = Vector3.up * bounceCurve.Evaluate(bounceProgress);
+            }
+
             moveValue = Mathf.Lerp(moveValue, Mathf.Clamp01(v), Time.deltaTime * moveDampening);
-            transform.localPosition = Vector3.Lerp(initalRelOffset, moveRelOffset, moveValue);
+            transform.localPosition = Vector3.Lerp(initalRelOffset, moveRelOffset + bounceOffset, moveValue);
+        
         }
 
         private float Calculate(float pValue, float pTarget, float pMax, float pDampening)
@@ -48,17 +72,6 @@ namespace OliverLoescher.Camera
             pValue = Mathf.Lerp(pValue, pTarget, Time.deltaTime * tiltDampening.x);
             return pValue;
         }
-
-        // private void DoSpring(Vector3 pVelocity)
-        // {
-        //     vel += -pVelocity.y;
-        //     vel += spring * -transform.localPosition.y * Time.deltaTime;
-        //     vel += damper * -vel * Time.deltaTime;
-
-        //     Vector3 pos = transform.localPosition;
-        //     pos.y += vel * Time.deltaTime;
-        //     transform.localPosition = pos;
-        // }
 
         private void OnDrawGizmosSelected() 
         {

@@ -2940,6 +2940,14 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 0.35
       objectReference: {fileID: 0}
+    - target: {fileID: 4402165035663497155, guid: 573e71d2dff263f4f8bd26b6a83ab534, type: 3}
+      propertyPath: m_CollisionDetection
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4664072660159958576, guid: 573e71d2dff263f4f8bd26b6a83ab534, type: 3}
+      propertyPath: m_CollisionDetection
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 6076489411007762982, guid: 573e71d2dff263f4f8bd26b6a83ab534, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -2999,6 +3007,14 @@ PrefabInstance:
     - target: {fileID: 7868175244023719689, guid: 573e71d2dff263f4f8bd26b6a83ab534, type: 3}
       propertyPath: m_Name
       value: CharacterController Root
+      objectReference: {fileID: 0}
+    - target: {fileID: 7868175244023719689, guid: 573e71d2dff263f4f8bd26b6a83ab534, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7869101397138570507, guid: 573e71d2dff263f4f8bd26b6a83ab534, type: 3}
+      propertyPath: m_CollisionDetection
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8817811188325252149, guid: 573e71d2dff263f4f8bd26b6a83ab534, type: 3}
       propertyPath: m_Enabled
