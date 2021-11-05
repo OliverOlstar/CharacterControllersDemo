@@ -16,7 +16,7 @@ public class WeaponData : ScriptableObject
 
     [ShowIf("@fireType == FireType.Burst")] [Min(2)] public int burstFireCount = 5;
     [Min(1)] public int bulletsPerShot = 1;
-
+ 
     [Header("Damage")]
     public int damage = 1;
     [Range(0, 1)] public float critChance01 = 0.1f;
@@ -26,8 +26,6 @@ public class WeaponData : ScriptableObject
     [TitleGroup("Proj/Projectile")] public string projecilePoolKey = "";
     [TitleGroup("Proj/Projectile")] [ShowIf("@projecilePoolKey == \"\"")] public GameObject projectilePrefab = null;
     [TitleGroup("Proj/Projectile")] public BulletCollision bulletCollision = BulletCollision.Destroy;
-    // [TitleGroup("Proj/Projectile")] public BulletHoming bulletHoming = BulletHoming.Null;
-    // [TitleGroup("Proj/Projectile")] public BulletExplosion bulletExplosion = BulletExplosion.Null;
     [TitleGroup("Proj/Projectile")] public Vector2 lifeTime = new Vector2(4.0f, 4.5f);
     [TitleGroup("Proj/Projectile")] public Vector2 shootForce = new Vector2(5.0f, 5.0f);
     [TitleGroup("Proj/Projectile")] public float bulletGravity = 0.0f;
@@ -36,23 +34,11 @@ public class WeaponData : ScriptableObject
     [TitleGroup("Ray/Raycast")] public float range = 5.0f;
     [TitleGroup("Ray/Raycast")] [AssetsOnly] public GameObject hitFXPrefab = null;
     [ShowIf("@bulletType != BulletType.Projectile")] public LayerMask layerMask = new LayerMask();
-    
-    // [ShowIfGroup("Home", Condition = "@bulletType != BulletType.Raycast && bulletHoming != BulletHoming.Null")]
-    // [TitleGroup("Home/Homing")] public BulletHomingMovement homingMovement = BulletHomingMovement.RotateVelocity;
-    // [TitleGroup("Home/Homing")] [ShowIf("@homingMovement == BulletHomingMovement.RotateVelocity")] [Range(0, 180)] public float homingDegPerSecond = 90.0f;
-    // [TitleGroup("Home/Homing")] [ShowIf("@homingMovement == BulletHomingMovement.AddForce")] public float homingForce = 50.0f;
-    // [TitleGroup("Home/Homing")] [Range(0.0f, 5.0f)] public float homingTriggerRadius = 1.0f;
-    // [TitleGroup("Home/Homing")] [PropertyRange("@homingTriggerRadius * 2", 12.0f)] public float homingTriggerDistance = 4.0f;
-    
-    // [ShowIfGroup("Explo", Condition = "@bulletType != BulletType.Raycast && bulletExplosion != BulletExplosion.Null")]
-    // [TitleGroup("Explo/Explosion")] public float explosionRadius = 5.0f;
-    // [TitleGroup("Explo/Explosion")] public float explosionDamage = 5.0f;
-    // [TitleGroup("Explo/Explosion")] public float explosionForce = 5.0f;
-    // [TitleGroup("Explo/Explosion")] public float explosiveUpwardsModifier = 5.0f;
 
     [Title("Stats")]
-    [Tooltip("Not used with single fire")]
-    public float secondsBetweenShots = 0.1f;
+    public bool alwaysFireOnShootStart = true;
+    [HideIf("@alwaysFireOnShootStart == true && fireType != FireType.Auto")] public float secondsBetweenShots = 0.1f;
+    [ShowIf("@fireType == FireType.Burst")] public float secondsBetweenBurstShots = 0.1f;
 
     [Header("Spread")]
     public SpreadType spreadType = SpreadType.Circle;
@@ -169,8 +155,7 @@ public class WeaponData : ScriptableObject
         projecilePoolKey = pOther.projecilePoolKey;
         projectilePrefab = pOther.projectilePrefab;
         bulletCollision = pOther.bulletCollision;
-        // bulletHoming = pOther.bulletHoming;
-        // bulletExplosion = pOther.bulletExplosion;
+
         lifeTime = pOther.lifeTime;
         shootForce = pOther.shootForce;
         bulletGravity = pOther.bulletGravity;
@@ -178,17 +163,6 @@ public class WeaponData : ScriptableObject
         range = pOther.range;
         hitFXPrefab = pOther.hitFXPrefab;
         layerMask = pOther.layerMask;
-        
-        // homingMovement = pOther.homingMovement;
-        // homingDegPerSecond = pOther.homingDegPerSecond;
-        // homingForce = pOther.homingForce;
-        // homingTriggerRadius = pOther.homingTriggerRadius;
-        // homingTriggerDistance = pOther.homingTriggerDistance;
-        
-        // explosionRadius = pOther.explosionRadius;
-        // explosionDamage = pOther.explosionDamage;
-        // explosionForce = pOther.explosionForce;
-        // explosiveUpwardsModifier = pOther.explosiveUpwardsModifier;
 
         secondsBetweenShots = pOther.secondsBetweenShots;
 

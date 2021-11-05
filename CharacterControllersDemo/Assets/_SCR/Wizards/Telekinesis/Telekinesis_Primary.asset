@@ -15,24 +15,26 @@ MonoBehaviour:
   displayName: Telekinesis Primary
   description: 
   fireType: 0
-  bulletType: 0
+  bulletType: 1
   burstFireCount: 5
   bulletsPerShot: 1
-  damage: 1
+  damage: 10
   critChance01: 0.1
   critDamageMultiplier: 2
   projecilePoolKey: 
-  projectilePrefab: {fileID: 0}
+  projectilePrefab: {fileID: 3032010529082586260, guid: 22de61b5c52845c4c979efb189f90537, type: 3}
   bulletCollision: 1
   lifeTime: {x: 4, y: 4.5}
-  shootForce: {x: 5, y: 5}
-  bulletGravity: 0
+  shootForce: {x: 25, y: 30}
+  bulletGravity: 9.81
   range: 5
   hitFXPrefab: {fileID: 0}
   layerMask:
     serializedVersion: 2
-    m_Bits: 0
-  secondsBetweenShots: 0.1
+    m_Bits: 64
+  alwaysFireOnShootStart: 0
+  secondsBetweenShots: 0.3
+  secondsBetweenBurstShots: 0.1
   spreadType: 3
   spreadVector: {x: 0.2, y: 0.2}
   spreadVectorMax: {x: 0.5, y: 0.5}

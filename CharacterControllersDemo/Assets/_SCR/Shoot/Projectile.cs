@@ -168,8 +168,10 @@ public class Projectile : PoolElement
         {
             case WeaponData.BulletCollision.Stick:
                 rigidbody.isKinematic = true;
-                transform.SetParent(other.transform);
+                if (other.gameObject.isStatic == false)
+                    transform.SetParent(other.transform);
                 canDamage = false;
+                activeSelf = false;
                 break;
 
             case WeaponData.BulletCollision.Penetrate:

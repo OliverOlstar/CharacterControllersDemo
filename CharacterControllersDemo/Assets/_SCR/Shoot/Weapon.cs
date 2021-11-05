@@ -20,6 +20,7 @@ public class Weapon : MonoBehaviour
     [SerializeField] private ParticleSystem muzzleFlash = null;
     [ShowIf("@muzzleFlash != null")] [SerializeField] private Vector3 muzzleFlashRelOffset = new Vector3();
     [SerializeField] private PhotonView photonView = null;
+    [SerializeField] private WeaponMultiplayer weapon = null;
 
     [Space]
     public GameObject sender = null;
@@ -44,11 +45,11 @@ public class Weapon : MonoBehaviour
     [HideInInspector] public bool isShooting {get; private set;} = false;
     public void ShootStart()
     {
-        if (data.fireType == WeaponData.FireType.Single)
+        if (data.fireType == WeaponData.FireType.Single)    // Single
         {
-
+            
         }
-        else if (data.fireType == WeaponData.FireType.Burst)
+        else if (data.fireType == WeaponData.FireType.Burst) // Burst
         {
             // If already shooting don't shoot again
             if (isShooting == true)
@@ -57,10 +58,14 @@ public class Weapon : MonoBehaviour
             
             burstFireActiveCount = data.burstFireCount - 1;
         }
-        else if (data.fireType == WeaponData.FireType.Auto)
+        else if (data.fireType == WeaponData.FireType.Auto) // Auto
         {
             isShooting = true;
         }
+        
+        // If shoot on click
+        if (data.alwaysFireOnShootStart == false && nextCanShootTime > Time.time)
+            return;
             
         Shoot();
     }
@@ -88,16 +93,6 @@ public class Weapon : MonoBehaviour
 
             // Shoot
             Shoot();
-
-            // If Burst
-            if (data.fireType == WeaponData.FireType.Burst)
-            {
-                burstFireActiveCount--;
-                if (burstFireActiveCount < 1)
-                {
-                    isShooting = false;
-                }
-            }
         }
         else
         {
@@ -114,6 +109,22 @@ public class Weapon : MonoBehaviour
 
             // Firerate
             nextCanShootTime = Time.time + data.secondsBetweenShots;
+
+            // If Burst
+            if (data.fireType == WeaponData.FireType.Burst)
+            {
+                burstFireActiveCount--;
+                if (burstFireActiveCount < 1)
+                {
+                    isShooting = false;
+                    return;
+                }
+                else
+                {
+                    // Overrride Firerate
+                    nextCanShootTime = Time.time + data.secondsBetweenBurstShots;
+                }
+            }
 
             // Bullet
             for (int i = 0; i < data.bulletsPerShot; i++)
@@ -168,34 +179,16 @@ public class Weapon : MonoBehaviour
 
     protected virtual void SpawnProjectile(Transform pMuzzle)
     {
-        // GameObject projectile;
-
-        // Spawn projectile
-        // if (data.projecilePoolKey != "")
-        // {
-        //     projectile = ObjectPoolDictionary.dictionary[data.projecilePoolKey].CheckOutObject(true);
-        //     if (projectile == null)
-        //         return;
-        // }
-        // else
-        // {
-        //     projectile = Instantiate(data.projectileMultiplayerPrefab);
-        // }
-        
-        // projectile.transform.position = pMuzzle.position;
-        // projectile.transform.rotation = pMuzzle.rotation * Quaternion.Euler(GetSpreadVector());
-
-        // Projectile projectileScript = projectile.GetComponentInChildren<Projectile>();
-        // projectileScript.data = data;
-
-        // projectileScript.sender = sender;
-
         Vector3 force = Random.Range(data.shootForce.x, data.shootForce.y) * (GetSpreadQuaternion() * pMuzzle.forward);
-        // projectileScript.Init(force);
 
-        // Multiplayer
-        if (photonView != null && photonView.IsMine)
+        if (photonView != null && PhotonNetwork.IsConnected && photonView.IsMine)
+        {
             photonView.RPC("RPC_ShootProjectile", RpcTarget.All, pMuzzle.position, force);
+        }
+        else
+        {
+            weapon.RPC_ShootProjectile(pMuzzle.position, force);
+        }
     }
 
     protected virtual void SpawnRaycast(Transform pMuzzle)

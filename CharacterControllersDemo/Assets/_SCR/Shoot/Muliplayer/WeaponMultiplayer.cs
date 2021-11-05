@@ -27,7 +27,7 @@ public class WeaponMultiplayer : MonoBehaviour
     }
 
     [PunRPC]
-    private void RPC_ShootProjectile(Vector3 pPoint, Vector3 pForce)
+    public void RPC_ShootProjectile(Vector3 pPoint, Vector3 pForce)
     {
         // Spawn projectile
         GameObject projectile;

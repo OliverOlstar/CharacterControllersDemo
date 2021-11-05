@@ -27,9 +27,9 @@ namespace OliverLoescher.Camera
 
         private void LateUpdate() 
         {
-            Vector3 motion = transform.position - lastPosition;
+            Vector3 motion = transform.parent.position - lastPosition;
             Vector3 relMotion = transform.InverseTransformDirection(motion);
-            lastPosition = transform.position;
+            lastPosition = transform.parent.position;
 
             Vector3 velocity = rigid.velocity - lastVelocity;
             lastVelocity = rigid.velocity;
