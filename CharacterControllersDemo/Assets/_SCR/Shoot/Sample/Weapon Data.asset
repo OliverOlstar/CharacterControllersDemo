@@ -23,7 +23,6 @@ MonoBehaviour:
   critDamageMultiplier: 2
   projecilePoolKey: 
   projectilePrefab: {fileID: 1527966059315699084, guid: a4d6990e0b08f024f86d036d9e56ed49, type: 3}
-  projectileMultiplayerPrefab: {fileID: 1527966059315699084, guid: aaaaaa502ab0a9b4aa998528f3719602, type: 3}
   bulletCollision: 0
   lifeTime: {x: 4, y: 4.5}
   shootForce: {x: 33, y: 33}
@@ -33,7 +32,10 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 65
-  secondsBetweenShots: 0.1
+  startShootingType: 2
+  secondsBetweenShots: 0.8
+  secondsBetweenBurstShots: 0.1
+  chargeSeconds: 0.5
   spreadType: 1
   spreadVector: {x: 0.2, y: 0.2}
   spreadVectorMax: {x: 0.5, y: 0.5}

@@ -44,6 +44,25 @@ public class Weapon : MonoBehaviour
 
     [HideInInspector] public bool isShooting {get; private set;} = false;
     public void ShootStart()
+    {        
+        // If shoot on click
+        if (data.startShootingType == WeaponData.StartType.Instant)
+        {
+            ShootStartDelayed();
+        }
+        else if (data.startShootingType == WeaponData.StartType.InstantLimitedByFirerate)
+        {
+            if (nextCanShootTime <= Time.time)
+                ShootStartDelayed();
+        }
+        else if (data.startShootingType == WeaponData.StartType.Charge)
+        {
+            CancelInvoke(nameof(ShootStartDelayed));
+            Invoke(nameof(ShootStartDelayed), data.chargeSeconds);
+        }
+    }
+
+    private void ShootStartDelayed()
     {
         if (data.fireType == WeaponData.FireType.Single)    // Single
         {
@@ -62,11 +81,7 @@ public class Weapon : MonoBehaviour
         {
             isShooting = true;
         }
-        
-        // If shoot on click
-        if (data.alwaysFireOnShootStart == false && nextCanShootTime > Time.time)
-            return;
-            
+
         Shoot();
     }
 
@@ -76,21 +91,17 @@ public class Weapon : MonoBehaviour
         {
             isShooting = false;
         }
+
+        if (data.startShootingType == WeaponData.StartType.Charge)
+        {
+            CancelInvoke(nameof(ShootStartDelayed));
+        }
     }
 
     private void Update()
     {
-        if (isShooting == true)
+        if (isShooting == true && nextCanShootTime <= Time.time)
         {
-            // Firerate
-            if (nextCanShootTime > Time.time)
-            {
-                // Spread
-                spread01 = Mathf.Max(0, spread01 - (Time.deltaTime * data.spreadDecrease));
-
-                return;
-            }
-
             // Shoot
             Shoot();
         }
@@ -105,8 +116,6 @@ public class Weapon : MonoBehaviour
     {
         if (canShoot)
         {
-            Transform muzzle = GetMuzzle();
-
             // Firerate
             nextCanShootTime = Time.time + data.secondsBetweenShots;
 
@@ -125,6 +134,8 @@ public class Weapon : MonoBehaviour
                     nextCanShootTime = Time.time + data.secondsBetweenBurstShots;
                 }
             }
+            
+            Transform muzzle = GetMuzzle();
 
             // Bullet
             for (int i = 0; i < data.bulletsPerShot; i++)
@@ -166,7 +177,7 @@ public class Weapon : MonoBehaviour
         else
         {
             // Audio
-            data.faildShotSound.Play(sourcePool.GetSource());
+            data.failedShotSound.Play(sourcePool.GetSource());
 
             // Event
             OnFailedShoot?.Invoke();

@@ -36,9 +36,10 @@ public class WeaponData : ScriptableObject
     [ShowIf("@bulletType != BulletType.Projectile")] public LayerMask layerMask = new LayerMask();
 
     [Title("Stats")]
-    public bool alwaysFireOnShootStart = true;
-    [HideIf("@alwaysFireOnShootStart == true && fireType != FireType.Auto")] public float secondsBetweenShots = 0.1f;
+    public StartType startShootingType = StartType.Instant;
+    [ShowIf("@startShootingType == StartType.InstantLimitedByFirerate || fireType == FireType.Auto")] public float secondsBetweenShots = 0.1f;
     [ShowIf("@fireType == FireType.Burst")] public float secondsBetweenBurstShots = 0.1f;
+    [ShowIf("@startShootingType == StartType.Charge")] public float chargeSeconds = 0.5f;
 
     [Header("Spread")]
     public SpreadType spreadType = SpreadType.Circle;
@@ -57,7 +58,6 @@ public class WeaponData : ScriptableObject
     {
         recoilForce = pForce;
     }
-
     public float hitForce = 8;
 
     [Title("Ammo")]
@@ -71,7 +71,7 @@ public class WeaponData : ScriptableObject
 
     [Title("Audio")]
     public AudioUtil.AudioPiece shotSound = new AudioUtil.AudioPiece();
-    public AudioUtil.AudioPiece faildShotSound = new AudioUtil.AudioPiece();
+    public AudioUtil.AudioPiece failedShotSound = new AudioUtil.AudioPiece();
 
     [Space]
     [ShowIf("@ammoType != AmmoType.Null")] public AudioUtil.AudioPiece reloadSound = new AudioUtil.AudioPiece();
@@ -83,6 +83,13 @@ public class WeaponData : ScriptableObject
         Single,
         Burst,
         Auto
+    }
+    
+    public enum StartType 
+    {
+        Instant,
+        Charge,
+        InstantLimitedByFirerate
     }
 
     public enum SpreadType 
@@ -186,7 +193,7 @@ public class WeaponData : ScriptableObject
         reloadIntervalSeconds = pOther.reloadIntervalSeconds;
 
         shotSound = pOther.shotSound;
-        faildShotSound = pOther.faildShotSound;
+        failedShotSound = pOther.failedShotSound;
 
         reloadSound = pOther.reloadSound;
         outOfAmmoSound = pOther.outOfAmmoSound;

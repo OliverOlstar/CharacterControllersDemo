@@ -78,7 +78,7 @@ public class WeaponMultiplayer : MonoBehaviour
     private void RPC_ShootFailed()
     {
         // Audio
-        data.faildShotSound.Play(sourcePool.GetSource());
+        data.failedShotSound.Play(sourcePool.GetSource());
 
         // Event
         OnFailedShoot?.Invoke();

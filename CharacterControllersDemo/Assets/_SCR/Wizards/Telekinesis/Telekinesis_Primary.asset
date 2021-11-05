@@ -32,9 +32,10 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 64
-  alwaysFireOnShootStart: 0
-  secondsBetweenShots: 0.3
+  startShootingType: 2
+  secondsBetweenShots: 0.5
   secondsBetweenBurstShots: 0.1
+  chargeSeconds: 0.5
   spreadType: 3
   spreadVector: {x: 0.2, y: 0.2}
   spreadVectorMax: {x: 0.5, y: 0.5}
