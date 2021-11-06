@@ -23,6 +23,14 @@ public class WeaponMultiplayer : Weapon
             RPC_ShootProjectile(pPoint, pForce);
     }
 
+    protected override void SpawnRaycast(Vector3 pPoint, Vector3 pForward)
+    {
+        if (IsValid())
+            photonView.RPC(nameof(RPC_ShootRaycast), RpcTarget.All, pPoint, pForward);
+        else
+            RPC_ShootRaycast(pPoint, pForward);
+    }
+
     protected override void OnShootFailed()
     {
         base.OnShootFailed();
@@ -46,16 +54,9 @@ public class WeaponMultiplayer : Weapon
     }
 
     [PunRPC]
-    private void RPC_ShootRaycast(Vector3 pHitPoint, Vector3 pHitNormal)
+    private void RPC_ShootRaycast(Vector3 pPoint, Vector3 pForward)
     {
-        
+        base.SpawnRaycast(pPoint, pForward);
     }
-
-    [PunRPC]
-    private void RPC_ShootRaycastMissed(Transform pMuzzle)
-    {
-        
-    }
-
     public bool IsValid() => PhotonNetwork.IsConnected && photonView.IsMine;
 }

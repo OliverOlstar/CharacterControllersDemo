@@ -177,8 +177,7 @@ public class Weapon : MonoBehaviour
         {
             if (data.bulletType == WeaponData.BulletType.Raycast)
             {
-
-                SpawnRaycast(pMuzzle);
+                SpawnRaycast(pMuzzle.position, pMuzzle.forward);
             }
             else
             {
@@ -230,10 +229,10 @@ public class Weapon : MonoBehaviour
         OnShoot?.Invoke();
     }
 
-    protected virtual void SpawnRaycast(Transform pMuzzle)
+    protected virtual void SpawnRaycast(Vector3 pPoint, Vector3 pForward)
     {
-        Vector3 dir = GetSpreadQuaternion() * pMuzzle.forward;
-        if (Physics.Raycast(pMuzzle.position, dir, out RaycastHit hit, data.range, data.layerMask, QueryTriggerInteraction.Ignore)) 
+        Vector3 dir = GetSpreadQuaternion() * pForward;
+        if (Physics.Raycast(pPoint, dir, out RaycastHit hit, data.range, data.layerMask, QueryTriggerInteraction.Ignore)) 
         {
             ApplyParticleFX(hit.point, Quaternion.FromToRotation(Vector3.forward, hit.normal), hit.collider);
 
@@ -246,16 +245,6 @@ public class Weapon : MonoBehaviour
             IDamageable a = hit.collider.GetComponent<IDamageable>();
             if (a != null)
                 a.Damage(data.damage, sender, hit.point, hit.normal);
-
-            // Multiplayer
-            // if (photonView != null && photonView.IsMine)
-            //     photonView.RPC("RPC_ShootRaycast", RpcTarget.Others, pMuzzle, data.hitForce * dir, hit.point, hit.normal, hit.collider);
-        }
-        else
-        {
-            // Multiplayer Missed
-            // if (photonView != null && photonView.IsMine)
-            //     photonView.RPC("RPC_ShootRaycastMissed", RpcTarget.Others, pMuzzle);
         }
     }
 
