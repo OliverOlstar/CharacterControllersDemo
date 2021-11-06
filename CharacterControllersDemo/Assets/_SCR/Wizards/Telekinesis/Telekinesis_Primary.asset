@@ -15,7 +15,7 @@ MonoBehaviour:
   displayName: Telekinesis Primary
   description: 
   fireType: 0
-  bulletType: 1
+  bulletType: 0
   burstFireCount: 5
   bulletsPerShot: 1
   damage: 10
@@ -28,7 +28,7 @@ MonoBehaviour:
   shootForce: {x: 25, y: 30}
   bulletGravity: 9.81
   range: 5
-  hitFXPrefab: {fileID: 0}
+  hitFXPrefab: {fileID: 7706684984111978519, guid: abb7ebaa9d2a280409e9543ff95e31f8, type: 3}
   layerMask:
     serializedVersion: 2
     m_Bits: 64
@@ -54,7 +54,7 @@ MonoBehaviour:
     clips: []
     volume: 1
     pitch: {x: 0.9, y: 1.2}
-  faildShotSound:
+  failedShotSound:
     clips: []
     volume: 1
     pitch: {x: 0.9, y: 1.2}
