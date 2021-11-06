@@ -15,8 +15,8 @@ public class BillboardToMainCamera : MonoBehaviour
     {
         Vector3 dir = transform.position - camera.transform.position;
         dir.y = 0;
-        transform.rotation = Quaternion.LookRotation(dir);
 
-        // transform.rotation = camera.rotation;
+        if (dir != Vector3.zero)
+            transform.rotation = Quaternion.LookRotation(dir);
     }
 }
