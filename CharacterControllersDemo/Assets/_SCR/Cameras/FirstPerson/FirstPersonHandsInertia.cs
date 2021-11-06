@@ -16,6 +16,7 @@ namespace OliverLoescher.Camera
         [Header("Movement")]
         [SerializeField] private Rigidbody rigid = null;
         [SerializeField,Range(0, 0.01f)] private float targetMagnitude = 5.0f;
+        [SerializeField, Min(0)] private float maxMagnitude = 1.0f;
         [SerializeField] private float moveDampening = 1.0f;
         [SerializeField] private Vector3 moveRelOffset = Vector3.zero;
 
@@ -52,7 +53,7 @@ namespace OliverLoescher.Camera
             rot.x = Calculate(FuncUtil.SafeAngle(rot.x), motion.x * tiltMagnitude.y, tiltMax.y, tiltDampening.y);
             transform.localRotation = Quaternion.Euler(rot);
 
-            float v = rigid.velocity.sqrMagnitude * targetMagnitude;
+            float v = Mathf.Min(maxMagnitude, rigid.velocity.sqrMagnitude) * targetMagnitude;
 
             Vector3 bounceOffset = Vector3.zero;
             if (doBounce == true)

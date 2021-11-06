@@ -19,8 +19,6 @@ public class Weapon : MonoBehaviour
     [SerializeField] protected Transform[] muzzlePoints = new Transform[1];
     [SerializeField] private ParticleSystem muzzleFlash = null;
     [ShowIf("@muzzleFlash != null")] [SerializeField] private Vector3 muzzleFlashRelOffset = new Vector3();
-    [SerializeField] private PhotonView photonView = null;
-    [SerializeField] private WeaponMultiplayer weapon = null;
 
     [Space]
     public GameObject sender = null;
@@ -134,17 +132,10 @@ public class Weapon : MonoBehaviour
                     nextCanShootTime = Time.time + data.secondsBetweenBurstShots;
                 }
             }
-            
-            Transform muzzle = GetMuzzle();
 
             // Bullet
-            for (int i = 0; i < data.bulletsPerShot; i++)
-            {
-                if (data.bulletType == WeaponData.BulletType.Raycast)
-                    SpawnRaycast(muzzle);
-                else
-                    SpawnProjectile(muzzle);
-            }
+            Transform muzzle = GetMuzzle();
+            SpawnBullet(muzzle);
 
             // Recoil
             if (recoilBody != null && data.recoilForce != Vector3.zero)
@@ -176,30 +167,67 @@ public class Weapon : MonoBehaviour
         }
         else
         {
-            // Audio
-            data.failedShotSound.Play(sourcePool.GetSource());
-
-            // Event
-            OnFailedShoot?.Invoke();
-            
-            // Multiplayer
-            if (photonView != null && photonView.IsMine)
-                photonView.RPC("RPC_ShootFailed", RpcTarget.Others);
-        }        
+            OnShootFailed();
+        }
     }
 
-    protected virtual void SpawnProjectile(Transform pMuzzle)
+    protected virtual void SpawnBullet(Transform pMuzzle)
     {
-        Vector3 force = Random.Range(data.shootForce.x, data.shootForce.y) * (GetSpreadQuaternion() * pMuzzle.forward);
-
-        if (photonView != null && PhotonNetwork.IsConnected && photonView.IsMine)
+        for (int i = 0; i < data.bulletsPerShot; i++)
         {
-            photonView.RPC("RPC_ShootProjectile", RpcTarget.All, pMuzzle.position, force);
+            if (data.bulletType == WeaponData.BulletType.Raycast)
+            {
+
+                SpawnRaycast(pMuzzle);
+            }
+            else
+            {
+                Vector3 force = Random.Range(data.shootForce.x, data.shootForce.y) * (GetSpreadQuaternion() * pMuzzle.forward);
+                SpawnProjectile(pMuzzle.position, force);
+            }
+        }
+    }
+
+    protected virtual void OnShootFailed()
+    {
+        // Audio
+        data.failedShotSound.Play(sourcePool.GetSource());
+
+        // Event
+        OnFailedShoot?.Invoke();
+    }
+
+    protected virtual void SpawnProjectile(Vector3 pPoint, Vector3 pForce)
+    {
+        // Spawn projectile
+        GameObject projectile;
+        if (data.projecilePoolKey != "")
+        {
+            projectile = ObjectPoolDictionary.dictionary[data.projecilePoolKey].CheckOutObject(true);
+            if (projectile == null)
+                return;
         }
         else
         {
-            weapon.RPC_ShootProjectile(pMuzzle.position, force);
+            projectile = Instantiate(data.projectilePrefab);
         }
+        
+        projectile.transform.position = pPoint;
+        projectile.transform.rotation = Quaternion.LookRotation(pForce);
+
+        Projectile projectileScript = projectile.GetComponentInChildren<Projectile>();
+        projectileScript.data = data;
+
+        projectileScript.sender = sender;
+
+        projectileScript.Init(pForce);
+
+        // Audio
+        if (sourcePool != null)
+            data.shotSound.Play(sourcePool.GetSource());
+
+        // Event
+        OnShoot?.Invoke();
     }
 
     protected virtual void SpawnRaycast(Transform pMuzzle)
@@ -220,14 +248,14 @@ public class Weapon : MonoBehaviour
                 a.Damage(data.damage, sender, hit.point, hit.normal);
 
             // Multiplayer
-            if (photonView != null && photonView.IsMine)
-                photonView.RPC("RPC_ShootRaycast", RpcTarget.Others, pMuzzle, data.hitForce * dir, hit.point, hit.normal, hit.collider);
+            // if (photonView != null && photonView.IsMine)
+            //     photonView.RPC("RPC_ShootRaycast", RpcTarget.Others, pMuzzle, data.hitForce * dir, hit.point, hit.normal, hit.collider);
         }
         else
         {
             // Multiplayer Missed
-            if (photonView != null && photonView.IsMine)
-                photonView.RPC("RPC_ShootRaycastMissed", RpcTarget.Others, pMuzzle);
+            // if (photonView != null && photonView.IsMine)
+            //     photonView.RPC("RPC_ShootRaycastMissed", RpcTarget.Others, pMuzzle);
         }
     }
 

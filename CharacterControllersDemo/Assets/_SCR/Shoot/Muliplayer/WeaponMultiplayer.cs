@@ -5,112 +5,57 @@ using UnityEngine.Events;
 using Photon.Pun;
 using Sirenix.OdinInspector;
 
-public class WeaponMultiplayer : MonoBehaviour
+[RequireComponent(typeof(PhotonView))]
+public class WeaponMultiplayer : Weapon
 {
-    [Required] public WeaponData data = null;
+    private PhotonView photonView = null;
 
-    [Header("References")]
-    [SerializeField] private ParticleSystem muzzleFlash = null;
-    [ShowIf("@muzzleFlash != null")] [SerializeField] private Vector3 muzzleFlashRelOffset = new Vector3();
-    public AudioSourcePool sourcePool = null;
-    public GameObject sender = null;
-
-    [FoldoutGroup("Unity Events")] public UnityEvent OnShoot;
-    [FoldoutGroup("Unity Events")] public UnityEvent OnFailedShoot;
-
-    private void Start() 
+    protected override void Init()
     {
-        if (sender == null)
-        {
-            sender = gameObject;
-        }
+        photonView = GetComponent<PhotonView>();
     }
-
-    [PunRPC]
-    public void RPC_ShootProjectile(Vector3 pPoint, Vector3 pForce)
+    
+    protected override void SpawnProjectile(Vector3 pPoint, Vector3 pForce)
     {
-        // Spawn projectile
-        GameObject projectile;
-        if (data.projecilePoolKey != "")
-        {
-            projectile = ObjectPoolDictionary.dictionary[data.projecilePoolKey].CheckOutObject(true);
-            if (projectile == null)
-                return;
-        }
+        if (IsValid())
+            photonView.RPC(nameof(RPC_ShootProjectile), RpcTarget.All, pPoint, pForce);
         else
-        {
-            projectile = Instantiate(data.projectilePrefab);
-        }
-        
-        projectile.transform.position = pPoint;
-        projectile.transform.rotation = Quaternion.LookRotation(pForce);
-
-        Projectile projectileScript = projectile.GetComponentInChildren<Projectile>();
-        projectileScript.data = data;
-
-        projectileScript.sender = sender;
-
-        projectileScript.Init(pForce);
-
-        DidShot();
+            RPC_ShootProjectile(pPoint, pForce);
     }
 
-    // [PunRPC]
-    // private void RPC_ShootRaycast(Vector3 pHitPoint, Vector3 pHitNormal)
-    // {
-    //     ApplyParticleFX(pHitPoint, Quaternion.FromToRotation(Vector3.forward, pHitNormal), pHitCollider);
-
-    //     // push object if rigidbody
-    //     Rigidbody hitRb = pHitCollider.attachedRigidbody;
-    //     if (hitRb != null)
-    //         hitRb.AddForceAtPosition(pForce, pHitPoint);
-
-    //     DidShot(pMuzzle);
-    // }
-
-    [PunRPC]
-    private void RPC_ShootRaycastMissed(Transform pMuzzle)
+    protected override void OnShootFailed()
     {
-        DidShot();
+        base.OnShootFailed();
+
+        if (IsValid())
+            photonView.RPC(nameof(RPC_ShootFailed), RpcTarget.Others);
+        else
+            RPC_ShootFailed();
     }
 
     [PunRPC]
     private void RPC_ShootFailed()
     {
-        // Audio
-        data.failedShotSound.Play(sourcePool.GetSource());
-
-        // Event
-        OnFailedShoot?.Invoke();
+        base.OnShootFailed();
     }
 
-    private void DidShot()
+    [PunRPC]
+    public void RPC_ShootProjectile(Vector3 pPoint, Vector3 pForce)
     {
-        // Particles
-        // if (muzzleFlash != null)
-        // {
-        //     if (muzzleFlash.transform.parent != pMuzzle)
-        //     {
-        //         muzzleFlash.transform.SetParent(pMuzzle);
-        //         muzzleFlash.transform.localPosition = muzzleFlashRelOffset;
-        //         muzzleFlash.transform.localRotation = Quaternion.identity;
-        //     }
-        //     muzzleFlash.Play();
-        // }
-
-        // Audio
-        if (sourcePool != null)
-            data.shotSound.Play(sourcePool.GetSource());
-
-        // Event
-        OnShoot?.Invoke();
+        base.SpawnProjectile(pPoint, pForce);
     }
 
-    private void ApplyParticleFX(Vector3 position, Quaternion rotation, Collider attachTo) 
+    [PunRPC]
+    private void RPC_ShootRaycast(Vector3 pHitPoint, Vector3 pHitNormal)
     {
-        if (data.hitFXPrefab) 
-        {
-            GameObject impact = Instantiate(data.hitFXPrefab, position, rotation) as GameObject;
-        }
+        
     }
+
+    [PunRPC]
+    private void RPC_ShootRaycastMissed(Transform pMuzzle)
+    {
+        
+    }
+
+    public bool IsValid() => PhotonNetwork.IsConnected && photonView.IsMine;
 }
