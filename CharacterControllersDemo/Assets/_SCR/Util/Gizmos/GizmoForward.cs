@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[ExecuteInEditMode]
 public class GizmoForward : GizmoBase
 {
     [SerializeField] private float magnitude = 1;

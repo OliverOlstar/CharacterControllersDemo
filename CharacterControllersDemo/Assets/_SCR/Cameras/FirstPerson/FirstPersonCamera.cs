@@ -10,13 +10,15 @@ namespace OliverLoescher.Camera
     {
         [SerializeField] private Transform cameraTransform = null;
         [SerializeField, MinMaxSlider(-90, 90, true)] private Vector2 cameraYClamp = new Vector2(-40, 50);
+        [SerializeField] private float sensitivityDelta = 1.0f;
+        [SerializeField] private float sensitivityUpdate = 1.0f;
         private Vector2 moveInput = new Vector2();
 
         private void Update() 
         {
             if (moveInput != Vector2.zero)
             {
-                RotateCamera(moveInput * Time.deltaTime);
+                RotateCamera(moveInput * sensitivityUpdate * Time.deltaTime);
             }
         }
 
@@ -27,7 +29,7 @@ namespace OliverLoescher.Camera
 
         public void OnCameraMoveDelta(Vector2 pInput)
         {
-            RotateCamera(pInput);
+            RotateCamera(pInput * sensitivityDelta);
         }
 
         private void RotateCamera(Vector2 pInput)

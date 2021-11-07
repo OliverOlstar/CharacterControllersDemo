@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 778877233}
   - component: {fileID: 778877232}
   - component: {fileID: 266292436672723331}
+  - component: {fileID: 8334817715484876141}
   m_Layer: 0
   m_Name: Player Canvas
   m_TagString: Untagged
@@ -97,6 +98,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4754fd56ae9a4d342939a61282deff88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &8334817715484876141
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 778877230}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 062b700355f75d545b1ce2222e632ced, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  disableOnPause:
+  - {fileID: 358985950651333307}
+  enableOnPause: []
 --- !u!1 &131790477585685196
 GameObject:
   m_ObjectHideFlags: 0
@@ -5146,6 +5162,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cameraTransform: {fileID: 4780935136320291127}
   cameraYClamp: {x: -50, y: 70}
+  sensitivityDelta: 1
+  sensitivityUpdate: 1
 --- !u!114 &4746869788087367458
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -8,7 +8,7 @@ using Sirenix.OdinInspector;
 
 namespace OliverLoescher.FPS
 {
-    public class FPS_InputBridge : MonoBehaviour
+    public class InputBridge_FPS : MonoBehaviour
     {
         // Camera
         [FoldoutGroup("Camera")] public Vector2 cameraMoveInput { get; private set; } = Vector2.zero;
@@ -48,57 +48,50 @@ namespace OliverLoescher.FPS
         [FoldoutGroup("Primary")] public UnityEvent onPrimaryPerformed;
         [FoldoutGroup("Primary")] public UnityEvent onPrimaryCanceled;
 
-        private PhotonView photonView;
+        public bool IsValid()
+        {
+            return PauseSystem.isPaused == false;
+        }
 
 #region Initialize
         private void Start() 
         {
-            photonView = GetComponentInParent<PhotonView>();
-
-            if (photonView == null || photonView.IsMine)
-            {
-                InputSystem.Input.FPS.CameraMove.performed += OnCameraMove;
-                InputSystem.Input.FPS.CameraMoveDelta.performed += OnCameraMoveDelta;
-                InputSystem.Input.FPS.Move.performed += OnMove;
-                InputSystem.Input.FPS.Move.canceled += OnMove;
-                InputSystem.Input.FPS.Sprint.performed += OnSprintPerformed;
-                InputSystem.Input.FPS.Sprint.canceled += OnSprintCanceled;
-                InputSystem.Input.FPS.Jump.performed += OnJumpPerformed;
-                // InputSystem.Input.FPS.Crouch.performed += OnCrouchPerformed;
-                // InputSystem.Input.FPS.Crouch.canceled += OnCrouchCanceled;
-                InputSystem.Input.FPS.Primary.performed += OnPrimaryPerformed;
-                InputSystem.Input.FPS.Primary.canceled += OnPrimaryCanceled;
-            }
+            InputSystem.Input.FPS.CameraMove.performed += OnCameraMove;
+            InputSystem.Input.FPS.CameraMoveDelta.performed += OnCameraMoveDelta;
+            InputSystem.Input.FPS.Move.performed += OnMove;
+            InputSystem.Input.FPS.Move.canceled += OnMove;
+            InputSystem.Input.FPS.Sprint.performed += OnSprintPerformed;
+            InputSystem.Input.FPS.Sprint.canceled += OnSprintCanceled;
+            InputSystem.Input.FPS.Jump.performed += OnJumpPerformed;
+            // InputSystem.Input.FPS.Crouch.performed += OnCrouchPerformed;
+            // InputSystem.Input.FPS.Crouch.canceled += OnCrouchCanceled;
+            InputSystem.Input.FPS.Primary.performed += OnPrimaryPerformed;
+            InputSystem.Input.FPS.Primary.canceled += OnPrimaryCanceled;
         }
 
         private void OnDestroy() 
         {
-            if (photonView == null || photonView.IsMine)
-            {
-                InputSystem.Input.FPS.CameraMove.performed -= OnCameraMove;
-                InputSystem.Input.FPS.CameraMoveDelta.performed -= OnCameraMoveDelta;
-                InputSystem.Input.FPS.Move.performed -= OnMove;
-                InputSystem.Input.FPS.Move.canceled -= OnMove;
-                InputSystem.Input.FPS.Sprint.performed -= OnSprintPerformed;
-                InputSystem.Input.FPS.Sprint.canceled -= OnSprintCanceled;
-                InputSystem.Input.FPS.Jump.performed -= OnJumpPerformed;
-                // InputSystem.Input.FPS.Crouch.performed -= OnCrouchPerformed;
-                // InputSystem.Input.FPS.Crouch.canceled -= OnCrouchCanceled;
-                InputSystem.Input.FPS.Primary.performed -= OnPrimaryPerformed;
-                InputSystem.Input.FPS.Primary.canceled -= OnPrimaryCanceled;
-            }
+            InputSystem.Input.FPS.CameraMove.performed -= OnCameraMove;
+            InputSystem.Input.FPS.CameraMoveDelta.performed -= OnCameraMoveDelta;
+            InputSystem.Input.FPS.Move.performed -= OnMove;
+            InputSystem.Input.FPS.Move.canceled -= OnMove;
+            InputSystem.Input.FPS.Sprint.performed -= OnSprintPerformed;
+            InputSystem.Input.FPS.Sprint.canceled -= OnSprintCanceled;
+            InputSystem.Input.FPS.Jump.performed -= OnJumpPerformed;
+            // InputSystem.Input.FPS.Crouch.performed -= OnCrouchPerformed;
+            // InputSystem.Input.FPS.Crouch.canceled -= OnCrouchCanceled;
+            InputSystem.Input.FPS.Primary.performed -= OnPrimaryPerformed;
+            InputSystem.Input.FPS.Primary.canceled -= OnPrimaryCanceled;
         }
 
         private void OnEnable()
         {
             InputSystem.Input.FPS.Enable();
-            Cursor.lockState = CursorLockMode.Locked;
         }
 
         private void OnDisable() 
         {
             InputSystem.Input.FPS.Disable();
-            Cursor.lockState = CursorLockMode.None;
         }
 #endregion
 
@@ -109,45 +102,70 @@ namespace OliverLoescher.FPS
             input.y *= pAxisMult.y * (cameraInvertY ? -1 : 1);
             return input * pMult;
         }
+
         public void OnCameraMove(InputAction.CallbackContext ctx) 
         {
+            if (IsValid() == false)
+                return;
+
             cameraMoveInput = ConvertCameraValues(ctx, cameraMoveMultipler, cameraMoveSensitivity);
             onCameraMove.Invoke(cameraMoveInput);
         }  
         public void OnCameraMoveDelta(InputAction.CallbackContext ctx) 
         {
+            if (IsValid() == false)
+                return;
+
             onCameraMoveDelta?.Invoke(ConvertCameraValues(ctx, cameraMoveDeltaMultipler, cameraMoveDeltaSensitivity));
         }
         private void OnMove(InputAction.CallbackContext ctx) 
         {
+            if (IsValid() == false)
+                return;
+
             moveInput = ctx.ReadValue<Vector2>();
             onMove?.Invoke(moveInput);
         }
 
         private void OnSprintPerformed(InputAction.CallbackContext ctx)
         {
+            if (IsValid() == false)
+                return;
+
             isSprinting = true;
             onSprint?.Invoke(isSprinting);
         }
         private void OnSprintCanceled(InputAction.CallbackContext ctx)
         {
+            if (IsValid() == false)
+                return;
+
             isSprinting = false;
             onSprint?.Invoke(isSprinting);
         }
 
         private void OnJumpPerformed(InputAction.CallbackContext ctx)
         {
+            if (IsValid() == false)
+                return;
+
             onJump?.Invoke();
         }
 
         private void OnPrimaryPerformed(InputAction.CallbackContext ctx)
         {
+            if (IsValid() == false)
+                return;
+
             isPressingPrimary = true;
             onPrimary?.Invoke(true);
             onPrimaryPerformed?.Invoke();
         }
         private void OnPrimaryCanceled(InputAction.CallbackContext ctx)
         {
+            if (IsValid() == false)
+                return;
+
             isPressingPrimary = false;
             onPrimary?.Invoke(false);
             onPrimaryCanceled?.Invoke();

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[ExecuteInEditMode]
 public class GizmoBase : MonoBehaviour
 {
     [SerializeField] private Color color = new Color(0, 0.5f, 1, 1);
