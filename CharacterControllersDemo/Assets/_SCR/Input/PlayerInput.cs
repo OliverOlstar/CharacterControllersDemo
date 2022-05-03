@@ -627,9 +627,33 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                     ""interactions"": """"
                 },
                 {
+                    ""name"": ""Zoom"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""6dfc14cd-cc8b-45a8-9616-e6cb53ad65b4"",
+                    ""expectedControlType"": ""Analog"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
                     ""name"": ""Sprint"",
                     ""type"": ""Button"",
                     ""id"": ""2e3f0408-2fdf-48ad-9123-1d488b8368be"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""ModeToggle"",
+                    ""type"": ""Button"",
+                    ""id"": ""9cc8fff5-ec13-4746-9ff0-add64d6d0e5e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""TargetToggle"",
+                    ""type"": ""Button"",
+                    ""id"": ""c600d64c-88f6-4354-9459-9343bca35844"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
@@ -833,6 +857,72 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                     ""action"": ""Sprint"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""aa192966-6398-4c15-8826-f8a6c542c8a1"",
+                    ""path"": ""<Mouse>/scroll/y"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Zoom"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bbbfa0bd-bff4-4c0d-ad81-f07e3f41235b"",
+                    ""path"": ""<Gamepad>/dpad/y"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Zoom"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d40e392d-d99f-4a6b-b921-ba4669cd9736"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""ModeToggle"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""92b5bc89-81db-4b16-ae05-36043c79f419"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""ModeToggle"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2d7998cb-c286-411b-bc92-16ad88a137f9"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""TargetToggle"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""633eb6a4-4830-4493-b1ad-e6107c539c3f"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""TargetToggle"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -932,7 +1022,10 @@ public class @PlayerInput : IInputActionCollection, IDisposable
         m_SpectatorCamera_LookDelta = m_SpectatorCamera.FindAction("LookDelta", throwIfNotFound: true);
         m_SpectatorCamera_MoveHorizontal = m_SpectatorCamera.FindAction("MoveHorizontal", throwIfNotFound: true);
         m_SpectatorCamera_MoveVertical = m_SpectatorCamera.FindAction("MoveVertical", throwIfNotFound: true);
+        m_SpectatorCamera_Zoom = m_SpectatorCamera.FindAction("Zoom", throwIfNotFound: true);
         m_SpectatorCamera_Sprint = m_SpectatorCamera.FindAction("Sprint", throwIfNotFound: true);
+        m_SpectatorCamera_ModeToggle = m_SpectatorCamera.FindAction("ModeToggle", throwIfNotFound: true);
+        m_SpectatorCamera_TargetToggle = m_SpectatorCamera.FindAction("TargetToggle", throwIfNotFound: true);
         // Menu
         m_Menu = asset.FindActionMap("Menu", throwIfNotFound: true);
         m_Menu_Pause = m_Menu.FindAction("Pause", throwIfNotFound: true);
@@ -1193,7 +1286,10 @@ public class @PlayerInput : IInputActionCollection, IDisposable
     private readonly InputAction m_SpectatorCamera_LookDelta;
     private readonly InputAction m_SpectatorCamera_MoveHorizontal;
     private readonly InputAction m_SpectatorCamera_MoveVertical;
+    private readonly InputAction m_SpectatorCamera_Zoom;
     private readonly InputAction m_SpectatorCamera_Sprint;
+    private readonly InputAction m_SpectatorCamera_ModeToggle;
+    private readonly InputAction m_SpectatorCamera_TargetToggle;
     public struct SpectatorCameraActions
     {
         private @PlayerInput m_Wrapper;
@@ -1202,7 +1298,10 @@ public class @PlayerInput : IInputActionCollection, IDisposable
         public InputAction @LookDelta => m_Wrapper.m_SpectatorCamera_LookDelta;
         public InputAction @MoveHorizontal => m_Wrapper.m_SpectatorCamera_MoveHorizontal;
         public InputAction @MoveVertical => m_Wrapper.m_SpectatorCamera_MoveVertical;
+        public InputAction @Zoom => m_Wrapper.m_SpectatorCamera_Zoom;
         public InputAction @Sprint => m_Wrapper.m_SpectatorCamera_Sprint;
+        public InputAction @ModeToggle => m_Wrapper.m_SpectatorCamera_ModeToggle;
+        public InputAction @TargetToggle => m_Wrapper.m_SpectatorCamera_TargetToggle;
         public InputActionMap Get() { return m_Wrapper.m_SpectatorCamera; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1224,9 +1323,18 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                 @MoveVertical.started -= m_Wrapper.m_SpectatorCameraActionsCallbackInterface.OnMoveVertical;
                 @MoveVertical.performed -= m_Wrapper.m_SpectatorCameraActionsCallbackInterface.OnMoveVertical;
                 @MoveVertical.canceled -= m_Wrapper.m_SpectatorCameraActionsCallbackInterface.OnMoveVertical;
+                @Zoom.started -= m_Wrapper.m_SpectatorCameraActionsCallbackInterface.OnZoom;
+                @Zoom.performed -= m_Wrapper.m_SpectatorCameraActionsCallbackInterface.OnZoom;
+                @Zoom.canceled -= m_Wrapper.m_SpectatorCameraActionsCallbackInterface.OnZoom;
                 @Sprint.started -= m_Wrapper.m_SpectatorCameraActionsCallbackInterface.OnSprint;
                 @Sprint.performed -= m_Wrapper.m_SpectatorCameraActionsCallbackInterface.OnSprint;
                 @Sprint.canceled -= m_Wrapper.m_SpectatorCameraActionsCallbackInterface.OnSprint;
+                @ModeToggle.started -= m_Wrapper.m_SpectatorCameraActionsCallbackInterface.OnModeToggle;
+                @ModeToggle.performed -= m_Wrapper.m_SpectatorCameraActionsCallbackInterface.OnModeToggle;
+                @ModeToggle.canceled -= m_Wrapper.m_SpectatorCameraActionsCallbackInterface.OnModeToggle;
+                @TargetToggle.started -= m_Wrapper.m_SpectatorCameraActionsCallbackInterface.OnTargetToggle;
+                @TargetToggle.performed -= m_Wrapper.m_SpectatorCameraActionsCallbackInterface.OnTargetToggle;
+                @TargetToggle.canceled -= m_Wrapper.m_SpectatorCameraActionsCallbackInterface.OnTargetToggle;
             }
             m_Wrapper.m_SpectatorCameraActionsCallbackInterface = instance;
             if (instance != null)
@@ -1243,9 +1351,18 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                 @MoveVertical.started += instance.OnMoveVertical;
                 @MoveVertical.performed += instance.OnMoveVertical;
                 @MoveVertical.canceled += instance.OnMoveVertical;
+                @Zoom.started += instance.OnZoom;
+                @Zoom.performed += instance.OnZoom;
+                @Zoom.canceled += instance.OnZoom;
                 @Sprint.started += instance.OnSprint;
                 @Sprint.performed += instance.OnSprint;
                 @Sprint.canceled += instance.OnSprint;
+                @ModeToggle.started += instance.OnModeToggle;
+                @ModeToggle.performed += instance.OnModeToggle;
+                @ModeToggle.canceled += instance.OnModeToggle;
+                @TargetToggle.started += instance.OnTargetToggle;
+                @TargetToggle.performed += instance.OnTargetToggle;
+                @TargetToggle.canceled += instance.OnTargetToggle;
             }
         }
     }
@@ -1332,7 +1449,10 @@ public class @PlayerInput : IInputActionCollection, IDisposable
         void OnLookDelta(InputAction.CallbackContext context);
         void OnMoveHorizontal(InputAction.CallbackContext context);
         void OnMoveVertical(InputAction.CallbackContext context);
+        void OnZoom(InputAction.CallbackContext context);
         void OnSprint(InputAction.CallbackContext context);
+        void OnModeToggle(InputAction.CallbackContext context);
+        void OnTargetToggle(InputAction.CallbackContext context);
     }
     public interface IMenuActions
     {

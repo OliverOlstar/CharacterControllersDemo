@@ -4,25 +4,16 @@ using UnityEngine;
 
 public class PoolElement : MonoBehaviour
 {
-    private string poolKey = "";
     private Transform parent = null;
 
-    public virtual void Init(string pKey, Transform pParent)
+    public virtual void Init(Transform pParent)
     {
-        poolKey = pKey;
         parent = pParent;
     }
 
     public virtual void ReturnToPool()
     {
-        if (poolKey != "")
-        {
-            ObjectPoolDictionary.dictionary[poolKey].CheckInObject(gameObject, this, parent);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        ObjectPoolDictionary.Return(gameObject, this, parent);
     }
 
     public virtual void OnExitPool()
@@ -32,9 +23,6 @@ public class PoolElement : MonoBehaviour
 
     private void OnDestroy() 
     {
-        if (poolKey != "" && ObjectPoolDictionary.dictionary.ContainsKey(poolKey))
-        {
-            ObjectPoolDictionary.dictionary[poolKey].ObjectDestroyed(gameObject, this);
-        }
+        ObjectPoolDictionary.ObjectDestroyed(gameObject, this);
     }
 }

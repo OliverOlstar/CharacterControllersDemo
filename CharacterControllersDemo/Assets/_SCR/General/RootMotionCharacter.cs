@@ -12,12 +12,12 @@ namespace OliverLoescher
         [Header("Root Motion")]
         [SerializeField] private CharacterController character = null;
         [SerializeField] private OnGround grounded = null;
-        private Animator animator;
+        private Animator animator = null;
 
         [Space, SerializeField] private float gravity = 9.81f;
         [SerializeField] private float stepDown = 0.1f; 
-        [SerializeField] private float slopeLimit = 45.0f;
-        [SerializeField] private float slideFriction = 1.0f;
+        // [SerializeField] private float slopeLimit = 45.0f;
+        // [SerializeField] private float slideFriction = 1.0f;
         private bool inAir = false;
         private Vector3 rootMotion = new Vector3();
         private Vector3 velocity = Vector3.zero;

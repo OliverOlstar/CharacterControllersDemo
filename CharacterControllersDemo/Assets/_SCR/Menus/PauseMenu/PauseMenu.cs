@@ -14,6 +14,8 @@ namespace OliverLoescher
         {
             Application.focusChanged += OnFocusLost;
             InputSystem.Input.Menu.Pause.performed += OnInput;
+            
+            menuObject.SetActive(false);
             Cursor.lockState = CursorLockMode.Locked;
         }
 

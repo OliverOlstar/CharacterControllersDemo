@@ -5450,7 +5450,19 @@ MonoBehaviour:
       m_Calls: []
   onValueOut:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 8803655957156052931}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   onValueIn:
     m_PersistentCalls:
       m_Calls: []
@@ -5571,9 +5583,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1cc02bde2e592641941cf96d6a72a9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cameraMoveSensitivity: 5
-  cameraMoveMultipler: {x: 1, y: 1}
-  onCameraMove:
+  lookSensitivity: 5
+  lookMultipler: {x: 1, y: 1}
+  onLook:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 3452116999988166372}
@@ -5588,9 +5600,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  cameraMoveDeltaSensitivity: 0.05
-  cameraMoveDeltaMultipler: {x: 1, y: 1}
-  onCameraMoveDelta:
+  lookDeltaSensitivity: 0.05
+  lookDeltaMultipler: {x: 1, y: 1}
+  onLookDelta:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 3452116999988166372}
@@ -5605,7 +5617,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  cameraInvertY: 0
+  lookInvertY: 0
   onMove:
     m_PersistentCalls:
       m_Calls:

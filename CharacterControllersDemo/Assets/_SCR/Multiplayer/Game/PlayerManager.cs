@@ -1,6 +1,6 @@
 using UnityEngine;
 using Photon.Pun;
-using System.IO;
+using Sirenix.OdinInspector;
 
 namespace OliverLoescher.Multiplayer
 {
@@ -10,8 +10,8 @@ namespace OliverLoescher.Multiplayer
         private PhotonView photonView;
         private GameObject playerObject;
 
-        [SerializeField] private GameObject playerPrefab = null;
-        [SerializeField] private GameObject othersPrefab = null; 
+        [SerializeField, AssetsOnly] private GameObject playerPrefab = null;
+        [SerializeField, AssetsOnly] private GameObject othersPrefab = null; 
 
         private void Awake() 
         {
@@ -24,11 +24,14 @@ namespace OliverLoescher.Multiplayer
             {
                 SpawnPlayer();
             }
+
+            Camera.SpectatorCamera.Instance.gameObject.SetActive(false);
         }
 
         public void SpawnPlayer()
         {
             playerObject = Instantiate(playerPrefab);
+            playerObject.GetComponent<Health>().onValueOut.AddListener(OnPlayerDeath);
             PhotonView pv = playerObject.GetComponent<PhotonView>();
 
             if (PhotonNetwork.AllocateViewID(pv))
@@ -50,9 +53,9 @@ namespace OliverLoescher.Multiplayer
             photonView.ViewID = pViewID;
         }
 
-        // private void CreateController()
-        // {
-        //     playerObject = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "CharacterController Root"), Vector3.zero, Quaternion.identity);
-        // }
+        private void OnPlayerDeath()
+        {
+            Camera.SpectatorCamera.Instance.gameObject.SetActive(true);
+        }
     }
 }

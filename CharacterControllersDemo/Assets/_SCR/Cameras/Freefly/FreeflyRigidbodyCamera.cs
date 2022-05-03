@@ -13,6 +13,11 @@ namespace OliverLoescher.Camera
             moveTransform = null;
         }
 
+        private void OnEnable() 
+        {
+            moveRigidbody.velocity = Vector3.zero;
+        }
+
         protected override void DoMove(Vector2 pMovement, float pUp, float pMult)
         {
             Vector3 move = (pMovement.y * transform.forward) + (pMovement.x * transform.right) + (pUp * transform.up);

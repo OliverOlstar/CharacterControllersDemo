@@ -6,30 +6,32 @@ using Sirenix.OdinInspector;
 public class ObjectPoolDictionary : MonoBehaviour
 {
     [System.Serializable]
-    public class Pool
+    public class PoolValues
     {
-        [DisableInPlayMode] [Required] public string key = "";
         [AssetsOnly] public GameObject prefab = null;
-        [Tooltip("What returns when all items are already checked out")]
-        [SerializeField] private PoolReturnType returnType = PoolReturnType.Expand;
+        public string key => prefab == null ? string.Empty : prefab.name;
 
-        [Space]
-        [HideInPlayMode] [SerializeField] private int startingCopies = 15;
-        
+        [Tooltip("What returns when all items are already checked out")]
+        public PoolReturnType returnType = PoolReturnType.Expand;
+        [HideInPlayMode] public int startingCopies = 5;
+    }
+
+    private class Pool
+    {
+        private PoolValues values = null;
         private List<PoolItem> itemsIn = new List<PoolItem>();
         private List<PoolItem> itemsOut = new List<PoolItem>();
-        private int currentIndex = 0;
 
         private Transform transform = null;
 
-        public void Init(Transform pTransform)
+        public Pool(PoolValues pValues, Transform pTransform)
         {
+            values = pValues;
             transform = pTransform;
 
-            while (startingCopies > 0)
+            while (itemsIn.Count < values.startingCopies)
             {
                 itemsIn.Add(InstiateNewObject());
-                startingCopies--;
             }
         }
 
@@ -37,7 +39,7 @@ public class ObjectPoolDictionary : MonoBehaviour
         {
             PoolItem item = new PoolItem();
 
-            item.gameObject = Instantiate(prefab, transform);
+            item.gameObject = Instantiate(values.prefab, transform);
             // item.gameObject.transform.SetParent(transform);
 
             item.element = item.gameObject.GetComponentInChildren<PoolElement>();
@@ -45,7 +47,7 @@ public class ObjectPoolDictionary : MonoBehaviour
             {
                 item.parent = item.gameObject.transform;
                 item.gameObject = item.element.gameObject;
-                item.element.Init(key, item.parent);
+                item.element.Init(item.parent);
             }
             else
             {
@@ -67,12 +69,12 @@ public class ObjectPoolDictionary : MonoBehaviour
                 itemsIn.RemoveAt(0);
             }
             // Expand
-            else if (returnType == PoolReturnType.Expand)
+            else if (values.returnType == PoolReturnType.Expand)
             {
                 item = InstiateNewObject();
             }
             // Grab first out
-            else if (returnType == PoolReturnType.Loop) 
+            else if (values.returnType == PoolReturnType.Loop) 
             {
                 if (itemsOut.Count > 0)
                 {
@@ -123,6 +125,11 @@ public class ObjectPoolDictionary : MonoBehaviour
             if (!itemsIn.Remove(item))
                 itemsOut.Remove(item);
         }
+
+        public void OnDestroy()
+        {
+
+        }
     }
 
     public struct PoolItem
@@ -139,45 +146,83 @@ public class ObjectPoolDictionary : MonoBehaviour
         Null
     }
 
-    // Dictionary
-    public static Dictionary<string, Pool> dictionary = new Dictionary<string, Pool>();
-    [SerializeField] private Pool[] pools = new Pool[1];
-
-    private void Awake() 
+#region Singleton
+    public static ObjectPoolDictionary _Instance = null;
+    public static ObjectPoolDictionary Instance 
     {
-        foreach (Pool p in pools)
+        get
         {
-            // Add to Dictionary
-            if (p.key != "")
+            if (_Instance != null)
             {
-                if (dictionary.ContainsKey(p.key))
-                {
-                    Debug.LogError("[ObjectPoolDictionary] Dictionary already contains key, destroying self", gameObject);
-                    p.key = ""; // Prevent OnDestroy from being called
-                    Destroy(this);
-                }
-                else
-                {
-                    dictionary.Add(p.key, p);
-                }
+                return _Instance;
             }
-
-            // Init
-            Transform poolT = new GameObject("Pool " + p.key).transform;
-            poolT.SetParent(transform);
-            p.Init(poolT);
+            GameObject gameObject = new GameObject("ObjectPoolDictionary Container");
+            _Instance = gameObject.AddComponent<ObjectPoolDictionary>();
+            return _Instance;
         }
+    }
+
+#endregion
+
+    private static Dictionary<string, Pool> dictionary = new Dictionary<string, Pool>();
+
+    public static GameObject Get(GameObject pObject) 
+    { 
+        if (pObject == null)
+        {
+            return null;
+        }
+        if (dictionary.ContainsKey(pObject.name) == false)
+        {
+            PoolValues values = new PoolValues();
+            values.prefab = pObject;
+            return Instance.CreatePool(values).CheckOutObject();
+        }
+        return dictionary[pObject.name].CheckOutObject();
+    }
+    public static GameObject Get(PoolValues pValues) 
+    { 
+        if (pValues.prefab == null)
+        {
+            return null;
+        }
+        if (dictionary.ContainsKey(pValues.key) == false)
+        {
+            return Instance.CreatePool(pValues).CheckOutObject();
+        }
+        return dictionary[pValues.key].CheckOutObject();
+    }
+
+    public static void Return(GameObject pObject, PoolElement pElement, Transform pParent, bool pDisable = true) 
+    {
+        dictionary[pObject.name].CheckInObject(pObject, pElement, pParent, pDisable);
+    }
+    
+
+    public static void ObjectDestroyed(GameObject pObject, PoolElement pElement)
+    {
+        if (dictionary.ContainsKey(pObject.name))
+        {
+            dictionary[pObject.name].ObjectDestroyed(pObject, pElement);
+        }
+    }
+
+    private Pool CreatePool(PoolValues pValues)
+    {
+        Transform poolT = new GameObject("Pool " + pValues.key).transform;
+        poolT.SetParent(transform);
+        Pool pool = new Pool(pValues, poolT);
+
+        dictionary.Add(pValues.key, pool);
+        return pool;
     }
 
     private void OnDestroy() 
     {
-        foreach (Pool p in pools)
+        foreach (Pool p in dictionary.Values)
         {
-            // Remove to Dictionary
-            if (p.key != "")
-            {
-                dictionary.Remove(p.key);
-            }
+            p.OnDestroy();
         }
+        dictionary.Clear();
     }
 }

@@ -11,17 +11,17 @@ namespace OliverLoescher.FPS
     public class InputBridge_FPS : MonoBehaviour
     {
         // Camera
-        [FoldoutGroup("Camera")] public Vector2 cameraMoveInput { get; private set; } = Vector2.zero;
+        [FoldoutGroup("Look")] public Vector2 lookInput { get; private set; } = Vector2.zero;
 
-        [FoldoutGroup("Camera")] public float cameraMoveSensitivity = 5.0f;
-        [FoldoutGroup("Camera")] public Vector2 cameraMoveMultipler = Vector2.one;
-        [FoldoutGroup("Camera")] public UnityEventsUtil.Vector2Event onCameraMove;
+        [FoldoutGroup("Look")] public float lookSensitivity = 5.0f;
+        [FoldoutGroup("Look")] public Vector2 lookMultipler = Vector2.one;
+        [FoldoutGroup("Look")] public UnityEventsUtil.Vector2Event onLook;
 
-        [FoldoutGroup("Camera")] public float cameraMoveDeltaSensitivity = 0.05f;
-        [FoldoutGroup("Camera")] public Vector2 cameraMoveDeltaMultipler = Vector2.one;
-        [FoldoutGroup("Camera")] public UnityEventsUtil.Vector2Event onCameraMoveDelta;
+        [FoldoutGroup("Look")] public float lookDeltaSensitivity = 0.05f;
+        [FoldoutGroup("Look")] public Vector2 lookDeltaMultipler = Vector2.one;
+        [FoldoutGroup("Look")] public UnityEventsUtil.Vector2Event onLookDelta;
         
-        [FoldoutGroup("Camera")] public bool cameraInvertY = false;
+        [FoldoutGroup("Look")] public bool lookInvertY = false;
 
         // Move
         [FoldoutGroup("Move")] public Vector2 moveInput { get; private set; } = new Vector2();
@@ -48,11 +48,6 @@ namespace OliverLoescher.FPS
         [FoldoutGroup("Primary")] public UnityEvent onPrimaryPerformed;
         [FoldoutGroup("Primary")] public UnityEvent onPrimaryCanceled;
 
-        public bool IsValid()
-        {
-            return PauseSystem.isPaused == false;
-        }
-
 #region Initialize
         private void Start() 
         {
@@ -67,6 +62,8 @@ namespace OliverLoescher.FPS
             // InputSystem.Input.FPS.Crouch.canceled += OnCrouchCanceled;
             InputSystem.Input.FPS.Primary.performed += OnPrimaryPerformed;
             InputSystem.Input.FPS.Primary.canceled += OnPrimaryCanceled;
+
+            PauseSystem.onPause += ClearInputs;
         }
 
         private void OnDestroy() 
@@ -82,6 +79,8 @@ namespace OliverLoescher.FPS
             // InputSystem.Input.FPS.Crouch.canceled -= OnCrouchCanceled;
             InputSystem.Input.FPS.Primary.performed -= OnPrimaryPerformed;
             InputSystem.Input.FPS.Primary.canceled -= OnPrimaryCanceled;
+
+            PauseSystem.onPause -= ClearInputs;
         }
 
         private void OnEnable()
@@ -95,11 +94,28 @@ namespace OliverLoescher.FPS
         }
 #endregion
 
+        public bool IsValid()
+        {
+            return PauseSystem.isPaused == false;
+        }
+
+        public void ClearInputs()
+        {
+            lookInput = Vector2.zero;
+            onLook?.Invoke(lookInput);
+
+            moveInput = Vector2.zero;
+            onMove?.Invoke(moveInput);
+
+            isPressingPrimary = false;
+            onPrimaryCanceled?.Invoke();
+        }
+
         private Vector2 ConvertCameraValues(InputAction.CallbackContext ctx, Vector2 pAxisMult, float pMult)
         {
             Vector2 input = ctx.ReadValue<Vector2>();
             input.x *= pAxisMult.x;
-            input.y *= pAxisMult.y * (cameraInvertY ? -1 : 1);
+            input.y *= pAxisMult.y * (lookInvertY ? -1 : 1);
             return input * pMult;
         }
 
@@ -108,15 +124,15 @@ namespace OliverLoescher.FPS
             if (IsValid() == false)
                 return;
 
-            cameraMoveInput = ConvertCameraValues(ctx, cameraMoveMultipler, cameraMoveSensitivity);
-            onCameraMove.Invoke(cameraMoveInput);
+            lookInput = ConvertCameraValues(ctx, lookMultipler, lookSensitivity);
+            onLook.Invoke(lookInput);
         }  
         public void OnCameraMoveDelta(InputAction.CallbackContext ctx) 
         {
             if (IsValid() == false)
                 return;
 
-            onCameraMoveDelta?.Invoke(ConvertCameraValues(ctx, cameraMoveDeltaMultipler, cameraMoveDeltaSensitivity));
+            onLookDelta?.Invoke(ConvertCameraValues(ctx, lookDeltaMultipler, lookDeltaSensitivity));
         }
         private void OnMove(InputAction.CallbackContext ctx) 
         {

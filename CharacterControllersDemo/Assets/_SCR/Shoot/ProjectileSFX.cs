@@ -2,37 +2,40 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ProjectileSFX : MonoBehaviour
+namespace OliverLoescher.Weapon
 {
-    [SerializeField] private AudioClip[] hitClips = new AudioClip[0];
-    [SerializeField] private Vector2 hitPitch = new Vector2(0.9f, 1.2f);
-    [SerializeField] private AudioClip[] explodeClips = new AudioClip[0];
-    [SerializeField] private Vector2 explodePitch = new Vector2(0.9f, 1.2f);
-    private AudioSource[] sources = new AudioSource[0];
-    int index = 0;
-
-    void Start()
+    public class ProjectileSFX : MonoBehaviour
     {
-        sources = GetComponents<AudioSource>();
-    }
+        [SerializeField] private AudioClip[] hitClips = new AudioClip[0];
+        [SerializeField] private Vector2 hitPitch = new Vector2(0.9f, 1.2f);
+        [SerializeField] private AudioClip[] explodeClips = new AudioClip[0];
+        [SerializeField] private Vector2 explodePitch = new Vector2(0.9f, 1.2f);
+        private AudioSource[] sources = new AudioSource[0];
+        int index = 0;
 
-    public AudioSource GetSource()
-    {
-        index++;
-        if (index == sources.Length)
+        void Start()
         {
-            index = 0;
+            sources = GetComponents<AudioSource>();
         }
-        return sources[index];
-    }
 
-    public void OnCollision()
-    {
-        AudioUtil.PlayOneShotRandomClip(GetSource(), hitClips, hitPitch);
-    }
+        public AudioSource GetSource()
+        {
+            index++;
+            if (index == sources.Length)
+            {
+                index = 0;
+            }
+            return sources[index];
+        }
 
-    public void OnExplode()
-    {
-        AudioUtil.PlayOneShotRandomClip(GetSource(), explodeClips, explodePitch);
+        public void OnCollision()
+        {
+            AudioUtil.PlayOneShotRandomClip(GetSource(), hitClips, hitPitch);
+        }
+
+        public void OnExplode()
+        {
+            AudioUtil.PlayOneShotRandomClip(GetSource(), explodeClips, explodePitch);
+        }
     }
 }

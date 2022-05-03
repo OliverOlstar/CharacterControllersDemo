@@ -8,6 +8,13 @@ public class SliderText : MonoBehaviour
     [SerializeField] private TMP_Text text = null;
     private Slider slider = null;
     
+    [Header("Text")]
+    [Tooltip("Xn - n number of decimal place \nX format - F (fixed-point), D (decimal), C (currency) P (percent), etc")]
+    // https://docs.microsoft.com/en-us/previous-versions/dotnet/netframework-3.0/dwhawy9k(v=vs.85)?redirectedfrom=MSDN
+    [SerializeField] private string textFormat = "F2";
+    [SerializeField] private string preText = "";
+    [SerializeField] private string postText = "";
+    
     void Awake()
     {
         slider = GetComponent<Slider>();
@@ -22,6 +29,6 @@ public class SliderText : MonoBehaviour
 
     public void OnValueChanged(float pValue)
     {
-        text.text = pValue.ToString();
+        text.text = preText + pValue.ToString(textFormat) + postText;
     }
 }
