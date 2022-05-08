@@ -2,10 +2,30 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WFC_Module : MonoBehaviour
+namespace OliverLoescher.WaveFunctionCollapse
 {
-    public int northEdge = 0;
-    public int eastEdge = 0;
-    public int southEdge = 0;
-    public int westEdge = 0;
+	public class WFC_Module : MonoBehaviour
+	{
+		public int[] edges = new int[4];
+
+		private void OnDrawGizmosSelected() 
+		{
+			UnityEditor.Handles.Label(transform.position + Vector3.forward * 0.65f, edges[0].ToString());
+			UnityEditor.Handles.Label(transform.position + Vector3.back * 0.65f, edges[1].ToString());
+			UnityEditor.Handles.Label(transform.position + Vector3.right * 0.65f, edges[2].ToString());
+			UnityEditor.Handles.Label(transform.position + Vector3.left * 0.65f, edges[3].ToString());
+		}
+
+		public static int GetOpposingEdge(int edgeIndex)
+		{
+			switch (edgeIndex)
+			{
+				case 0: return 1;
+				case 1: return 0;
+				case 2: return 3;
+				case 3: return 2;
+			}
+			return -1;
+		}
+	}
 }

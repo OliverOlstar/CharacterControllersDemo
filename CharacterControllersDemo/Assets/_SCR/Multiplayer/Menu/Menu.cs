@@ -4,13 +4,13 @@ using UnityEngine;
 
 namespace OliverLoescher.UI
 {
-    public class Menu : MonoBehaviour
-    {
-        public string menuName = "Untitled";
+	public class Menu : MonoBehaviour
+	{
+		public string menuName = "Untitled";
 
-        public void Toggle(bool pOpen)
-        {
-            gameObject.SetActive(pOpen);
-        }
-    }
+		public void Toggle(bool pOpen)
+		{
+			gameObject.SetActive(pOpen);
+		}
+	}
 }

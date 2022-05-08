@@ -4,24 +4,24 @@ using UnityEngine;
 
 namespace OliverLoescher 
 {
-    public class InputSystem : MonoBehaviour
-    {
-        public static PlayerInput Input
-        {
-            get
-            {
-                if (_Input == null)
-                {
-                    _Input = new PlayerInput();
-                }
-                return _Input;
-            }
+	public class InputSystem : MonoBehaviour
+	{
+		public static PlayerInput Input
+		{
+			get
+			{
+				if (_Input == null)
+				{
+					_Input = new PlayerInput();
+				}
+				return _Input;
+			}
 
-            set
-            {
-                _Input = value;
-            }
-        }
-        private static PlayerInput _Input = null;
-    }
+			set
+			{
+				_Input = value;
+			}
+		}
+		private static PlayerInput _Input = null;
+	}
 }

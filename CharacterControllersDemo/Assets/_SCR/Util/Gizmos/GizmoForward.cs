@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class GizmoForward : GizmoBase
 {
-    [SerializeField] private float magnitude = 1;
+	[SerializeField] private float magnitude = 1;
 
-    protected override void DrawGizmos()
-    {
-        base.DrawGizmos();
-        
-        Gizmos.DrawLine(transform.position, transform.position + (transform.forward * magnitude));
-    }
+	protected override void DrawGizmos()
+	{
+		base.DrawGizmos();
+		
+		Gizmos.DrawLine(transform.position, transform.position + (transform.forward * magnitude));
+	}
 }

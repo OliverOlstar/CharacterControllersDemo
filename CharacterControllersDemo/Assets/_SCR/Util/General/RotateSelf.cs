@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class RotateSelf : MonoBehaviour
 {
-    [SerializeField] private Vector3 rotateSpeed = new Vector3(0, 1, 0);
+	[SerializeField] private Vector3 rotateSpeed = new Vector3(0, 1, 0);
 
-    private void LateUpdate()
-    {
-        transform.Rotate(rotateSpeed * Time.deltaTime, Space.Self);
-    }
+	private void LateUpdate()
+	{
+		transform.Rotate(rotateSpeed * Time.deltaTime, Space.Self);
+	}
 }

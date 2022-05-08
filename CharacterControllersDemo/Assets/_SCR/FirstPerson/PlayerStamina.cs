@@ -6,8 +6,8 @@ using Sirenix.OdinInspector;
 
 namespace OliverLoescher
 {
-    public class PlayerStamina : CharacterValue
-    {
-        
-    }
+	public class PlayerStamina : CharacterValue
+	{
+		
+	}
 }

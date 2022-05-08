@@ -4,15 +4,15 @@ using UnityEditor;
 [CustomEditor(typeof(UnityEventWithButton))]
 public class UnityEventWithButtonEditor : Editor
 {
-    public override void OnInspectorGUI() 
-    {
-        base.OnInspectorGUI();
+	public override void OnInspectorGUI() 
+	{
+		base.OnInspectorGUI();
 
-        UnityEventWithButton script = (UnityEventWithButton)target;
+		UnityEventWithButton script = (UnityEventWithButton)target;
 
-        if (GUILayout.Button("Invoke"))
-        {
-            script.InvokeEvent();
-        }
-    }
+		if (GUILayout.Button("Invoke"))
+		{
+			script.InvokeEvent();
+		}
+	}
 }
