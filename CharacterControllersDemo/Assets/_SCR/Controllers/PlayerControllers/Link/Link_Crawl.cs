@@ -11,7 +11,7 @@ namespace OliverLoescher.Link
         [SerializeField] private float colliderHeight = 1.5f;
 
         [Header("Components")]
-        [SerializeField] private Link_InputBridge input = null;
+        [SerializeField] private InputBridge_Platformer input = null;
         [SerializeField] private Transform cameraForward = null;
         [SerializeField] private CharacterController character = null;
         [SerializeField] private OnGround grounded = null;

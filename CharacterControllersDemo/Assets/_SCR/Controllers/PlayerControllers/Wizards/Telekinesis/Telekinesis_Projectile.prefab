@@ -1001,7 +1001,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06c2b04b8642ec9418cc55d3fa00fca9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  data: {fileID: 11400000, guid: bb9db4b0d98ae044fa7f4264449f51e1, type: 2}
+  data: {fileID: 11400000, guid: bffbc094c1dfaf849b5790b0fb5f25e6, type: 2}
   collider: {fileID: 6814629326868493549}
   audio: {fileID: 0}
   sender: {fileID: 0}

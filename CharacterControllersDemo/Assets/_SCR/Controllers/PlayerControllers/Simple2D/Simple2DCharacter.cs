@@ -22,9 +22,9 @@ namespace OliverLoescher
 
             if (photonView == null || photonView.IsMine)
             {
-                InputSystem.Input.Simple2D.Move.performed += OnMove;
-                InputSystem.Input.Simple2D.Move.canceled += OnMove;
-                InputSystem.Input.Simple2D.Jump.performed += OnJump;
+                InputSystem.Instance.Simple2D.Move.performed += OnMove;
+                InputSystem.Instance.Simple2D.Move.canceled += OnMove;
+                InputSystem.Instance.Simple2D.Jump.performed += OnJump;
             }
         }
 
@@ -32,9 +32,9 @@ namespace OliverLoescher
         {
             if (photonView == null || photonView.IsMine)
             {
-                InputSystem.Input.Simple2D.Move.performed -= OnMove;
-                InputSystem.Input.Simple2D.Move.canceled -= OnMove;
-                InputSystem.Input.Simple2D.Jump.performed -= OnJump;
+                InputSystem.Instance.Simple2D.Move.performed -= OnMove;
+                InputSystem.Instance.Simple2D.Move.canceled -= OnMove;
+                InputSystem.Instance.Simple2D.Jump.performed -= OnJump;
             }
         }
 
@@ -42,7 +42,7 @@ namespace OliverLoescher
         {
             if (photonView == null || photonView.IsMine)
             {
-                InputSystem.Input.Simple2D.Enable();
+                InputSystem.Instance.Simple2D.Enable();
             }
         }
 
@@ -50,7 +50,7 @@ namespace OliverLoescher
         {
             if (photonView == null || photonView.IsMine)
             {
-                InputSystem.Input.Simple2D.Disable();
+                InputSystem.Instance.Simple2D.Disable();
             }
         }
 

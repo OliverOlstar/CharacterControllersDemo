@@ -25,7 +25,7 @@ namespace OliverLoescher.Link
         private Vector3 wallNormal = new Vector3();
 
         [Header("Components")]
-        [SerializeField] private Link_InputBridge input = null;
+        [SerializeField] private InputBridge_Platformer input = null;
         [SerializeField] private RootMotionCharacter rootMotion = null;
         [SerializeField] private Link_AnimController animController = null;
         [SerializeField] private Link_Jump jump = null;
@@ -80,7 +80,7 @@ namespace OliverLoescher.Link
             rootMotion.ignoreYValue = true;
             yield return new WaitForSeconds(0.5f);
             transform.position = wallTopPoint + (Vector3.down * holdDown) + (wallNormal * holdDistance);
-            transform.rotation = Quaternion.LookRotation(FuncUtil.Horizontalize(-wallNormal));
+            transform.rotation = Quaternion.LookRotation(MathUtil.Horizontalize(-wallNormal));
         }
 
         public override void OnUpdate()

@@ -95,7 +95,7 @@ namespace OliverLoescher
 		public void DoJump(float pUp, float pForward)
 		{
 			inAir = true;
-			velocity = FuncUtil.Horizontalize(animator.velocity, true) * pForward;
+			velocity = MathUtil.Horizontalize(animator.velocity, true) * pForward;
 			velocity.y = Mathf.Sqrt(2 * gravity * pUp);
 		}
 

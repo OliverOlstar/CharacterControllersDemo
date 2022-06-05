@@ -27,5 +27,22 @@ namespace OliverLoescher.WaveFunctionCollapse
 			}
 			return -1;
 		}
+
+		public int GetEdge(Vector3Int dir)
+		{
+			if (dir == Vector3Int.up)
+			{
+				return edges[0];
+			}
+			if (dir == Vector3Int.down)
+			{
+				return edges[1];
+			}
+			if (dir == Vector3Int.right)
+			{
+				return edges[2];
+			}
+			return edges[3]; // Left
+		}
 	}
 }

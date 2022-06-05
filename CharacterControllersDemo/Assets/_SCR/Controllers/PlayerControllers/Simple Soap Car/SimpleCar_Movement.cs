@@ -28,28 +28,28 @@ namespace OliverLoescher.SoapCar
 
         private void Awake() 
         {
-            InputSystem.Input.SimpleCar.Move.performed += OnMovePerformed;
-            InputSystem.Input.SimpleCar.Drift.performed += OnDriftPerformed;
-            InputSystem.Input.SimpleCar.Drift.canceled += OnDriftCanceled;
+            InputSystem.Instance.SimpleCar.Move.performed += OnMovePerformed;
+            InputSystem.Instance.SimpleCar.Drift.performed += OnDriftPerformed;
+            InputSystem.Instance.SimpleCar.Drift.canceled += OnDriftCanceled;
 
             offset = transform.position - rigid.transform.position;
         }
 
         private void OnEnable() 
         {
-            InputSystem.Input.SimpleCar.Enable();
+            InputSystem.Instance.SimpleCar.Enable();
         }
 
         private void OnDisable() 
         {
-            InputSystem.Input.SimpleCar.Disable();
+            InputSystem.Instance.SimpleCar.Disable();
         }
 
         private void FixedUpdate() 
         {
             if (grounded.isGrounded)
             {
-                bool movingForward = Vector3.Dot(FuncUtil.Horizontalize(transform.forward), FuncUtil.Horizontalize(rigid.velocity)) >= 0;
+                bool movingForward = Vector3.Dot(MathUtil.Horizontalize(transform.forward), MathUtil.Horizontalize(rigid.velocity)) >= 0;
                 bool inputingForward = moveInput.y >= 0;
 
                 // Movement

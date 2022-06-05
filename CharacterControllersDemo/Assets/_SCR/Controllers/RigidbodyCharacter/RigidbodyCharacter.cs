@@ -1,11 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using Sirenix.OdinInspector;
+using UnityEngine;
+using UnityEngine.Events;
 
 namespace OliverLoescher
 {
-    [RequireComponent(typeof(Rigidbody), typeof(OnGround))]
+	[RequireComponent(typeof(Rigidbody), typeof(OnGround))]
     public class RigidbodyCharacter : MonoBehaviour
     {
         [SerializeField] private Transform cameraForward = null;
@@ -23,6 +22,13 @@ namespace OliverLoescher
         [SerializeField, Min(0)] private float airAcceleration = 2.0f;
         [SerializeField, Min(0)] private float airDrag = 0.0f;
 
+        [Space]
+        [SerializeField, MaxValue(0)] private float hardLandingYVelocityTrigger = -2f;
+        [SerializeField, Min(0)] private float hardLandingDrag = 2.0f;
+		[SerializeField, Min(0)] private float hardLandingSeconds = 0.5f;
+        [HideInInspector] public UnityEvent OnHardLandStart;
+        [HideInInspector] public UnityEvent OnHardLandEnd;
+
         [Header("Stamina")]
         [SerializeField] private PlayerStamina stamina = null;
         [SerializeField, ShowIf("@stamina != null")] private float staminaPerSecond = 25.0f;
@@ -33,6 +39,7 @@ namespace OliverLoescher
         private float initialDrag;
         private bool isGrounded = false;
         private bool isSprinting = false;
+        private bool isHardLanding = false;
 
         private void Start() 
         {
@@ -53,7 +60,12 @@ namespace OliverLoescher
             grounded.OnExit.AddListener(OnGroundedExit);
         }
 
-        public void OnMoveInput(Vector2 pInput)
+		private void OnDisable()
+		{
+            ClearHardLanding();
+        }
+
+		public void OnMoveInput(Vector2 pInput)
         {
             moveInput = pInput;
         }
@@ -88,7 +100,6 @@ namespace OliverLoescher
                 Vector3 vel = new Vector3(rigid.velocity.x, 0.0f, rigid.velocity.z);
                 if ((vel + move).sqrMagnitude >= Mathf.Pow(maxVel, 2))
                 {
-                    float maxMag = vel.magnitude;
                     move = Vector3.ClampMagnitude(move + vel, vel.magnitude) - vel;
                 }
                 
@@ -104,6 +115,12 @@ namespace OliverLoescher
 
         private void OnGroundedEnter()
         {
+            if (rigid.velocity.y < hardLandingYVelocityTrigger)
+			{
+                isHardLanding = true;
+                Invoke(nameof(ClearHardLanding), hardLandingSeconds);
+                OnHardLandStart?.Invoke();
+            }
             isGrounded = true;
             UpdateSpeeds();
         }
@@ -111,7 +128,18 @@ namespace OliverLoescher
         private void OnGroundedExit()
         {
             isGrounded = false;
-            UpdateSpeeds();
+            ClearHardLanding();
+            //UpdateSpeeds();
+        }
+
+        public void ClearHardLanding()
+        {
+            if (isHardLanding)
+            {
+                isHardLanding = false;
+                UpdateSpeeds();
+                OnHardLandEnd?.Invoke();
+            }
         }
 
         public void OnStaminaOut()
@@ -133,6 +161,12 @@ namespace OliverLoescher
                 accel = airAcceleration;
                 maxVel = maxVelocity;
                 rigid.drag = airDrag;
+            }
+            else if (isHardLanding)
+            {
+                accel = 0;
+                maxVel = 0;
+                rigid.drag = hardLandingDrag;
             }
             else if (isSprinting && !stamina.isOut)
             {

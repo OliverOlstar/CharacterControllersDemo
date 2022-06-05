@@ -5336,9 +5336,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rigid: {fileID: 8803655958587180410}
-  tiltMagnitude: 600
-  tiltMax: 12
-  tiltDampening: 10
+  tiltMagnitude: 60
+  tiltMax: 13
+  tiltDampening: 8
   spring: 45
   damper: 10
 --- !u!1 &8803655957777003574
@@ -5645,6 +5645,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  toggleSprint: 1
   onSprint:
     m_PersistentCalls:
       m_Calls:
@@ -5660,6 +5661,10 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  toggleCrouch: 1
+  onCrouch:
+    m_PersistentCalls:
+      m_Calls: []
   onJump:
     m_PersistentCalls:
       m_Calls:
@@ -5861,6 +5866,15 @@ MonoBehaviour:
   sprintAcceleration: 40
   airAcceleration: 13
   airDrag: 0
+  hardLandingYVelocityTrigger: -2
+  hardLandingDrag: 2
+  hardLandingSeconds: 0.5
+  OnHardLandStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHardLandEnd:
+    m_PersistentCalls:
+      m_Calls: []
   stamina: {fileID: 8803655959004510264}
   staminaPerSecond: 20
 --- !u!114 &694287693

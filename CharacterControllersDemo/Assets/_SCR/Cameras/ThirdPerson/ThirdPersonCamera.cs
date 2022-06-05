@@ -7,9 +7,12 @@ namespace OliverLoescher
 {
     public class ThirdPersonCamera : MonoBehaviour
     {
+        [SerializeField] private InputBridge_Camera input = null;
+
         [Header("Follow")]
-        public Transform followTarget = null;
+        public Transform followTransform = null;
         [SerializeField] private Vector3 offset = new Vector3(0.0f, 0.5f, 0.0f);
+        public Transform cameraTransform = null; // Should be child
         [SerializeField] private Vector3 childOffset = new Vector3(0.0f, 2.0f, -5.0f);
         
         [Header("Look")]
@@ -28,13 +31,28 @@ namespace OliverLoescher
         [SerializeField] private LayerMask collisionLayers = new LayerMask();
         [SerializeField] private float collisionRadius = 0.2f;
 
-        private void Start() 
+		private void Reset()
+        {
+            lookTransform = transform;
+            if (transform.childCount > 0)
+            {
+                cameraTransform = transform.GetChild(0);
+            }
+        }
+
+		private void Start() 
         {
             DoFollow();
 
             currZoom = childOffset.magnitude;
-            transform.GetChild(0).localPosition = childOffset;
-            childOffset.Normalize();
+            cameraTransform.localPosition = childOffset;
+
+            if (input != null)
+            {
+                input.onLook.AddListener(OnLook);
+                input.onLookDelta.AddListener(OnLookDelta);
+                input.onZoom.AddListener(OnZoom);
+            }
         }
 
         private void LateUpdate() 
@@ -52,14 +70,18 @@ namespace OliverLoescher
 
         private void DoFollow()
         {
-            if (followTarget != null)
+            if (followTransform != null)
             {
-                transform.position = followTarget.position + offset;
+                transform.position = followTransform.position + offset;
             }
         }
 
         private void RotateCamera(Vector2 pInput)
         {
+            if (lookTransform == null)
+			{
+                return;
+			}
             Vector3 euler = lookTransform.eulerAngles;
             euler.x = Mathf.Clamp(FuncUtil.SafeAngle(euler.x - pInput.y), lookYClamp.x, lookYClamp.y);
             euler.y = euler.y + pInput.x;
@@ -75,14 +97,14 @@ namespace OliverLoescher
 
         private void DoZoomUpdate()
         {
-            transform.GetChild(0).localPosition = Vector3.Lerp(transform.GetChild(0).localPosition, childOffset * currZoom, Time.deltaTime * 15.0f);
+            cameraTransform.localPosition = Vector3.Lerp(cameraTransform.localPosition, childOffset.normalized * currZoom, Time.deltaTime * 15.0f);
         }
 
         private void DoCollision()
         {
-            if (Physics.Raycast(transform.position, transform.TransformDirection(childOffset), out RaycastHit hit, transform.GetChild(0).localPosition.magnitude + collisionRadius, collisionLayers))
+            if (Physics.Raycast(transform.position, transform.TransformDirection(childOffset.normalized), out RaycastHit hit, cameraTransform.localPosition.magnitude + collisionRadius, collisionLayers))
             {
-                transform.GetChild(0).localPosition = childOffset * (hit.distance - collisionRadius);
+                cameraTransform.localPosition = childOffset.normalized * (hit.distance - collisionRadius);
             }
         }
 
@@ -108,14 +130,14 @@ namespace OliverLoescher
             if (Application.isPlaying == false)
             {
                 DoFollow();
-                transform.GetChild(0).localPosition = childOffset;
+                cameraTransform.localPosition = childOffset;
             }
         }
 
         private void OnDrawGizmos() 
         {
             Gizmos.color = Color.green;
-            Gizmos.DrawLine(transform.position, transform.position + transform.TransformDirection(childOffset) * (transform.GetChild(0).localPosition.magnitude + collisionRadius));
+            Gizmos.DrawLine(transform.position, transform.position + transform.TransformDirection(childOffset) * (cameraTransform.localPosition.magnitude + collisionRadius));
         }
     }
 }

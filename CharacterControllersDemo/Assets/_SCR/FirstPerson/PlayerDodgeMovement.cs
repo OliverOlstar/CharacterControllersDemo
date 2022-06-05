@@ -74,7 +74,7 @@ namespace OliverLoescher
             if (stamina != null)
                 stamina.Modify(-staminaUse);
 
-            Vector3 dir = FuncUtil.Horizontalize(GetQuadrentVector(pQuadrent), true);
+            Vector3 dir = MathUtil.Horizontalize(GetQuadrentVector(pQuadrent), true);
             float inverseDodgeSeconds = 1 / dodgeSeconds;
             Vector3 velocity = dir * dodgeDistance * inverseDodgeSeconds;
 

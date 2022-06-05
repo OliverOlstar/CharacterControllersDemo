@@ -132,7 +132,7 @@ namespace OliverLoescher.Camera
                 targets[targetIndex].Toggle(false);
 
                 thirdPersonCamera.transform.rotation = Quaternion.Euler(30.0f, targets[targetIndex].thirdPersonTarget.eulerAngles.y, 0.0f);
-                thirdPersonCamera.followTarget = targets[targetIndex].thirdPersonTarget;
+                thirdPersonCamera.followTransform = targets[targetIndex].thirdPersonTarget;
 
                 inputBridge.ClearInputs();
             }
@@ -162,7 +162,7 @@ namespace OliverLoescher.Camera
             }
             else if (mode == Mode.ThirdPerson)
             {
-                thirdPersonCamera.followTarget = targets[targetIndex].thirdPersonTarget;
+                thirdPersonCamera.followTransform = targets[targetIndex].thirdPersonTarget;
             }
         }
 

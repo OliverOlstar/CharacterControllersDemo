@@ -7,27 +7,35 @@ namespace OliverLoescher.WaveFunctionCollapse
 	[System.Serializable]
 	public class WFC_Slot
 	{
-		public Vector3 position = Vector3.zero;
+		private Vector3 m_Position = Vector3.zero;
 		private Transform container = null;
 		public List<WFC_Module> States = new List<WFC_Module>();
 		public bool isSet = false;
 
-		public WFC_Slot[] neighbours = new WFC_Slot[4];
-		public int[,] edgeCounts = new int[4, 3];
+		public Dictionary<Vector3Int, int[]> edges = new Dictionary<Vector3Int, int[]>();
 		
-		public WFC_Slot Initialize(WFC_Slot[] neighs, List<WFC_Module> states, Vector3 positions, Transform transform)
+		public WFC_Slot()
+		{
+			CreateEdgesDictionary();
+		}
+
+		private void CreateEdgesDictionary()
+		{
+			edges.Clear();
+			edges.Add(Vector3Int.up, new int[3]);
+			edges.Add(Vector3Int.down, new int[3]);
+			edges.Add(Vector3Int.right, new int[3]);
+			edges.Add(Vector3Int.left, new int[3]);
+		}
+
+		public WFC_Slot Initialize(List<WFC_Module> states, Vector3 position, Transform transform)
 		{
 			States = new List<WFC_Module>(states);
-			edgeCounts = new int[4, 3];
 			foreach (WFC_Module module in States)
 			{
-				for (int i = 0; i < 4; i++)
-				{
-					edgeCounts[i, module.edges[i]]++;
-				}
+				AddEdges(module);
 			}
-			neighbours = neighs;
-			position = positions;
+			m_Position = position;
 			container = transform;
 			isSet = false;
 			return this;
@@ -48,87 +56,67 @@ namespace OliverLoescher.WaveFunctionCollapse
 			Log("PickModule()");
 
 			WFC_Module module = States[Random.Range(0, States.Count)];
-			GameObject.Instantiate(module.gameObject, position, Quaternion.identity, container);
+			GameObject.Instantiate(module.gameObject, m_Position, Quaternion.identity, container);
 			isSet = true;
 
-			AddToRemove(States);
-			RemoveFromToRemove(module);
-			RemoveState();
-			
-			WFC_Generator.slotsToUpdate.Remove(this);
+			CreateEdgesDictionary();
+			AddEdges(module);
 		}
 
-		private List<WFC_Module> toRemove = new List<WFC_Module>();
-		public void AddToRemove(WFC_Module state) 
+		private void AddEdges(WFC_Module module)
 		{
-			if (toRemove.Contains(state))
-			{
-				return;
-			}
-			toRemove.Add(state);
-		}
-		public void AddToRemove(List<WFC_Module> states) => toRemove.AddRange(states);
-		public void RemoveFromToRemove(WFC_Module state) => toRemove.Remove(state);
-
-		public void RemoveState()
-		{
-			if (toRemove.Count == 0)
-			{
-				return;
-			}
-			Log(nameof(RemoveState) + " - " + States[0].name + " - " + States.Count + " _ " + ListString(toRemove));
-			List<int>[] edgesLost = new List<int>[4];
-			for (int i = 0; i < 4; i++)
-			{
-				edgesLost[i] = new List<int>();
-			}
-
-			// Remove
-			foreach (WFC_Module state in toRemove)
-			{
-				if (!States.Remove(state))
-				{
-					continue;
-				}
-				for (int i = 0; i < 4; i++)
-				{
-					edgeCounts[i, state.edges[i]]--;
-					if (edgeCounts[i, state.edges[i]] <= 0)
-					{
-						edgesLost[i].Add(state.edges[i]);
-					}
-				}
-			}
-			toRemove.Clear();
-
-			Log(nameof(RemoveState) + " - " + Array2DString(edgeCounts));
-			
-			for (int i = 0; i < 4; i++)
-			{
-				if (neighbours[i] != null && !neighbours[i].isSet)
-				{
-					neighbours[i].EdgesLost(WFC_Module.GetOpposingEdge(i), edgesLost[i]);
-					neighbours[i].RemoveState();
-				}
-			}
+			edges[Vector3Int.up][module.edges[0]]++;
+			edges[Vector3Int.down][module.edges[1]]++;
+			edges[Vector3Int.right][module.edges[2]]++;
+			edges[Vector3Int.left][module.edges[3]]++;
 		}
 
-		public void EdgesLost(int edgeIndex, in List<int> lostEdges)
+		public List<int> GetValidEdges(Vector3Int dir)
 		{
-			Log(nameof(EdgesLost) + ": " + ListString(lostEdges));
+			List<int> result = new List<int>();
+			for (int i = 0; i < 3; i++)
+			{
+				if (edges[dir][i] > 0)
+				{
+					result.Add(i);
+				}
+			}
+			return result;
+		}
+
+		public bool Constrain(List<int> validEdges, Vector3Int dir)
+		{
+			if (isSet)
+			{
+				return false;
+			}
+			Log($"{nameof(Constrain)}() - {dir}");
+			bool changed = false;
 			for (int i = 0; i < States.Count; i++)
 			{
-				if (lostEdges.Contains(States[i].edges[edgeIndex]))
+				if (!validEdges.Contains(States[i].GetEdge(dir)))
 				{
-					AddToRemove(States[i]);
+					RemoveModule(States[i]);
+					i--;
+					changed = true;
 				}
 			}
+			return changed;
+		}
+
+		public void RemoveModule(WFC_Module module)
+		{
+			edges[Vector3Int.up][module.edges[0]]--;
+			edges[Vector3Int.down][module.edges[1]]--;
+			edges[Vector3Int.right][module.edges[2]]--;
+			edges[Vector3Int.left][module.edges[3]]--;
+			States.Remove(module);
 		}
 
 #region Helpers
 		private void Log(string message)
 		{
-			Debug.Log($"[Slot ({position.x}, {position.y}, {position.z})] {message}");
+			Debug.Log($"[Slot ({m_Position.x}, {m_Position.y}, {m_Position.z})] {message}");
 		}
 		private string ListString(List<WFC_Module> modules)
 		{
@@ -182,7 +170,7 @@ namespace OliverLoescher.WaveFunctionCollapse
 			}
 			return output + "\n}";
 		}
-		public string Name => $"({position.x}, {position.y}, {position.z})";
+		public string Name => $"({m_Position.x}, {m_Position.y}, {m_Position.z})";
 #endregion
 	}
 }

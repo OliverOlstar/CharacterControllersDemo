@@ -8,6 +8,8 @@ namespace OliverLoescher.WaveFunctionCollapse
 {
 	public class WFC_Generator : MonoBehaviour
 	{
+		private static readonly Vector3Int NULLVector3Int = new Vector3Int(int.MaxValue, int.MaxValue, int.MaxValue);
+
 		[SerializeField]
 		private int GRIDSIZE = 10;
 		[SerializeField]
@@ -19,8 +21,6 @@ namespace OliverLoescher.WaveFunctionCollapse
 
 		[SerializeField]
 		private Stack<Vector3Int> m_Stack = new Stack<Vector3Int>();
-
-		public static List<WFC_Slot> slotsToUpdate = new List<WFC_Slot>();
 
 		[Button]
 		public void Generate()
@@ -38,13 +38,11 @@ namespace OliverLoescher.WaveFunctionCollapse
 				DestroyImmediate(child.gameObject);
 			}
 
-			slotsToUpdate.Clear();
 			slots = new WFC_Slot[GRIDSIZE, GRIDSIZE];
 			for (int x = 0; x < GRIDSIZE; x++)
 				for (int y = 0; y < GRIDSIZE; y++)
 				{
 					slots[x, y] = new WFC_Slot();
-					slotsToUpdate.Add(slots[x, y]);
 				}
 			WFC_Slot[] neighbours;
 			for (int x = 0; x < GRIDSIZE; x++)
@@ -55,58 +53,67 @@ namespace OliverLoescher.WaveFunctionCollapse
 					neighbours[1] = y == 0 ? null : slots[x, y - 1];
 					neighbours[2] = x == GRIDSIZE - 1 ? null : slots[x + 1, y];
 					neighbours[3] = x == 0 ? null : slots[x - 1, y];
-					slots[x, y].Initialize(neighbours, modules, new Vector3(x, 0.0f, y), transform);
+					slots[x, y].Initialize(modules, new Vector3(x, 0, y), transform);
 				}
 
-			WFC_Slot slot = GetNext();
-			while (slot != null)
+			Vector3Int index = GetNext();
+			while (index != NULLVector3Int)
 			{
-				slot.PickModule();
-				slot = GetNext();
+				GetSlot(index).PickModule();
+				Propagate(index);
+				index = GetNext();
 				yield return new WaitForSeconds(PICKDELAY);
 			}
 		}
 
-		private WFC_Slot GetNext()
+		private Vector3Int GetNext()
 		{
-			if (slotsToUpdate.Count == 0)
-			{
-				return null;
-			}
-
-			WFC_Slot smallest = null;
+			Vector3Int smallest = NULLVector3Int;
 			int smallestSize = int.MaxValue;
-			foreach (WFC_Slot slot in slotsToUpdate)
-			{
-				if (slot.isSet)
+			for (int x = 0; x < GRIDSIZE; x++)
+				for (int y = 0; y < GRIDSIZE; y++)
 				{
-					Debug.LogError($"slot {slot.Name} is set but is also in slotsToUpdate, this shouldn't be here");
-					continue;
+					Vector3Int index = new Vector3Int(x, y, 0);
+					if (GetSlot(index).isSet)
+					{
+						continue;
+					}
+					int moduleSize = slots[x, y].States.Count;
+					if (moduleSize < smallestSize || (moduleSize == smallestSize && Random.value > 0.25f))
+					{
+						smallest = index;
+						smallestSize = moduleSize;
+					}
 				}
-				int moduleSize = slot.States.Count;
-				if (moduleSize < smallestSize || (moduleSize == smallestSize && Random.value > 0.25f))
-				{
-					smallest = slot;
-					smallestSize = moduleSize;
-				}
-			}
 			return smallest;
 		}
 
 		private void Propagate(Vector3Int index)
 		{
-			m_Stack.Append(index);
+			m_Stack.Push(index);
 			while (m_Stack.Count > 0)
 			{
 				Vector3Int currIndex = m_Stack.Pop();
+				Debug.Log($"{nameof(Propagate)}() - {currIndex}");
 				foreach (Vector3Int neighIndex in ValidNeighbours(currIndex))
 				{
-					
+					if (Constrain(currIndex, neighIndex))
+					{
+						m_Stack.Push(neighIndex);
+					}
 				}
 			}
 		}
 
-		private WFC_Slot GetSlot(Vector3Int index) => slots[index.x, index.y];
+		private bool Constrain(Vector3Int indexFrom, Vector3Int indexTo)
+		{
+			Vector3Int dir = indexTo - indexFrom;
+			if (GetSlot(indexTo).isSet)
+			{
+				return false;
+			}
+			return GetSlot(indexTo).Constrain(GetSlot(indexFrom).GetValidEdges(dir), dir);
+		}
 
 		private IEnumerable<Vector3Int> ValidNeighbours(Vector3Int currIndex)
 		{
@@ -127,5 +134,7 @@ namespace OliverLoescher.WaveFunctionCollapse
 				yield return currIndex + new Vector3Int(-1, 0, 0); // West
 			}
 		}
+
+		private WFC_Slot GetSlot(Vector3Int index) => slots[index.x, index.y];
 	}
 }

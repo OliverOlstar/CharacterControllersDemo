@@ -13,7 +13,7 @@ namespace OliverLoescher
 		private void Start() 
 		{
 			Application.focusChanged += OnFocusLost;
-			InputSystem.Input.Menu.Pause.performed += OnInput;
+			InputSystem.Instance.Menu.Pause.performed += OnInput;
 			
 			menuObject.SetActive(false);
 			Cursor.lockState = CursorLockMode.Locked;
@@ -22,17 +22,17 @@ namespace OliverLoescher
 		private void OnDestroy() 
 		{
 			Application.focusChanged -= OnFocusLost;
-			InputSystem.Input.FPS.CameraMove.performed -= OnInput;
+			InputSystem.Instance.FPS.CameraMove.performed -= OnInput;
 		}
 
 		private void OnEnable()
 		{
-			InputSystem.Input.Menu.Enable();
+			InputSystem.Instance.Menu.Enable();
 		}
 
 		private void OnDisable() 
 		{
-			InputSystem.Input.Menu.Disable();
+			InputSystem.Instance.Menu.Disable();
 		}
 
 		public void OnInput(InputAction.CallbackContext ctx) => TogglePause();

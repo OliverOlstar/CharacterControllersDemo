@@ -6,7 +6,7 @@ namespace OliverLoescher.Link
 {
     public class Link_Roll : BaseState
     {
-        [SerializeField] private Link_InputBridge input = null;
+        [SerializeField] private InputBridge_Platformer input = null;
         [SerializeField] private Link_AnimController animController = null;
 
         public override void Init(StateMachine pMachine)

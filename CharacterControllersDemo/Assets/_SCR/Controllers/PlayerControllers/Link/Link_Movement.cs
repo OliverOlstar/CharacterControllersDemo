@@ -21,7 +21,7 @@ namespace OliverLoescher.Link
         private Quaternion targetRotation = Quaternion.identity;
 
         [Header("Components")]
-        [SerializeField] private Link_InputBridge input = null;
+        [SerializeField] private InputBridge_Platformer input = null;
         [SerializeField] private Transform cameraForward = null;
         [SerializeField] private OnGround grounded = null;
         [SerializeField] private Link_AnimController animController = null;

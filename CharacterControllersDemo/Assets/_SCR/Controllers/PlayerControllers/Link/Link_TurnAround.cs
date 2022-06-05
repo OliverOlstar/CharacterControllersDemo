@@ -6,7 +6,7 @@ namespace OliverLoescher.Link
 {
     public class Link_TurnAround : BaseState
     {
-        [SerializeField] private Link_InputBridge input = null;
+        [SerializeField] private InputBridge_Platformer input = null;
         [SerializeField] private Link_AnimController animController = null;
         [SerializeField] private float animationLength = 0.4f;
 

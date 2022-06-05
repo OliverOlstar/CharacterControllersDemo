@@ -69,7 +69,7 @@ namespace OliverLoescher.Link
             if (grounded.isGrounded)
                 debugGroundPoint = transform.position;
 
-            Vector3 velocity = Vector3.up * jumpForwardForce + FuncUtil.Horizontalize(transform.forward) * Mathf.Sqrt(2 * 9.81f * jumpUpForce);
+            Vector3 velocity = Vector3.up * jumpForwardForce + MathUtil.Horizontalize(transform.forward) * Mathf.Sqrt(2 * 9.81f * jumpUpForce);
             Vector3 point = debugGroundPoint;
             Vector3 lastPoint = point;
             for (int i = 0; i < debugLineRepeat; i++)

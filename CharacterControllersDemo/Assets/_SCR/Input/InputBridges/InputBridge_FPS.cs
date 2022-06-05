@@ -29,18 +29,17 @@ namespace OliverLoescher.FPS
         [FoldoutGroup("Move")] public UnityEventsUtil.Vector2Event onMove;
 
         // Sprint
+        [FoldoutGroup("Sprint")] public bool toggleSprint = true;
         [FoldoutGroup("Sprint")] public bool isSprinting { get; private set; } = false;
         [FoldoutGroup("Sprint")] public UnityEventsUtil.BoolEvent onSprint;
-        
-        // Jump
-        [FoldoutGroup("Jump")] public UnityEvent onJump;
 
         // Crouch
-        // public bool toggleCrouch = true;
-        // public bool crouchInput { get; private set; } = false;
-        // [HideInInspector] public UnityEventsUtil.BoolEvent onCrouch = new UnityEventsUtil.BoolEvent();
-        // [HideInInspector] public UnityEvent onCrouchPerformed = new UnityEvent();
-        // [HideInInspector] public UnityEvent onCrouchCanceled = new UnityEvent();
+        [FoldoutGroup("Crouch")] public bool toggleCrouch = true;
+        [FoldoutGroup("Crouch")] public bool isCrouching { get; private set; } = false;
+        [FoldoutGroup("Crouch")] public UnityEventsUtil.BoolEvent onCrouch;
+
+        // Jump
+        [FoldoutGroup("Jump")] public UnityEvent onJump;
         
         // Primary
         [FoldoutGroup("Primary")] public bool isPressingPrimary { get; private set; } = false;
@@ -51,46 +50,46 @@ namespace OliverLoescher.FPS
 #region Initialize
         private void Start() 
         {
-            InputSystem.Input.FPS.CameraMove.performed += OnCameraMove;
-            InputSystem.Input.FPS.CameraMoveDelta.performed += OnCameraMoveDelta;
-            InputSystem.Input.FPS.Move.performed += OnMove;
-            InputSystem.Input.FPS.Move.canceled += OnMove;
-            InputSystem.Input.FPS.Sprint.performed += OnSprintPerformed;
-            InputSystem.Input.FPS.Sprint.canceled += OnSprintCanceled;
-            InputSystem.Input.FPS.Jump.performed += OnJumpPerformed;
-            // InputSystem.Input.FPS.Crouch.performed += OnCrouchPerformed;
-            // InputSystem.Input.FPS.Crouch.canceled += OnCrouchCanceled;
-            InputSystem.Input.FPS.Primary.performed += OnPrimaryPerformed;
-            InputSystem.Input.FPS.Primary.canceled += OnPrimaryCanceled;
+            InputSystem.Instance.FPS.CameraMove.performed += OnCameraMove;
+            InputSystem.Instance.FPS.CameraMoveDelta.performed += OnCameraMoveDelta;
+            InputSystem.Instance.FPS.Move.performed += OnMove;
+            InputSystem.Instance.FPS.Move.canceled += OnMove;
+            InputSystem.Instance.FPS.Sprint.performed += OnSprintPerformed;
+            InputSystem.Instance.FPS.Sprint.canceled += OnSprintCanceled;
+            InputSystem.Instance.FPS.Jump.performed += OnJumpPerformed;
+            InputSystem.Instance.FPS.Crouch.performed += OnCrouchPerformed;
+            InputSystem.Instance.FPS.Crouch.canceled += OnCrouchCanceled;
+            InputSystem.Instance.FPS.Primary.performed += OnPrimaryPerformed;
+            InputSystem.Instance.FPS.Primary.canceled += OnPrimaryCanceled;
 
             PauseSystem.onPause += ClearInputs;
         }
 
         private void OnDestroy() 
         {
-            InputSystem.Input.FPS.CameraMove.performed -= OnCameraMove;
-            InputSystem.Input.FPS.CameraMoveDelta.performed -= OnCameraMoveDelta;
-            InputSystem.Input.FPS.Move.performed -= OnMove;
-            InputSystem.Input.FPS.Move.canceled -= OnMove;
-            InputSystem.Input.FPS.Sprint.performed -= OnSprintPerformed;
-            InputSystem.Input.FPS.Sprint.canceled -= OnSprintCanceled;
-            InputSystem.Input.FPS.Jump.performed -= OnJumpPerformed;
-            // InputSystem.Input.FPS.Crouch.performed -= OnCrouchPerformed;
-            // InputSystem.Input.FPS.Crouch.canceled -= OnCrouchCanceled;
-            InputSystem.Input.FPS.Primary.performed -= OnPrimaryPerformed;
-            InputSystem.Input.FPS.Primary.canceled -= OnPrimaryCanceled;
+            InputSystem.Instance.FPS.CameraMove.performed -= OnCameraMove;
+            InputSystem.Instance.FPS.CameraMoveDelta.performed -= OnCameraMoveDelta;
+            InputSystem.Instance.FPS.Move.performed -= OnMove;
+            InputSystem.Instance.FPS.Move.canceled -= OnMove;
+            InputSystem.Instance.FPS.Sprint.performed -= OnSprintPerformed;
+            InputSystem.Instance.FPS.Sprint.canceled -= OnSprintCanceled;
+            InputSystem.Instance.FPS.Jump.performed -= OnJumpPerformed;
+            InputSystem.Instance.FPS.Crouch.performed -= OnCrouchPerformed;
+            InputSystem.Instance.FPS.Crouch.canceled -= OnCrouchCanceled;
+            InputSystem.Instance.FPS.Primary.performed -= OnPrimaryPerformed;
+            InputSystem.Instance.FPS.Primary.canceled -= OnPrimaryCanceled;
 
             PauseSystem.onPause -= ClearInputs;
         }
 
         private void OnEnable()
         {
-            InputSystem.Input.FPS.Enable();
+            InputSystem.Instance.FPS.Enable();
         }
 
         private void OnDisable() 
         {
-            InputSystem.Input.FPS.Disable();
+            InputSystem.Instance.FPS.Disable();
         }
 #endregion
 
@@ -109,6 +108,9 @@ namespace OliverLoescher.FPS
 
             isPressingPrimary = false;
             onPrimaryCanceled?.Invoke();
+
+            SetSprinting(false);
+            SetCrouch(false);
         }
 
         private Vector2 ConvertCameraValues(InputAction.CallbackContext ctx, Vector2 pAxisMult, float pMult)
@@ -148,16 +150,59 @@ namespace OliverLoescher.FPS
             if (IsValid() == false)
                 return;
 
-            isSprinting = true;
-            onSprint?.Invoke(isSprinting);
+            // True if not toggle sprint || not currently sprinting
+            // False if toggle sprint && currently sprinting
+            SetSprinting(toggleSprint == false || isSprinting == false);
         }
-        private void OnSprintCanceled(InputAction.CallbackContext ctx)
+		private void OnSprintCanceled(InputAction.CallbackContext ctx)
         {
             if (IsValid() == false)
                 return;
 
-            isSprinting = false;
-            onSprint?.Invoke(isSprinting);
+            if (toggleSprint == false)
+                SetSprinting(false);
+        }
+        public void SetSprinting(bool pSprinting)
+        {
+            if (isSprinting != pSprinting)
+            {
+                isSprinting = pSprinting;
+                if (isSprinting)
+				{
+                    SetCrouch(false);
+				}
+
+                // Events
+                onSprint.Invoke(isSprinting);
+            }
+        }
+
+        private void OnCrouchPerformed(InputAction.CallbackContext ctx)
+        {
+            if (IsValid() == false)
+                return;
+
+            // True if not toggle crouch || not currently crouching
+            // False if toggle crouch && currently crouching
+            SetCrouch(toggleCrouch == false || isCrouching == false);
+        }
+        private void OnCrouchCanceled(InputAction.CallbackContext ctx)
+        {
+            if (IsValid() == false)
+                return;
+
+            if (toggleCrouch == false)
+                SetCrouch(false);
+        }
+        public void SetCrouch(bool pCrouch)
+        {
+            if (isCrouching != pCrouch)
+            {
+                isCrouching = pCrouch;
+
+                // Events
+                onCrouch.Invoke(isCrouching);
+            }
         }
 
         private void OnJumpPerformed(InputAction.CallbackContext ctx)
@@ -186,31 +231,5 @@ namespace OliverLoescher.FPS
             onPrimary?.Invoke(false);
             onPrimaryCanceled?.Invoke();
         }
-
-        // private void OnCrouchPerformed(InputAction.CallbackContext ctx)
-        // {
-        //     // True if not toggle crouch || not currently crouching
-        //     // False if toggle crouch && currently crouching
-        //     SetCrouch(toggleCrouch == false || crouchInput == false);
-        // }
-        // private void OnCrouchCanceled(InputAction.CallbackContext ctx)
-        // {
-        //     if (toggleCrouch == false)
-        //         SetCrouch(false);
-        // }
-        // public void SetCrouch(bool pCrouch)
-        // {
-        //     if (crouchInput != pCrouch)
-        //     {
-        //         crouchInput = pCrouch;
-
-        //         // Events
-        //         onCrouch.Invoke(crouchInput);
-        //         if (crouchInput)
-        //             onCrouchPerformed?.Invoke();
-        //         else
-        //             onCrouchCanceled?.Invoke();
-        //     }
-        // }
     }
 }
