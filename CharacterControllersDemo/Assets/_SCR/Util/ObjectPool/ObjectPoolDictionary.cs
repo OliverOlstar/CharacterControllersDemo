@@ -9,7 +9,7 @@ public class ObjectPoolDictionary : MonoBehaviour
 	public class PoolValues
 	{
 		[AssetsOnly] public GameObject prefab = null;
-		public string key => prefab == null ? string.Empty : prefab.name;
+		public string key => prefab.name;
 
 		[Tooltip("What returns when all items are already checked out")]
 		public PoolReturnType returnType = PoolReturnType.Expand;
@@ -47,7 +47,8 @@ public class ObjectPoolDictionary : MonoBehaviour
 			{
 				item.parent = item.gameObject.transform;
 				item.gameObject = item.element.gameObject;
-				item.element.Init(item.parent);
+				item.element.Init(values.prefab.name, item.parent);
+				item.gameObject.name = values.prefab.name;
 			}
 			else
 			{

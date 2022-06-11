@@ -211,16 +211,17 @@ namespace OliverLoescher.Weapon
 		{
 			// Spawn projectile
 			GameObject projectile;
-			if (data.projecilePoolKey != "")
-			{
-				projectile = ObjectPoolDictionary.Get(data.projectilePrefab);
-				if (projectile == null)
-					return;
-			}
-			else
-			{
-				projectile = Instantiate(data.projectilePrefab);
-			}
+			//if (data.projecilePoolKey != "")
+			//{
+			projectile = ObjectPoolDictionary.Get(data.projectilePrefab);
+			projectile.SetActive(true);
+			//	if (projectile == null)
+			//		return;
+			//}
+			//else
+			//{
+			//	projectile = Instantiate(data.projectilePrefab);
+			//}
 
 			Projectile projectileScript = projectile.GetComponentInChildren<Projectile>();
 			projectileScript.sender = sender;

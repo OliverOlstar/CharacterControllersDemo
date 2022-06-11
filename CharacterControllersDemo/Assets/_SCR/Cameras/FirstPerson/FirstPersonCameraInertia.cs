@@ -28,49 +28,61 @@ namespace OliverLoescher.Camera
         [SerializeField, MinMaxSlider(0, 20, true)] private Vector2 fovVelocity = new Vector2(0.0f, 10.0f);
         [SerializeField, Min(0)] private float fovDampening = 10.0f;
 
-        private void Start() 
+        private void Start()
         {
             lastPosition = transform.position;
+            if (camera != null)
+			{
+                camera.m_Lens.FieldOfView = fovMinMax.x;
+            }
         }
 
-        private void FixedUpdate() 
+		private void LateUpdate()
+        {
+            Vector3 velocity = rigid.velocity - lastVelocity;
+            lastVelocity = rigid.velocity;
+
+            DoSpring(velocity, Time.deltaTime);
+        }
+
+		private void FixedUpdate() 
         {
             Vector3 motion = transform.parent.position - lastPosition;
             Vector3 relMotion = transform.InverseTransformDirection(motion);
             lastPosition = transform.parent.position;
 
-            Vector3 velocity = rigid.velocity - lastVelocity;
-            lastVelocity = rigid.velocity;
-
-            DoTilt(relMotion);
-            DoSpring(velocity);
-            DoFOV();
+            DoTilt(relMotion, Time.fixedDeltaTime);
+            DoFOV(Time.fixedDeltaTime);
         }
 
-		private void DoTilt(Vector3 pRelMotion)
+		private void DoTilt(Vector3 pRelMotion, float pDeltaTime)
         {
             Vector3 rot = transform.localEulerAngles;
             rot.z = pRelMotion.x * -tiltMagnitude;
 			rot.z = Mathf.Clamp(rot.z, -tiltMax, tiltMax);
-			rot.z = Mathf.Lerp(FuncUtil.SafeAngle(transform.localEulerAngles.z), rot.z, Time.fixedDeltaTime * tiltDampening);
+			rot.z = Mathf.Lerp(FuncUtil.SafeAngle(transform.localEulerAngles.z), rot.z, pDeltaTime * tiltDampening);
             transform.localRotation = Quaternion.Euler(rot);
         }
 
-        private void DoSpring(Vector3 pVelocity)
+        private void DoSpring(Vector3 pVelocity, float pDeltaTime)
         {
             springVel += -pVelocity.y;
-            springVel += sprintSpring * -transform.localPosition.y * Time.fixedDeltaTime;
-            springVel += springDamper * -springVel * Time.fixedDeltaTime;
+            springVel += sprintSpring * -transform.localPosition.y * pDeltaTime;
+            springVel += springDamper * -springVel * pDeltaTime;
 
             Vector3 pos = transform.localPosition;
-            pos.y += springVel * Time.fixedDeltaTime;
+            pos.y += springVel * pDeltaTime;
             transform.localPosition = pos;
         }
 
-        private void DoFOV()
+        private void DoFOV(float pDeltaTime)
 		{
+            if (camera == null)
+			{
+                return;
+			}
             float fov01 = FuncUtil.SmoothStep(fovVelocity, MathUtil.Horizontalize(rigid.velocity).magnitude);
-            camera.m_Lens.FieldOfView = Mathf.Lerp(camera.m_Lens.FieldOfView, Mathf.Lerp(fovMinMax.x, fovMinMax.y, fov01), Time.fixedDeltaTime * fovDampening);
+            camera.m_Lens.FieldOfView = Mathf.Lerp(camera.m_Lens.FieldOfView, Mathf.Lerp(fovMinMax.x, fovMinMax.y, fov01), pDeltaTime * fovDampening);
         }
     }
 }

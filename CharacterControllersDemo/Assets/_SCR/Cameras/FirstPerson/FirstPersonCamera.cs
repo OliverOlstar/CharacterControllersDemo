@@ -36,7 +36,7 @@ namespace OliverLoescher.Camera
         {
             Vector3 euler = cameraTransform.eulerAngles;
             euler.x = Mathf.Clamp(FuncUtil.SafeAngle(euler.x - pInput.y), cameraYClamp.x, cameraYClamp.y);
-            euler.y = euler.y + pInput.x;
+            euler.y += pInput.x;
             euler.z = 0.0f;
             cameraTransform.rotation = Quaternion.Euler(euler);
         }

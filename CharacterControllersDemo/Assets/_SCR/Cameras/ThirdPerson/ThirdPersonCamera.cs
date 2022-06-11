@@ -129,13 +129,17 @@ namespace OliverLoescher
         {
             if (Application.isPlaying == false)
             {
+                if (cameraTransform == null)
+                    return;
                 DoFollow();
                 cameraTransform.localPosition = childOffset;
             }
         }
 
-        private void OnDrawGizmos() 
+        private void OnDrawGizmos()
         {
+            if (cameraTransform == null)
+                return;
             Gizmos.color = Color.green;
             Gizmos.DrawLine(transform.position, transform.position + transform.TransformDirection(childOffset) * (cameraTransform.localPosition.magnitude + collisionRadius));
         }

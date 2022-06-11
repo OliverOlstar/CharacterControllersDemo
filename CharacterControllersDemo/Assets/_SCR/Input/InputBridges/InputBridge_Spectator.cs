@@ -5,9 +5,9 @@ using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using Sirenix.OdinInspector;
 
-namespace OliverLoescher
+namespace OliverLoescher.Camera
 {
-	public class InputBrige_Spectator : MonoBehaviour
+	public class InputBridge_Spectator : MonoBehaviour
 	{
 		// Camera
 		[FoldoutGroup("Camera")] public Vector2 lookInput { get; protected set; } = Vector2.zero;

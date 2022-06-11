@@ -7,10 +7,20 @@ namespace OliverLoescher
 	[RequireComponent(typeof(Rigidbody), typeof(OnGround))]
     public class RigidbodyCharacter : MonoBehaviour
     {
+        public enum State
+		{
+            Default,
+            InAir,
+            Crouch,
+            Slide,
+            HardLand,
+        }
+
         [SerializeField] private Transform cameraForward = null;
         private Rigidbody rigid = null;
         private OnGround grounded = null;
         
+        [Header("Default")]
         [SerializeField, Min(0)] private float maxVelocity = 2.0f;
         [SerializeField, Min(0)] private float acceleration = 5.0f;
 
@@ -22,7 +32,16 @@ namespace OliverLoescher
         [SerializeField, Min(0)] private float airAcceleration = 2.0f;
         [SerializeField, Min(0)] private float airDrag = 0.0f;
 
+        [Header("Crouch")]
+        [SerializeField, Min(0)] private float crouchMaxSpeed = 2.0f;
+        [SerializeField, Min(0)] private float crouchAcceleration = 5.0f;
+
         [Space]
+        [SerializeField, Min(0)] private float slideMaxSpeed = 2.0f;
+        [SerializeField, Min(0)] private float slideAcceleration = 5.0f;
+        [SerializeField, Min(0)] private float slideDrag = 5.0f;
+
+        [Header("Hard Landing")]
         [SerializeField, MaxValue(0)] private float hardLandingYVelocityTrigger = -2f;
         [SerializeField, Min(0)] private float hardLandingDrag = 2.0f;
 		[SerializeField, Min(0)] private float hardLandingSeconds = 0.5f;
@@ -37,9 +56,10 @@ namespace OliverLoescher
         private float accel = 0;
         private float maxVel = 0;
         private float initialDrag;
-        private bool isGrounded = false;
         private bool isSprinting = false;
-        private bool isHardLanding = false;
+        public State state { get; private set; } = State.Default;
+
+        public UnityEvent<State> onStateChanged;
 
         private void Start() 
         {
@@ -65,30 +85,8 @@ namespace OliverLoescher
             ClearHardLanding();
         }
 
-		public void OnMoveInput(Vector2 pInput)
-        {
-            moveInput = pInput;
-        }
-
-        public void OnSprintInput(bool pBool)
-        {
-            isSprinting = pBool;
-            UpdateSpeeds();
-        }
-
         private void FixedUpdate() 
         {
-            if (grounded.isGrounded)
-            {
-                if (isGrounded == false)
-                    OnGroundedEnter();
-            }
-            else
-            {
-                if (isGrounded == true)
-                    OnGroundedExit();
-            }
-
             if (accel != 0 && moveInput != Vector2.zero)
             {
                 // Move values
@@ -104,7 +102,7 @@ namespace OliverLoescher
                 }
                 
                 // Stamina
-                if (isSprinting && isGrounded && !stamina.isOut && stamina != null)
+                if (isSprinting && state == State.Default && !stamina.isOut && stamina != null)
                     stamina.Modify(-Time.deltaTime * staminaPerSecond);
 
                 // Actually move
@@ -113,31 +111,51 @@ namespace OliverLoescher
             }
         }
 
+        public void OnMoveInput(Vector2 pInput)
+        {
+            moveInput = pInput;
+        }
+
+        public void OnSprintInput(bool pInput)
+        {
+            isSprinting = pInput;
+            UpdateDefaultState();
+        }
+
+        public void OnCrouch(bool pInput)
+		{
+            if (pInput)
+			{
+                SetState(State.Crouch);
+			}
+            else if (state == State.Crouch)
+            {
+                SetState(State.Default);
+            }
+		}
+
         private void OnGroundedEnter()
         {
             if (rigid.velocity.y < hardLandingYVelocityTrigger)
-			{
-                isHardLanding = true;
+            {
+                SetState(State.HardLand);
                 Invoke(nameof(ClearHardLanding), hardLandingSeconds);
                 OnHardLandStart?.Invoke();
+                return;
             }
-            isGrounded = true;
-            UpdateSpeeds();
+            SetState(State.Default);
         }
 
         private void OnGroundedExit()
         {
-            isGrounded = false;
-            ClearHardLanding();
-            //UpdateSpeeds();
+            SetState(State.InAir);
         }
 
         public void ClearHardLanding()
         {
-            if (isHardLanding)
+            if (state == State.HardLand)
             {
-                isHardLanding = false;
-                UpdateSpeeds();
+                SetState(State.Default);
                 OnHardLandEnd?.Invoke();
             }
         }
@@ -145,30 +163,65 @@ namespace OliverLoescher
         public void OnStaminaOut()
         {
             if (isSprinting)
-                UpdateSpeeds();
+                UpdateDefaultState();
         }
 
         public void OnStaminaIn()
         {
             if (isSprinting)
-                UpdateSpeeds();
+                UpdateDefaultState();
         }
 
-        private void UpdateSpeeds()
+        public void SetState(State pState)
+		{
+            if (state == pState)
+			{
+                return;
+			}
+
+            state = pState;
+            switch (state)
+			{
+                case State.Default:
+                    UpdateDefaultState();
+                    break;
+
+                case State.InAir:
+                    accel = airAcceleration;
+                    maxVel = maxVelocity;
+                    rigid.drag = airDrag;
+                    break;
+
+                case State.Crouch:
+                    accel = crouchAcceleration;
+                    maxVel = crouchMaxSpeed;
+                    rigid.drag = initialDrag;
+                    break;
+
+                case State.Slide:
+                    accel = slideAcceleration;
+                    maxVel = slideMaxSpeed;
+                    rigid.drag = slideDrag;
+                    break;
+
+                case State.HardLand:
+                    accel = 0;
+                    maxVel = 0;
+                    rigid.drag = hardLandingDrag;
+                    break;
+            }
+            onStateChanged?.Invoke(state);
+
+        }
+
+        private void UpdateDefaultState()
         {
-            if (isGrounded == false)
+            if (state != State.Default)
             {
-                accel = airAcceleration;
-                maxVel = maxVelocity;
-                rigid.drag = airDrag;
+                return;
             }
-            else if (isHardLanding)
-            {
-                accel = 0;
-                maxVel = 0;
-                rigid.drag = hardLandingDrag;
-            }
-            else if (isSprinting && !stamina.isOut)
+
+            if (isSprinting && !stamina.isOut)
             {
                 accel = sprintAcceleration;
                 maxVel = sprintMaxSpeed;

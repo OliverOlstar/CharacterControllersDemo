@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class PoolElement : MonoBehaviour
 {
+	private string poolKey = string.Empty;
 	private Transform parent = null;
 
-	public virtual void Init(Transform pParent)
+	public virtual void Init(string pPoolKey, Transform pParent)
 	{
+		poolKey = pPoolKey;
 		parent = pParent;
 	}
 

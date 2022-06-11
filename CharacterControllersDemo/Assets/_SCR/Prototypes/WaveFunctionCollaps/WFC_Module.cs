@@ -8,6 +8,7 @@ namespace OliverLoescher.WaveFunctionCollapse
 	{
 		public int[] edges = new int[4];
 
+#if UNITY_EDITOR
 		private void OnDrawGizmosSelected() 
 		{
 			UnityEditor.Handles.Label(transform.position + Vector3.forward * 0.65f, edges[0].ToString());
@@ -15,6 +16,7 @@ namespace OliverLoescher.WaveFunctionCollapse
 			UnityEditor.Handles.Label(transform.position + Vector3.right * 0.65f, edges[2].ToString());
 			UnityEditor.Handles.Label(transform.position + Vector3.left * 0.65f, edges[3].ToString());
 		}
+#endif
 
 		public static int GetOpposingEdge(int edgeIndex)
 		{

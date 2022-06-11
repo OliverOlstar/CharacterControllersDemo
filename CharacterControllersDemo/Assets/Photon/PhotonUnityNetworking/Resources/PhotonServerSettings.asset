@@ -43,6 +43,8 @@ MonoBehaviour:
   - RPC_ShootProjectile
   - RPC_ShootRaycast
   - RPC_ShootRaycastMissed
+  - OnCrouch
+  - OnCrouchRPC
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 0

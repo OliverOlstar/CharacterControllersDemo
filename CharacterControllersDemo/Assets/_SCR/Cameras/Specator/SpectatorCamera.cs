@@ -31,7 +31,7 @@ namespace OliverLoescher.Camera
             Freefly
         }
 
-        [SerializeField] private InputBrige_Spectator inputBridge = null;
+        [SerializeField] private InputBridge_Spectator inputBridge = null;
         [SerializeField] private FollowTarget firstPersonCamera = null;
         [SerializeField] private ThirdPersonCamera thirdPersonCamera = null;
         [SerializeField] private FreeflyCamera freeflyCamera = null;

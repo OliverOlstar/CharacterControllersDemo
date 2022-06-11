@@ -32,11 +32,15 @@ namespace OliverLoescher.FPS
         [FoldoutGroup("Sprint")] public bool toggleSprint = true;
         [FoldoutGroup("Sprint")] public bool isSprinting { get; private set; } = false;
         [FoldoutGroup("Sprint")] public UnityEventsUtil.BoolEvent onSprint;
+        [FoldoutGroup("Sprint")] public UnityEvent onSprintPerformed;
+        [FoldoutGroup("Sprint")] public UnityEvent onSprintCanceled;
 
         // Crouch
         [FoldoutGroup("Crouch")] public bool toggleCrouch = true;
         [FoldoutGroup("Crouch")] public bool isCrouching { get; private set; } = false;
         [FoldoutGroup("Crouch")] public UnityEventsUtil.BoolEvent onCrouch;
+        [FoldoutGroup("Crouch")] public UnityEvent onCrouchPerformed;
+        [FoldoutGroup("Crouch")] public UnityEvent onCrouchCanceled;
 
         // Jump
         [FoldoutGroup("Jump")] public UnityEvent onJump;
@@ -110,7 +114,6 @@ namespace OliverLoescher.FPS
             onPrimaryCanceled?.Invoke();
 
             SetSprinting(false);
-            SetCrouch(false);
         }
 
         private Vector2 ConvertCameraValues(InputAction.CallbackContext ctx, Vector2 pAxisMult, float pMult)
@@ -167,13 +170,13 @@ namespace OliverLoescher.FPS
             if (isSprinting != pSprinting)
             {
                 isSprinting = pSprinting;
-                if (isSprinting)
-				{
-                    SetCrouch(false);
-				}
 
                 // Events
                 onSprint.Invoke(isSprinting);
+                if (isSprinting)
+                    onSprintPerformed?.Invoke();
+                else
+                    onSprintCanceled?.Invoke();
             }
         }
 
@@ -202,14 +205,26 @@ namespace OliverLoescher.FPS
 
                 // Events
                 onCrouch.Invoke(isCrouching);
+                if (isCrouching)
+                    onCrouchPerformed?.Invoke();
+                else
+                    onCrouchCanceled?.Invoke();
             }
         }
+        public void ClearCrouchIfToggle()
+		{
+            if (toggleCrouch)
+			{
+                SetCrouch(false);
+			}
+		}
 
         private void OnJumpPerformed(InputAction.CallbackContext ctx)
         {
             if (IsValid() == false)
                 return;
 
+            SetCrouch(false);
             onJump?.Invoke();
         }
 
