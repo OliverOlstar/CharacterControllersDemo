@@ -8,7 +8,7 @@ namespace OliverLoescher.FPS
 	[RequireComponent(typeof(PhotonView))]
 	public class FPS_MultiplayerEvents_Other : MonoBehaviour
 	{
-		[SerializeField] private PlayerCrouchMovement crouchMovement = null;
+		[SerializeField] private CharacterCrouchMovement crouchMovement = null;
 
 		private PhotonView photonView = null;
 		private RigidbodyCharacter.State state = RigidbodyCharacter.State.Default;
@@ -33,11 +33,11 @@ namespace OliverLoescher.FPS
 					break;
 
 				case RigidbodyCharacter.State.Crouch:
-
-					break;
-
 				case RigidbodyCharacter.State.Slide:
-
+					if (pState != RigidbodyCharacter.State.Slide && pState != RigidbodyCharacter.State.Crouch)
+					{
+						crouchMovement.Cancel();
+					}
 					break;
 
 				case RigidbodyCharacter.State.HardLand:
@@ -58,11 +58,11 @@ namespace OliverLoescher.FPS
 					break;
 
 				case RigidbodyCharacter.State.Crouch:
-
+					crouchMovement.StartCrouch();
 					break;
 
 				case RigidbodyCharacter.State.Slide:
-
+					crouchMovement.StartSlide();
 					break;
 
 				case RigidbodyCharacter.State.HardLand:

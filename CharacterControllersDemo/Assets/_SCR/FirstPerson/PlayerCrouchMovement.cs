@@ -4,114 +4,68 @@ using UnityEngine;
 
 namespace OliverLoescher.FPS
 {
-    public class PlayerCrouchMovement : MonoBehaviour
+    public class PlayerCrouchMovement : CharacterCrouchMovement
 	{
+		[Header("Player")]
 		[SerializeField] private InputBridge_FPS fpsInput = null;
-		[SerializeField] private new Rigidbody rigidbody = null;
 		[SerializeField] private RigidbodyCharacter movement = null;
         [SerializeField] private PlayerDodgeMovement dodgeMovement = null;
-        [SerializeField] private SmoothLocalOffset cameraOffset = null;
-		[SerializeField] private RigidbodyAnimController animController = null;
 
-		[Header("Crouch")]
-		[SerializeField] private float crouchCameraOffset = -0.4f;
-
-		[Header("Sliding")]
-		[SerializeField] private Collider feetCollider = null;
-		[SerializeField] private PhysicMaterial slidePhyicsMat = null;
-		private PhysicMaterial initialPhyicsMat = null;
-
-		[SerializeField] private float slideCameraOffset = -0.4f;
-		[SerializeField] private float sliderVelocity = 1.0f;
-
-		private void Start()
+		protected override void Initalize()
 		{
 			if (fpsInput != null)
 			{
-				fpsInput.onCrouchPerformed.AddListener(CrouchStart);
-				fpsInput.onCrouchCanceled.AddListener(CrouchCancel);
-				fpsInput.onSprintPerformed.AddListener(CrouchCancel);
+				fpsInput.onCrouchPerformed.AddListener(Play);
+				fpsInput.onCrouchCanceled.AddListener(Cancel);
+				fpsInput.onSprintPerformed.AddListener(Cancel);
 			}
 			if (dodgeMovement != null)
 			{
-				dodgeMovement.DodgeStart.AddListener(CrouchCancel);
+				dodgeMovement.DodgeStart.AddListener(Cancel);
 			}
 			if (movement != null)
 			{
 				movement.onStateChanged.AddListener(OnMoveStateChanged);
 			}
-
-			initialPhyicsMat = feetCollider.material;
 		}
 
-		public void CrouchStart()
-		{
-			if (movement.state != RigidbodyCharacter.State.Default)
-			{
-				return;
-			}
-			if (rigidbody.velocity.magnitude < sliderVelocity)
-			{
-				StartCrouchInternal();
-			}
-			else
-			{
-				StartSlideInternal();
-			}
-		}
-		private void StartCrouchInternal()
+		protected override void OnStartCrouch()
 		{
 			movement.SetState(RigidbodyCharacter.State.Crouch);
-			animController.SetCrouched(true);
-			animController.SetSlide(false);
-			cameraOffset.ModifyInitialOffsetY(crouchCameraOffset);
-			feetCollider.material = initialPhyicsMat;
 		}
-		private void StartSlideInternal()
+		protected override void OnStartSlide()
 		{
 			movement.SetState(RigidbodyCharacter.State.Slide);
-			animController.SetCrouched(false);
-			animController.SetSlide(true);
-			cameraOffset.ModifyInitialOffsetY(slideCameraOffset);
-			feetCollider.material = slidePhyicsMat;
 		}
-
-		public void CrouchCancel(bool _) => CrouchCancel();
-		public void CrouchCancel()
+		protected override void OnCancel()
 		{
-			if (IsCrouchState(movement.state))
+			if (IsCrouchState())
 			{
 				movement.SetState(RigidbodyCharacter.State.Default);
 			}
 			fpsInput.ClearCrouchIfToggle();
-			animController.SetCrouched(false);
-			animController.SetSlide(false);
-			cameraOffset.ResetOffset();
-			feetCollider.material = initialPhyicsMat;
 		}
+
+		protected override bool CanPlay() => movement.state == RigidbodyCharacter.State.Default;
+		private bool IsCrouchState() => movement.state == RigidbodyCharacter.State.Crouch || movement.state == RigidbodyCharacter.State.Slide;
 
 		public void OnMoveStateChanged(RigidbodyCharacter.State state)
 		{
 			if (state == RigidbodyCharacter.State.Default && fpsInput.isCrouching && fpsInput.isSprinting)
 			{
-				CrouchStart();
+				Play();
 			}
-			else if (!IsCrouchState(movement.state))
+			else if (!IsCrouchState())
 			{
-				CrouchCancel();
+				Cancel();
 			}
 		}
 
-		private bool IsCrouchState(RigidbodyCharacter.State state) => state == RigidbodyCharacter.State.Crouch || state == RigidbodyCharacter.State.Slide;
-
 		private void Update()
 		{
-			if (movement != null && movement.state == RigidbodyCharacter.State.Slide)
+			if (movement != null && movement.state == RigidbodyCharacter.State.Slide && rigidbody.velocity.magnitude < sliderVelocity)
 			{
-				if (rigidbody.velocity.magnitude < sliderVelocity)
-				{
-					StartCrouchInternal();
-				}
+				StartCrouch();
 			}
 		}
 	}

@@ -45,6 +45,7 @@ MonoBehaviour:
   - RPC_ShootRaycastMissed
   - OnCrouch
   - OnCrouchRPC
+  - OnStateChanged
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 0

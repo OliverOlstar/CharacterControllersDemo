@@ -58,7 +58,7 @@ namespace OliverLoescher.Weapon
 			rigidbody.useGravity = false;
 			canDamage = true;
 			lastHitCollider = null;
-			collider.enabled = false;
+			collider.isTrigger = true;
 			activeSelf = true;
 
 			base.OnExitPool();
@@ -198,7 +198,7 @@ namespace OliverLoescher.Weapon
 				
 				case ProjectileData.BulletCollision.Physics:
 					rigidbody.useGravity = true;
-					collider.enabled = true;
+					collider.isTrigger = false;
 					activeSelf = false;
 					transform.position += rigidbody.velocity.normalized * -0.25f;
 					break;

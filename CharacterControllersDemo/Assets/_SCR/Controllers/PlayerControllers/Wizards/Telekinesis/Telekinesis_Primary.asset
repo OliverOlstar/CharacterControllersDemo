@@ -18,22 +18,14 @@ MonoBehaviour:
   bulletType: 0
   burstFireCount: 5
   bulletsPerShot: 1
-  damage: 10
-  critChance01: 0.1
-  critDamageMultiplier: 2
-  projecilePoolKey: 
   projectilePrefab: {fileID: 3032010529082586260, guid: 22de61b5c52845c4c979efb189f90537, type: 3}
-  bulletCollision: 1
-  lifeTime: {x: 4, y: 4.5}
-  shootForce: {x: 25, y: 30}
-  bulletGravity: 9.81
   range: 5
   hitFXPrefab: {fileID: 7706684984111978519, guid: abb7ebaa9d2a280409e9543ff95e31f8, type: 3}
   layerMask:
     serializedVersion: 2
     m_Bits: 64
-  startShootingType: 2
-  secondsBetweenShots: 0.5
+  startShootingType: 0
+  secondsBetweenShots: 0.2
   secondsBetweenBurstShots: 0.1
   chargeSeconds: 0.5
   spreadType: 3
@@ -44,7 +36,6 @@ MonoBehaviour:
   spreadIncrease: 0.4
   spreadDecrease: 0.6
   recoilForce: {x: 0, y: 0, z: 0}
-  hitForce: 8
   ammoType: 2
   totalAmmo: 12
   clipAmmo: 4

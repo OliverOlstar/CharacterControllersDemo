@@ -56,8 +56,7 @@ namespace OliverLoescher.Weapon
 		[Min(1)] public int bulletsPerShot = 1;
 
 		[ShowIfGroup("Proj", Condition = "@bulletType != BulletType.Raycast")]
-		//[TitleGroup("Proj/Projectile")] public string projecilePoolKey = "";
-		[TitleGroup("Proj/Projectile")] [ShowIf("@projecilePoolKey == \"\"")] public GameObject projectilePrefab = null;
+		[TitleGroup("Proj/Projectile")] public GameObject projectilePrefab = null;
 
 		[ShowIfGroup("Ray", Condition = "@bulletType == BulletType.Raycast")]
 		[TitleGroup("Ray/Raycast")] public float range = 5.0f;
