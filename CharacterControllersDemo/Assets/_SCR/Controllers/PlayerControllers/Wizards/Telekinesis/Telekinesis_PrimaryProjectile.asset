@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d8a915898c2caf04dbe0343b9bbbc0d5, type: 3}
+  m_Script: {fileID: 11500000, guid: 6894d975f552dd24d905fc74986b99c9, type: 3}
   m_Name: Telekinesis_PrimaryProjectile
   m_EditorClassIdentifier: 
   useRaycast: 0

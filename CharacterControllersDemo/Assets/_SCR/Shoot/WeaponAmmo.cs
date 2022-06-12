@@ -33,7 +33,7 @@ namespace OliverLoescher.Weapon
 
 		public void OnShoot()
 		{
-			if (weapon.data.ammoType == WeaponData.AmmoType.Null)
+			if (weapon.data.ammoType == SOWeapon.AmmoType.Null)
 				return;
 
 			// Ammo
@@ -52,7 +52,7 @@ namespace OliverLoescher.Weapon
 				OnStartOverHeat.Invoke();
 			}
 
-			if (weapon.data.ammoType == WeaponData.AmmoType.Limited && totalAmmo <= 0)
+			if (weapon.data.ammoType == SOWeapon.AmmoType.Limited && totalAmmo <= 0)
 			{
 				// If totally out of ammo
 				if (clipAmmo <= 0)
@@ -74,7 +74,7 @@ namespace OliverLoescher.Weapon
 		{
 			yield return new WaitForSeconds(Mathf.Max(0, weapon.data.reloadDelaySeconds - weapon.data.reloadIntervalSeconds));
 
-			while (clipAmmo < weapon.data.clipAmmo && (totalAmmo > 0 || weapon.data.ammoType == WeaponData.AmmoType.Unlimited))
+			while (clipAmmo < weapon.data.clipAmmo && (totalAmmo > 0 || weapon.data.ammoType == SOWeapon.AmmoType.Unlimited))
 			{
 				yield return new WaitForSeconds(weapon.data.reloadIntervalSeconds);
 
@@ -82,7 +82,7 @@ namespace OliverLoescher.Weapon
 				clipAmmo++;
 
 				// Total Ammo
-				if (weapon.data.ammoType == WeaponData.AmmoType.Limited)
+				if (weapon.data.ammoType == SOWeapon.AmmoType.Limited)
 				{
 					totalAmmo--;
 				}

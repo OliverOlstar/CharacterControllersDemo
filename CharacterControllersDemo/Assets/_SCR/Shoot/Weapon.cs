@@ -19,7 +19,7 @@ namespace OliverLoescher.Weapon
 			RandomAllOnce
 		}
 
-		[Required] public WeaponData data = null;
+		[Required] public SOWeapon data = null;
 		[ShowIf("@muzzlePoints.Length > 1")] [SerializeField] protected MultiMuzzleType multiMuzzleType = MultiMuzzleType.RandomNotOneAfterItself;
 		public bool canShoot = true;
 
@@ -55,16 +55,16 @@ namespace OliverLoescher.Weapon
 		public void ShootStart()
 		{		
 			// If shoot on click
-			if (data.startShootingType == WeaponData.StartType.Instant)
+			if (data.startShootingType == SOWeapon.StartType.Instant)
 			{
 				ShootStartDelayed();
 			}
-			else if (data.startShootingType == WeaponData.StartType.InstantLimitedByFirerate)
+			else if (data.startShootingType == SOWeapon.StartType.InstantLimitedByFirerate)
 			{
 				if (nextCanShootTime <= Time.time)
 					ShootStartDelayed();
 			}
-			else if (data.startShootingType == WeaponData.StartType.Charge)
+			else if (data.startShootingType == SOWeapon.StartType.Charge)
 			{
 				CancelInvoke(nameof(ShootStartDelayed));
 				Invoke(nameof(ShootStartDelayed), data.chargeSeconds);
@@ -73,11 +73,11 @@ namespace OliverLoescher.Weapon
 
 		private void ShootStartDelayed()
 		{
-			if (data.fireType == WeaponData.FireType.Single)	// Single
+			if (data.fireType == SOWeapon.FireType.Single)	// Single
 			{
 				
 			}
-			else if (data.fireType == WeaponData.FireType.Burst) // Burst
+			else if (data.fireType == SOWeapon.FireType.Burst) // Burst
 			{
 				// If already shooting don't shoot again
 				if (isShooting == true)
@@ -86,7 +86,7 @@ namespace OliverLoescher.Weapon
 				
 				burstFireActiveCount = data.burstFireCount - 1;
 			}
-			else if (data.fireType == WeaponData.FireType.Auto) // Auto
+			else if (data.fireType == SOWeapon.FireType.Auto) // Auto
 			{
 				isShooting = true;
 			}
@@ -96,12 +96,12 @@ namespace OliverLoescher.Weapon
 
 		public void ShootEnd()
 		{
-			if (data.fireType == WeaponData.FireType.Auto)
+			if (data.fireType == SOWeapon.FireType.Auto)
 			{
 				isShooting = false;
 			}
 
-			if (data.startShootingType == WeaponData.StartType.Charge)
+			if (data.startShootingType == SOWeapon.StartType.Charge)
 			{
 				CancelInvoke(nameof(ShootStartDelayed));
 			}
@@ -129,7 +129,7 @@ namespace OliverLoescher.Weapon
 				nextCanShootTime = Time.time + data.secondsBetweenShots;
 
 				// If Burst
-				if (data.fireType == WeaponData.FireType.Burst)
+				if (data.fireType == SOWeapon.FireType.Burst)
 				{
 					burstFireActiveCount--;
 					if (burstFireActiveCount < 1)
@@ -186,7 +186,7 @@ namespace OliverLoescher.Weapon
 		{
 			for (int i = 0; i < data.bulletsPerShot; i++)
 			{
-				if (data.bulletType == WeaponData.BulletType.Raycast)
+				if (data.bulletType == SOWeapon.BulletType.Raycast)
 				{
 					SpawnRaycast(pMuzzle.position, pMuzzle.forward);
 				}
@@ -328,17 +328,17 @@ namespace OliverLoescher.Weapon
 		private float spread01 = 0.0f;
 		protected Quaternion GetSpreadQuaternion()
 		{
-			if (data.spreadType == WeaponData.SpreadType.Ellipse) // Ellipse
+			if (data.spreadType == SOWeapon.SpreadType.Ellipse) // Ellipse
 			{
 				Vector2 spread = Vector2.Lerp(data.spreadVector, data.spreadVectorMax, spread01);
 				return Quaternion.Euler(GetRandomPointInEllipse(spread.y * 2.0f, spread.x * 2.0f));
 			}
-			else if (data.spreadType == WeaponData.SpreadType.Circle) // Circle
+			else if (data.spreadType == SOWeapon.SpreadType.Circle) // Circle
 			{
 				float spread = Mathf.Lerp(data.spreadRadius, data.spreadRadiusMax, spread01);
 				return Quaternion.Euler(GetRandomPointOnCircle(spread));
 			}
-			else if (data.spreadType == WeaponData.SpreadType.Square) // Square
+			else if (data.spreadType == SOWeapon.SpreadType.Square) // Square
 			{
 				return Quaternion.Euler(RandUtil.Range(data.spreadVector.y), RandUtil.Range(data.spreadVector.x), 0);
 			}
@@ -383,7 +383,7 @@ namespace OliverLoescher.Weapon
 				Vector3 localForward = transform.InverseTransformVector(m.forward);
 
 				Handles.color = Color.cyan;
-				if (data.spreadType == WeaponData.SpreadType.Circle) // Circle
+				if (data.spreadType == SOWeapon.SpreadType.Circle) // Circle
 				{
 					Handles.DrawWireDisc(localForward * 1.0f, localForward, data.spreadRadius * 0.01f);
 
@@ -397,7 +397,7 @@ namespace OliverLoescher.Weapon
 						Handles.DrawWireDisc(localForward * 1.0f, localForward, spread * 0.01f);
 					}
 				}
-				else if (data.spreadType != WeaponData.SpreadType.Null) // Square || Ellipse
+				else if (data.spreadType != SOWeapon.SpreadType.Null) // Square || Ellipse
 				{
 					Handles.DrawWireCube(localForward * 1.0f, new Vector3(data.spreadVector.x * 0.04f, data.spreadVector.y * 0.04f, 0.0f));
 

@@ -8,7 +8,7 @@ namespace OliverLoescher.Weapon
 	[RequireComponent(typeof(Rigidbody))]
 	public class Projectile : PoolElement
 	{
-		[Required] public ProjectileData data = null;
+		[Required] public SOProjectile data = null;
 
 		private new Rigidbody rigidbody = null;
 		[SerializeField] private new Collider collider = null;
@@ -170,7 +170,7 @@ namespace OliverLoescher.Weapon
 		{
 			switch (data.bulletCollision)
 			{
-				case ProjectileData.BulletCollision.Stick:
+				case SOProjectile.BulletCollision.Stick:
 					rigidbody.isKinematic = true;
 					if (other.gameObject.isStatic == false)
 						transform.SetParent(other.transform);
@@ -178,7 +178,7 @@ namespace OliverLoescher.Weapon
 					activeSelf = false;
 					break;
 
-				case ProjectileData.BulletCollision.Penetrate:
+				case SOProjectile.BulletCollision.Penetrate:
 					if (other.gameObject.isStatic)
 					{
 						rigidbody.isKinematic = true;
@@ -187,16 +187,16 @@ namespace OliverLoescher.Weapon
 					}
 					break;
 				
-				case ProjectileData.BulletCollision.Reflect:
+				case SOProjectile.BulletCollision.Reflect:
 					Debug.LogError("[Projectile.cs] BulletCollision.Reflect not implemented", gameObject);
 					break;
 				
-				case ProjectileData.BulletCollision.ReflectBack:
+				case SOProjectile.BulletCollision.ReflectBack:
 					rigidbody.velocity = -rigidbody.velocity;
 					transform.rotation = Quaternion.LookRotation(rigidbody.velocity);
 					break;
 				
-				case ProjectileData.BulletCollision.Physics:
+				case SOProjectile.BulletCollision.Physics:
 					rigidbody.useGravity = true;
 					collider.isTrigger = false;
 					activeSelf = false;
