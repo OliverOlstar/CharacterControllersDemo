@@ -20,6 +20,7 @@ namespace OliverLoescher.Weapon
 		}
 
 		[Required] public SOWeapon data = null;
+		public SOTeam team = null;
 		[ShowIf("@muzzlePoints.Length > 1")] [SerializeField] protected MultiMuzzleType multiMuzzleType = MultiMuzzleType.RandomNotOneAfterItself;
 		public bool canShoot = true;
 
@@ -211,17 +212,8 @@ namespace OliverLoescher.Weapon
 		{
 			// Spawn projectile
 			GameObject projectile;
-			//if (data.projecilePoolKey != "")
-			//{
 			projectile = ObjectPoolDictionary.Get(data.projectilePrefab);
 			projectile.SetActive(true);
-			//	if (projectile == null)
-			//		return;
-			//}
-			//else
-			//{
-			//	projectile = Instantiate(data.projectilePrefab);
-			//}
 
 			Projectile projectileScript = projectile.GetComponentInChildren<Projectile>();
 			projectileScript.sender = sender;

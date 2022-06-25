@@ -9,6 +9,7 @@ namespace OliverLoescher.FPS
 	public class FPS_MultiplayerEvents_Other : MonoBehaviour
 	{
 		[SerializeField] private CharacterCrouchMovement crouchMovement = null;
+		[SerializeField] private RigidbodyAnimController animController = null;
 
 		private PhotonView photonView = null;
 		private RigidbodyCharacter.State state = RigidbodyCharacter.State.Default;
@@ -41,7 +42,7 @@ namespace OliverLoescher.FPS
 					break;
 
 				case RigidbodyCharacter.State.HardLand:
-
+					
 					break;
 			}
 
@@ -66,7 +67,7 @@ namespace OliverLoescher.FPS
 					break;
 
 				case RigidbodyCharacter.State.HardLand:
-
+					animController.OnHardLanded();
 					break;
 			}
 		}

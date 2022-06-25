@@ -112,7 +112,7 @@ namespace RootMotion
             for (int i = 0; i < bakerMuscles.Length; i++) bakerMuscles[i].SetLoopFrame(time);
 
             rootQT.MoveLastKeyframes(time);
-
+            
             leftFootQT.SetLoopFrame(time);
             rightFootQT.SetLoopFrame(time);
             leftHandQT.SetLoopFrame(time);
@@ -184,10 +184,12 @@ namespace RootMotion
 #if UNITY_EDITOR
         protected override void SetClipSettings(AnimationClip clip, UnityEditor.AnimationClipSettings settings)
         {
+            /* v2.0
             settings.loopBlendOrientation = true;
             settings.loopBlendPositionY = true;
             settings.keepOriginalOrientation = true;
             settings.keepOriginalPositionY = true;
+            */
         }
 #endif
     }

@@ -9,7 +9,7 @@ namespace RootMotion.FinalIK {
 	public class Inertia : OffsetModifier {
 
 		/// <summary>
-		/// Body is just following it's transform in a lazy and bouncy way.
+		/// Body is just following its transform in a lazy and bouncy way.
 		/// </summary>
 		[System.Serializable]
 		public class Body {

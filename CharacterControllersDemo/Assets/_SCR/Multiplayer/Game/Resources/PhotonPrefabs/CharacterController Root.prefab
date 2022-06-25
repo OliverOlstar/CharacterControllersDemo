@@ -5335,12 +5335,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90dfa0adabe8c5a4f932ec1cc4e2484b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  camera: {fileID: 0}
   rigid: {fileID: 8803655958587180410}
   tiltMagnitude: 60
   tiltMax: 13
   tiltDampening: 8
-  spring: 45
-  damper: 10
+  sprintSpring: 45
+  springDamper: 10
+  fovMinMax: {x: 70, y: 110}
+  fovVelocity: {x: 0, y: 10}
+  fovDampening: 10
 --- !u!1 &8803655957777003574
 GameObject:
   m_ObjectHideFlags: 0
@@ -5469,11 +5473,11 @@ MonoBehaviour:
   onMaxValueChanged:
     m_PersistentCalls:
       m_Calls: []
+  team: {fileID: 0}
   disableCollidersOnDeath: 1
   deathColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   damageColor: {r: 1, g: 0, b: 0, a: 1}
   healColor: {r: 0, g: 1, b: 0, a: 1}
-  photonView: {fileID: 4188125951726038663}
 --- !u!114 &8511582650180694098
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5501,6 +5505,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: 2c1fc01046dadaf48a971378550671bb, type: 2}
+  team: {fileID: 0}
   multiMuzzleType: 4
   canShoot: 1
   muzzlePoints:
@@ -5661,8 +5666,20 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  onSprintPerformed:
+    m_PersistentCalls:
+      m_Calls: []
+  onSprintCanceled:
+    m_PersistentCalls:
+      m_Calls: []
   toggleCrouch: 1
   onCrouch:
+    m_PersistentCalls:
+      m_Calls: []
+  onCrouchPerformed:
+    m_PersistentCalls:
+      m_Calls: []
+  onCrouchCanceled:
     m_PersistentCalls:
       m_Calls: []
   onJump:
@@ -5866,6 +5883,11 @@ MonoBehaviour:
   sprintAcceleration: 40
   airAcceleration: 13
   airDrag: 0
+  crouchMaxSpeed: 2
+  crouchAcceleration: 5
+  slideMaxSpeed: 2
+  slideAcceleration: 5
+  slideDrag: 5
   hardLandingYVelocityTrigger: -2
   hardLandingDrag: 2
   hardLandingSeconds: 0.5
@@ -5877,6 +5899,9 @@ MonoBehaviour:
       m_Calls: []
   stamina: {fileID: 8803655959004510264}
   staminaPerSecond: 20
+  onStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &694287693
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6276,35 +6301,35 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8660643480823296847, guid: d17c113bfcef6494a827fdafe97459bb, type: 3}
       propertyPath: valueCurve.m_Curve.Array.data[1].time
-      value: 0.3
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 8660643480823296847, guid: d17c113bfcef6494a827fdafe97459bb, type: 3}
       propertyPath: valueCurve.m_Curve.Array.data[1].value
-      value: 0.15
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 8660643480823296847, guid: d17c113bfcef6494a827fdafe97459bb, type: 3}
       propertyPath: valueCurve.m_Curve.Array.data[0].inSlope
-      value: 0.5
+      value: 0.75
       objectReference: {fileID: 0}
     - target: {fileID: 8660643480823296847, guid: d17c113bfcef6494a827fdafe97459bb, type: 3}
       propertyPath: valueCurve.m_Curve.Array.data[1].inSlope
-      value: 0.5
+      value: 0.75
       objectReference: {fileID: 0}
     - target: {fileID: 8660643480823296847, guid: d17c113bfcef6494a827fdafe97459bb, type: 3}
       propertyPath: valueCurve.m_Curve.Array.data[2].inSlope
-      value: 1.2142857
+      value: 1.1666666
       objectReference: {fileID: 0}
     - target: {fileID: 8660643480823296847, guid: d17c113bfcef6494a827fdafe97459bb, type: 3}
       propertyPath: valueCurve.m_Curve.Array.data[0].outSlope
-      value: 0.5
+      value: 0.75
       objectReference: {fileID: 0}
     - target: {fileID: 8660643480823296847, guid: d17c113bfcef6494a827fdafe97459bb, type: 3}
       propertyPath: valueCurve.m_Curve.Array.data[1].outSlope
-      value: 1.2142857
+      value: 1.1666666
       objectReference: {fileID: 0}
     - target: {fileID: 8660643480823296847, guid: d17c113bfcef6494a827fdafe97459bb, type: 3}
       propertyPath: valueCurve.m_Curve.Array.data[2].outSlope
-      value: 1.2142857
+      value: 1.1666666
       objectReference: {fileID: 0}
     - target: {fileID: 8660643480823296847, guid: d17c113bfcef6494a827fdafe97459bb, type: 3}
       propertyPath: valueCurve.m_Curve.Array.data[1].tangentMode

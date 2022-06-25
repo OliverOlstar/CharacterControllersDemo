@@ -26,6 +26,7 @@ namespace OliverLoescher.Camera
 
         private enum Mode
         {
+            None,
             FirstPerson,
             ThirdPerson,
             Freefly
@@ -42,7 +43,7 @@ namespace OliverLoescher.Camera
         private int targetIndex = 0;
         private float canInputTime = 0.0f;
 
-        private Mode mode = Mode.Freefly;
+        private Mode mode = Mode.None;
 
         private void Start() 
         {
@@ -68,6 +69,7 @@ namespace OliverLoescher.Camera
                 firstPersonCamera.gameObject.SetActive(false);
                 thirdPersonCamera.gameObject.SetActive(false);
 
+                mode = Mode.None;
                 SwitchMode(Mode.Freefly);
             }
         }

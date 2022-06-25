@@ -259,7 +259,7 @@ namespace RootMotion.FinalIK {
                     if (!turningToTarget && turnToTarget) StartCoroutine(TurnToTarget());
                 }
 
-				ik.transform.rotation = Quaternion.AngleAxis(rotation, ik.transform.up) * ik.transform.rotation;		
+                ik.transform.rotation = Quaternion.AngleAxis(rotation, ik.transform.up) * ik.transform.rotation;		
 			}
 		}
 

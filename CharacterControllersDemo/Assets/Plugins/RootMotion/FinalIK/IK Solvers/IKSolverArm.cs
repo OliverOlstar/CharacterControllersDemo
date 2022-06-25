@@ -104,7 +104,7 @@ namespace RootMotion.FinalIK {
 		}
 		
 		private void Solve() {
-			arm.PreSolve ();
+			arm.PreSolve (1f);
 			arm.ApplyOffsets(1f);
 			arm.Solve (isLeft);
 			arm.ResetOffsets ();

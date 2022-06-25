@@ -197,10 +197,30 @@ namespace RootMotion.FinalIK {
 			return false;
 		}
 
-		/// <summary>
-		/// Pauses the interaction of an effector.
+        /// <summary>
+		/// Starts the interaction between an effector and a specific interaction target.
 		/// </summary>
-		public bool PauseInteraction(FullBodyBipedEffector effectorType) {
+		public bool StartInteraction(FullBodyBipedEffector effectorType, InteractionObject interactionObject, InteractionTarget target, bool interrupt)
+        {
+            if (!IsValid(true)) return false;
+
+            if (interactionObject == null) return false;
+
+            for (int i = 0; i < interactionEffectors.Length; i++)
+            {
+                if (interactionEffectors[i].effectorType == effectorType)
+                {
+                    return interactionEffectors[i].Start(interactionObject, target, fadeInTime, interrupt);
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Pauses the interaction of an effector.
+        /// </summary>
+        public bool PauseInteraction(FullBodyBipedEffector effectorType) {
 			if (!IsValid(true)) return false;
 
 			for (int i = 0; i < interactionEffectors.Length; i++) {
@@ -606,9 +626,10 @@ namespace RootMotion.FinalIK {
 
 		public bool initiated { get; private set; }
 		private Collider lastCollider, c;
+        private float lastTime;
 
-		// Initiate
-		public void Start() {
+        // Initiate
+        public void Start() {
 			if (fullBody == null) fullBody = GetComponent<FullBodyBipedIK>();
 			//Debug.Log(fullBody);
 			if (fullBody == null) {
@@ -755,15 +776,23 @@ namespace RootMotion.FinalIK {
 			lastCollider = characterCollider;
 			
 		}
-		
-		// Update the interaction
-		void UpdateEffectors() {
+
+        private void OnEnable()
+        {
+            lastTime = Time.time;
+        }
+
+        // Update the interaction
+        void UpdateEffectors() {
 			if (fullBody == null) return;
 
-			for (int i = 0; i < interactionEffectors.Length; i++) interactionEffectors[i].Update(transform, speed);
+            float deltaTime = Time.time - lastTime; // When AnimatePhysics is used, Time.deltaTime is unusable
+            lastTime = Time.time;
+
+			for (int i = 0; i < interactionEffectors.Length; i++) interactionEffectors[i].Update(transform, speed, deltaTime);
 
 			// Interpolate to default pull, reach values
-			for (int i = 0; i < interactionEffectors.Length; i++) interactionEffectors[i].ResetToDefaults(resetToDefaultsSpeed * speed);
+			for (int i = 0; i < interactionEffectors.Length; i++) interactionEffectors[i].ResetToDefaults(resetToDefaultsSpeed * speed, deltaTime);
 		}
 
 		// Used for using LookAtIK to rotate the spine

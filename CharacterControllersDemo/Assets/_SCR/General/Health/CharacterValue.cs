@@ -69,8 +69,7 @@ namespace OliverLoescher
         }
         public void Set(float pValue)
         {
-            float change = Mathf.Abs(value - pValue);
-
+            float change = pValue - value;
             bool lower = pValue < value;
             value = Mathf.Clamp(pValue, 0.0f, maxValue);
 

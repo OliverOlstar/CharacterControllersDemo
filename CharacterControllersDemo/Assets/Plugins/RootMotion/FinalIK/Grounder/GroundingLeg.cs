@@ -223,7 +223,7 @@ namespace RootMotion.FinalIK {
                 // End point of the capsule depending on the foot's velocity.
                 Vector3 capsuleEnd = capsuleStart + offsetFromHeel;
 
-                if (Physics.CapsuleCast(capsuleStart, capsuleEnd, grounding.footRadius, -up, out hit, grounding.maxStep * 2, grounding.layers, QueryTriggerInteraction.Ignore))
+                if (grounding.CapsuleCast(capsuleStart, capsuleEnd, grounding.footRadius, -up, out hit, grounding.maxStep * 2, grounding.layers, QueryTriggerInteraction.Ignore))
                 {
                     // Safeguarding from a CapsuleCast bug in Unity that might cause it to return NaN for hit.point when cast against large colliders.
                     if (float.IsNaN(hit.point.x))
@@ -267,7 +267,7 @@ namespace RootMotion.FinalIK {
 
                 if (grounding.maxStep <= 0f) return hit;
 
-                Physics.Raycast(origin + grounding.maxStep * up, -up, out hit, grounding.maxStep * 2, grounding.layers, QueryTriggerInteraction.Ignore);
+                grounding.Raycast(origin + grounding.maxStep * up, -up, out hit, grounding.maxStep * 2, grounding.layers, QueryTriggerInteraction.Ignore);
 
                 // Since Unity2017 Raycasts will return Vector3.zero when starting from inside a collider
                 if (hit.point == Vector3.zero && hit.normal == Vector3.zero)

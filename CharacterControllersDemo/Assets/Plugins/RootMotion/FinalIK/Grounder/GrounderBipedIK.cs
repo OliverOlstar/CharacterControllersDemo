@@ -180,6 +180,8 @@ namespace RootMotion.FinalIK {
 
 			// Store the local position of the pelvis so we know it it changes
 			solvedPelvisLocalPosition = ik.references.pelvis.localPosition;
+
+            if (OnPostIK != null) OnPostIK();
 		}
 
 		// Cleaning up the delegates

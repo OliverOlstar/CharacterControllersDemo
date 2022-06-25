@@ -101,7 +101,7 @@ namespace RootMotion.FinalIK
             /// </summary>
             [Range(0f, 1f)] public float pelvisRotationWeight = 1f;
         }
-        
+
         /// <summary>
         /// Recalibrates only the avatar scale, updates CalibrationData to the new scale value
         /// </summary>
@@ -271,7 +271,7 @@ namespace RootMotion.FinalIK
             data.rightFoot = new CalibrationData.Target(ik.solver.rightLeg.target);
             data.leftLegGoal = new CalibrationData.Target(ik.solver.leftLeg.bendGoal);
             data.rightLegGoal = new CalibrationData.Target(ik.solver.rightLeg.bendGoal);
-            data.pelvisTargetRight = rootController != null? rootController.pelvisTargetRight: Vector3.zero;
+            data.pelvisTargetRight = rootController != null ? rootController.pelvisTargetRight : Vector3.zero;
             data.pelvisPositionWeight = ik.solver.spine.pelvisPositionWeight;
             data.pelvisRotationWeight = ik.solver.spine.pelvisRotationWeight;
 
@@ -520,7 +520,7 @@ namespace RootMotion.FinalIK
             data.head = new CalibrationData.Target(ik.solver.spine.headTarget);
             data.leftHand = new CalibrationData.Target(ik.solver.leftArm.target);
             data.rightHand = new CalibrationData.Target(ik.solver.rightArm.target);
-            
+
             return data;
         }
 
@@ -564,11 +564,11 @@ namespace RootMotion.FinalIK
             if (ik.solver.leftArm.target == null) ik.solver.leftArm.target = new GameObject("Left Hand IK Target").transform;
             if (ik.solver.rightArm.target == null) ik.solver.rightArm.target = new GameObject("Right Hand IK Target").transform;
 
-            CalibrateHand(ik.references.leftHand, ik.references.leftForearm, ik.solver.leftArm.target, leftHandAnchor, anchorPositionOffset, anchorRotationOffset, true);
-            CalibrateHand(ik.references.rightHand, ik.references.rightForearm, ik.solver.rightArm.target, rightHandAnchor, anchorPositionOffset, anchorRotationOffset, false);
+            CalibrateHand(ik, leftHandAnchor, anchorPositionOffset, anchorRotationOffset, true);
+            CalibrateHand(ik, rightHandAnchor, anchorPositionOffset, anchorRotationOffset, false);
         }
 
-        private static void CalibrateHand(Transform hand, Transform forearm, Transform target, Transform anchor, Vector3 positionOffset, Vector3 rotationOffset, bool isLeft)
+        private static void CalibrateHand(VRIK ik, Transform anchor, Vector3 positionOffset, Vector3 rotationOffset, bool isLeft)
         {
             if (isLeft)
             {
@@ -577,8 +577,16 @@ namespace RootMotion.FinalIK
                 rotationOffset.z = -rotationOffset.z;
             }
 
-            Vector3 forward = VRIKCalibrator.GuessWristToPalmAxis(hand, forearm);
-            Vector3 up = VRIKCalibrator.GuessPalmToThumbAxis(hand, forearm);
+            var hand = isLeft ? ik.references.leftHand : ik.references.rightHand;
+            var forearm = isLeft ? ik.references.leftForearm : ik.references.rightForearm;
+            var target = isLeft ? ik.solver.leftArm.target : ik.solver.rightArm.target;
+
+            Vector3 forward = isLeft ? ik.solver.leftArm.wristToPalmAxis : ik.solver.rightArm.wristToPalmAxis;
+            if (forward == Vector3.zero) forward = VRIKCalibrator.GuessWristToPalmAxis(hand, forearm);
+
+            Vector3 up = isLeft ? ik.solver.leftArm.palmToThumbAxis : ik.solver.rightArm.palmToThumbAxis;
+            if (up == Vector3.zero) up = VRIKCalibrator.GuessPalmToThumbAxis(hand, forearm);
+
             Quaternion handSpace = Quaternion.LookRotation(forward, up);
             Vector3 anchorPos = hand.position + hand.rotation * handSpace * positionOffset;
             Quaternion anchorRot = hand.rotation * handSpace * Quaternion.Euler(rotationOffset);

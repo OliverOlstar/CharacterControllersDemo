@@ -58,6 +58,17 @@ namespace RootMotion
 
         public static void SetLoopFrame(float time, AnimationCurve curve)
         {
+            /*
+            Keyframe[] keys = curve.keys;
+            keys[keys.Length - 1].value = keys[0].value;
+
+            keys[keys.Length - 1].inTangent = keys[0].inTangent;
+            keys[keys.Length - 1].outTangent = keys[0].outTangent;
+
+            keys[keys.Length - 1].time = time;
+            curve.keys = keys;
+            */
+
             Keyframe[] keys = curve.keys;
             keys[keys.Length - 1].value = keys[0].value;
 
@@ -163,6 +174,45 @@ namespace RootMotion
             Reset();
         }
 
+        public Quaternion EvaluateRotation(float time)
+        {
+            Quaternion q = new Quaternion(rotX.Evaluate(time), rotY.Evaluate(time), rotZ.Evaluate(time), rotW.Evaluate(time));
+            return q;
+            //return q.normalized;
+        }
+
+        public Vector3 EvaluatePosition(float time)
+        {
+            return new Vector3(posX.Evaluate(time), posY.Evaluate(time), posZ.Evaluate(time));
+        }
+
+        public TQ Evaluate(float time)
+        {
+            return new TQ(EvaluatePosition(time), EvaluateRotation(time));
+        }
+
+        public void GetCurvesFromClip(AnimationClip clip, Animator animator)
+        {
+#if UNITY_EDITOR
+            rotX = GetEditorCurve(clip, Qx);
+            rotY = GetEditorCurve(clip, Qy);
+            rotZ = GetEditorCurve(clip, Qz);
+            rotW = GetEditorCurve(clip, Qw);
+
+            posX = GetEditorCurve(clip, Tx);
+            posY = GetEditorCurve(clip, Ty);
+            posZ = GetEditorCurve(clip, Tz);
+#endif
+        }
+
+#if UNITY_EDITOR
+        private AnimationCurve GetEditorCurve(AnimationClip clip, string propertyPath)
+        {
+            var binding = UnityEditor.EditorCurveBinding.FloatCurve(string.Empty, typeof(Animator), propertyPath);
+            return UnityEditor.AnimationUtility.GetEditorCurve(clip, binding);
+        }
+#endif
+
         // Clear all curves
         public void Reset()
         {
@@ -196,7 +246,7 @@ namespace RootMotion
             if (lastQSet) rot = BakerUtilities.EnsureQuaternionContinuity(lastQ, IKTQ.q);
 
             //rot.Normalize();
-            
+
             lastQ = rot;
             lastQSet = true;
 
@@ -247,6 +297,19 @@ namespace RootMotion
             BakerUtilities.SetLoopFrame(time, posX);
             BakerUtilities.SetLoopFrame(time, posY);
             BakerUtilities.SetLoopFrame(time, posZ);
+        }
+
+        public void SetRootLoopFrame(float time)
+        {
+            /*
+            // TODO Should be based on AnimationClipSettings
+            BakerUtilities.SetLoopFrame(time, rotX);
+            BakerUtilities.SetLoopFrame(time, rotY);
+            BakerUtilities.SetLoopFrame(time, rotZ);
+            BakerUtilities.SetLoopFrame(time, rotW);
+            
+            BakerUtilities.SetLoopFrame(time, posY);
+            */
         }
 
         private void MoveLastKeyframe(float time, AnimationCurve curve)

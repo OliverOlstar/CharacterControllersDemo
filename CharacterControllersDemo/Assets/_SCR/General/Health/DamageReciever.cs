@@ -36,45 +36,39 @@ namespace OliverLoescher
             }
         }
 
-        public void Damage(float pValue, GameObject pAttacker, Vector3 pPoint, Vector3 pDirection, Color pColor)
+        void IDamageable.Damage(float pValue, GameObject pAttacker, Vector3 pPoint, Vector3 pDirection, Color pColor)
         {
-            pValue = DamageMultipler(pValue);
-            parent.Damage(pValue, pAttacker, pPoint, pDirection, pColor);
+            parent.Damage(DamageMultipler(pValue), pAttacker, pPoint, pDirection, pColor);
         }
-
-        public void Damage(float pValue, GameObject pAttacker, Vector3 pPoint, Vector3 pDirection)
+        void IDamageable.Damage(float pValue, GameObject pAttacker, Vector3 pPoint, Vector3 pDirection)
         {
-            pValue = DamageMultipler(pValue);
-            parent.Damage(pValue, pAttacker, pPoint, pDirection);
+            parent.Damage(DamageMultipler(pValue), pAttacker, pPoint, pDirection);
         }
+        private float DamageMultipler(float pValue) => pValue * damageMultiplier;
 
-        private float DamageMultipler(float pValue)
+        GameObject IDamageable.GetGameObject()
         {
-            return pValue * damageMultiplier;
-        }
-
-        public GameObject GetGameObject()
-        {
-            if (parent != null)
-            {
-                return parent.GetGameObject();
-            }
-            else
+            if (parent == null)
             {
                 return gameObject;
             }
+            return parent.GetGameObject();
         }
-
-        public IDamageable GetParentDamageable()
+        IDamageable IDamageable.GetParentDamageable()
         {
-            if (parent != null)
-            {
-                return parent.GetParentDamageable();
-            }
-            else
+            if (parent == null)
             {
                 return this;
             }
+            return parent.GetParentDamageable();
+        }
+        SOTeam IDamageable.GetTeam()
+		{
+            if (parent == null)
+            {
+                return null;
+            }
+            return parent.GetTeam();
         }
     }
 }

@@ -16,17 +16,13 @@ namespace RootMotion.FinalIK {
 		[System.Serializable]
 		public class Leg: BodyPart {
 
-			[Tooltip("The foot/toe target. This should not be the foot tracker itself, but a child GameObject parented to it so you could adjust it's position/rotation to match the orientation of the foot/toe bone. If a toe bone is assigned in the References, the solver will match the toe bone to this target. If no toe bone assigned, foot bone will be used instead.")]
+            [LargeHeader("Foot/Toe")]
+
+			[Tooltip("The foot/toe target. This should not be the foot tracker itself, but a child GameObject parented to it so you could adjust its position/rotation to match the orientation of the foot/toe bone. If a toe bone is assigned in the References, the solver will match the toe bone to this target. If no toe bone assigned, foot bone will be used instead.")]
             /// <summary>
-            /// The foot/toe target. This should not be the foot tracker itself, but a child GameObject parented to it so you could adjust it's position/rotation to match the orientation of the foot/toe bone. If a toe bone is assigned in the References, the solver will match the toe bone to this target. If no toe bone assigned, foot bone will be used instead.
+            /// The foot/toe target. This should not be the foot tracker itself, but a child GameObject parented to it so you could adjust its position/rotation to match the orientation of the foot/toe bone. If a toe bone is assigned in the References, the solver will match the toe bone to this target. If no toe bone assigned, foot bone will be used instead.
             /// </summary>
             public Transform target;
-
-			[Tooltip("The knee will be bent towards this Transform if 'Bend Goal Weight' > 0.")]
-			/// <summary>
-			/// The knee will be bent towards this Transform if 'Bend Goal Weight' > 0.
-			/// </summary>
-			public Transform bendGoal;
 
 			[Tooltip("Positional weight of the toe/foot target. Note that if you have nulled the target, the foot will still be pulled to the last position of the target until you set this value to 0.")]
             /// <summary>
@@ -40,7 +36,14 @@ namespace RootMotion.FinalIK {
             /// </summary>
             [Range(0f, 1f)] public float rotationWeight;
 
-			[Tooltip("If greater than 0, will bend the knee towards the 'Bend Goal' Transform.")]
+            [LargeHeader("Bending")]
+            [Tooltip("The knee will be bent towards this Transform if 'Bend Goal Weight' > 0.")]
+            /// <summary>
+            /// The knee will be bent towards this Transform if 'Bend Goal Weight' > 0.
+            /// </summary>
+            public Transform bendGoal;
+
+            [Tooltip("If greater than 0, will bend the knee towards the 'Bend Goal' Transform.")]
 			/// <summary>
 			/// If greater than 0, will bend the knee towards the 'Bend Goal' Transform.
 			/// </summary>
@@ -57,6 +60,8 @@ namespace RootMotion.FinalIK {
 			/// If 0, the bend plane will be locked to the rotation of the pelvis and rotating the foot will have no effect on the knee direction. If 1, to the target rotation of the leg so that the knee will bend towards the forward axis of the foot. Values in between will be slerped between the two.
 			/// </summary>
 			[Range(0f, 1f)] public float bendToTargetWeight = 0.5f;
+
+            [LargeHeader("Stretching")]
 
 			[Tooltip("Use this to make the leg shorter/longer. Works by displacement of foot and calf localPosition.")]
             /// <summary>
@@ -121,10 +126,10 @@ namespace RootMotion.FinalIK {
 			private Vector3 bendNormal;
 			private Quaternion calfRelToThigh = Quaternion.identity;
 			private Quaternion thighRelToFoot = Quaternion.identity;
-			private Vector3 bendNormalRelToPelvis;
-			private Vector3 bendNormalRelToTarget;
+            public Vector3 bendNormalRelToPelvis { get; set; }
+            public Vector3 bendNormalRelToTarget { get; set; }
 
-			protected override void OnRead(Vector3[] positions, Quaternion[] rotations, bool hasChest, bool hasNeck, bool hasShoulders, bool hasToes, bool hasLegs, int rootIndex, int index) {
+            protected override void OnRead(Vector3[] positions, Quaternion[] rotations, bool hasChest, bool hasNeck, bool hasShoulders, bool hasToes, bool hasLegs, int rootIndex, int index) {
 				Vector3 thighPos = positions[index];
 				Quaternion thighRot = rotations[index];
 				Vector3 calfPos = positions[index + 1];
@@ -155,8 +160,10 @@ namespace RootMotion.FinalIK {
 						IKRotation = footRot;
 					}
 
-					bendNormal = Vector3.Cross(calfPos - thighPos, footPos - calfPos);
-					bendNormalRelToPelvis = Quaternion.Inverse(rootRotation) * bendNormal;
+                    bendNormal = Vector3.Cross(calfPos - thighPos, footPos - calfPos);
+                    //bendNormal = rotations[0] * Vector3.right; // Use this to make the knees bend towards root.forward
+
+                    bendNormalRelToPelvis = Quaternion.Inverse(rootRotation) * bendNormal;
 					bendNormalRelToTarget = Quaternion.Inverse(IKRotation) * bendNormal;
 
 					rotation = IKRotation;
@@ -174,7 +181,7 @@ namespace RootMotion.FinalIK {
 				}
 			}
 
-			public override void PreSolve() {
+			public override void PreSolve(float scale) {
 				if (target != null) {
 					IKPosition = target.position;
 					IKRotation = target.rotation;
@@ -334,8 +341,8 @@ namespace RootMotion.FinalIK {
 
 				if (legLengthMlp != 1f) {
 					legLength *= legLengthMlp;
-					kneeAdd = (calf.solverPosition - thigh.solverPosition) * (legLengthMlp - 1f) * positionWeight;
-					footAdd = (foot.solverPosition - calf.solverPosition) * (legLengthMlp - 1f) * positionWeight;
+                    kneeAdd = (calf.solverPosition - thigh.solverPosition) * (legLengthMlp - 1f);// * positionWeight;
+                    footAdd = (foot.solverPosition - calf.solverPosition) * (legLengthMlp - 1f);// * positionWeight;
 					calf.solverPosition += kneeAdd;
 					foot.solverPosition += kneeAdd + footAdd;
 					if (hasToes) toes.solverPosition += kneeAdd + footAdd;
@@ -345,9 +352,8 @@ namespace RootMotion.FinalIK {
 				float distanceToTarget = Vector3.Distance(thigh.solverPosition, footPosition);
 				float stretchF = distanceToTarget / legLength;
 
-				float m = stretchCurve.Evaluate(stretchF) * positionWeight;
-				//m *= positionWeight;
-
+                float m = stretchCurve.Evaluate(stretchF);// * positionWeight; mlp by positionWeight enables stretching only for foot trackers, but not for built-in or animated locomotion
+				
 				kneeAdd = (calf.solverPosition - thigh.solverPosition) * m;
 				footAdd = (foot.solverPosition - calf.solverPosition) * m;
 

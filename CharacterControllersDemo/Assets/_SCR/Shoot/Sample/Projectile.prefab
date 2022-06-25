@@ -4927,7 +4927,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 1
   m_Constraints: 0
-  m_CollisionDetection: 3
+  m_CollisionDetection: 2
 --- !u!114 &4656803423598380119
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4940,7 +4940,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a94fb48ac991974469dd881c32da9e1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  data: {fileID: 11400000, guid: 2c1fc01046dadaf48a971378550671bb, type: 2}
+  data: {fileID: 0}
   collider: {fileID: 2141175902751734953}
   audio: {fileID: 0}
   sender: {fileID: 0}

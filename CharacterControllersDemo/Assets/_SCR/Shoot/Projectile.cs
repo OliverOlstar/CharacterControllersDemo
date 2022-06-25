@@ -11,9 +11,11 @@ namespace OliverLoescher.Weapon
 		[Required] public SOProjectile data = null;
 
 		private new Rigidbody rigidbody = null;
-		[SerializeField] private new Collider collider = null;
+		[SerializeField] private new Collider hitboxCollider = null;
+		[SerializeField] private new Collider physicsCollider = null;
 		public new ProjectileSFX audio = null;
 		public GameObject sender = null;
+		private SOTeam team = null;
 
 		private bool canDamage = true;
 		private bool activeSelf = true;
@@ -58,13 +60,14 @@ namespace OliverLoescher.Weapon
 			rigidbody.useGravity = false;
 			canDamage = true;
 			lastHitCollider = null;
-			collider.isTrigger = true;
+			hitboxCollider.enabled = true;
+			physicsCollider.enabled = false;
 			activeSelf = true;
 
 			base.OnExitPool();
 		}
 
-		public void Init(Vector3 pPosition, Vector3 pDirection)
+		public void Init(Vector3 pPosition, Vector3 pDirection, SOTeam pTeam = null)
 		{
 			transform.position = pPosition;
 			transform.rotation = Quaternion.LookRotation(pDirection);
@@ -75,6 +78,7 @@ namespace OliverLoescher.Weapon
 			startPos = transform.position;
 			previousPosition = transform.position;
 
+			team = pTeam;
 			Invoke(nameof(ReturnToPool), RandUtil.Range(data.lifeTime));
 		}
 
@@ -127,10 +131,24 @@ namespace OliverLoescher.Weapon
 	#region Hit/Damage
 		private void DoHitOther(Collider other, Vector3 point)
 		{
-			if (canDamage == false || currentFrame < 1 || other.isTrigger || other == lastHitCollider || other.gameObject == sender)
+			if (canDamage == false || currentFrame < 1 || other.isTrigger || other == lastHitCollider || IsSender(other.transform))
+			{
 				return;
+			}
 
-			DamageOther(other, point);
+			IDamageable damageable = other.GetComponent<IDamageable>();
+			if (damageable != null)
+			{
+				bool isSameTeam = SOTeam.Compare(damageable.GetTeam(), team);
+				if (isSameTeam && team.ignoreTeamCollisions)
+				{
+					return;
+				}
+				if (!isSameTeam || team.teamDamage)
+				{
+					DamageOther(damageable, point);
+				}
+			}
 
 			lastHitFrame = currentFrame;
 			lastHitCollider = other;
@@ -139,33 +157,42 @@ namespace OliverLoescher.Weapon
 			DoBulletCollision(other);
 		}
 
-		private void DamageOther(Collider other, Vector3 point)
+		private void DamageOther(IDamageable damageable, Vector3 point)
 		{
 			// Debug.Log("[Projectile.cs] DamageOther(" + other.name + ")", other);
-			Rigidbody otherRb = other.GetComponentInParent<Rigidbody>();
+			// Rigidbody otherRb = other.GetComponentInParent<Rigidbody>();
 			// if (otherRb != null)
 			//	 otherRb.AddForceAtPosition(rigidbody.velocity.normalized * data.hitForce, point);
 			
-			IDamageable damageable = other.GetComponent<IDamageable>();
-			if (damageable != null)
+			if (Random.value > data.critChance01)
 			{
-				if (Random.value > data.critChance01)
-				{
-					damageable.Damage(data.damage, sender, transform.position, rigidbody.velocity);
-				}
-				else
-				{
-					damageable.Damage(Mathf.RoundToInt(data.critDamageMultiplier * data.damage), sender, transform.position, rigidbody.velocity, critColor);
-				}
+				damageable.Damage(data.damage, sender, transform.position, rigidbody.velocity);
+			}
+			else
+			{
+				damageable.Damage(Mathf.RoundToInt(data.critDamageMultiplier * data.damage), sender, transform.position, rigidbody.velocity, critColor);
 			}
 
 			// Audio
 			if (audio != null)
 				audio.OnCollision();
 		}
-	#endregion
 
-	#region Collision
+		private bool IsSender(Transform other)
+		{
+			if (other == sender.transform)
+			{
+				return true;
+			}
+			if (other.parent == null)
+			{
+				return false;
+			}
+			return IsSender(other.parent);
+		}
+		#endregion
+
+		#region Collision
 		protected void DoBulletCollision(Collider other)
 		{
 			switch (data.bulletCollision)
@@ -198,7 +225,8 @@ namespace OliverLoescher.Weapon
 				
 				case SOProjectile.BulletCollision.Physics:
 					rigidbody.useGravity = true;
-					collider.isTrigger = false;
+					hitboxCollider.enabled = false;
+					physicsCollider.enabled = true;
 					activeSelf = false;
 					transform.position += rigidbody.velocity.normalized * -0.25f;
 					break;

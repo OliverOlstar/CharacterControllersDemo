@@ -2,29 +2,32 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PoolElement : MonoBehaviour
+namespace OliverLoescher
 {
-	private string poolKey = string.Empty;
-	private Transform parent = null;
-
-	public virtual void Init(string pPoolKey, Transform pParent)
+	public class PoolElement : MonoBehaviour
 	{
-		poolKey = pPoolKey;
-		parent = pParent;
-	}
+		public string poolKey { get; private set; } = string.Empty;
+		public Transform parent { get; private set; } = null;
 
-	public virtual void ReturnToPool()
-	{
-		ObjectPoolDictionary.Return(gameObject, this, parent);
-	}
+		public virtual void Init(string pPoolKey, Transform pParent)
+		{
+			poolKey = pPoolKey;
+			parent = pParent;
+		}
 
-	public virtual void OnExitPool()
-	{
+		public virtual void ReturnToPool()
+		{
+			ObjectPoolDictionary.Return(gameObject, this);
+		}
 
-	}
+		public virtual void OnExitPool()
+		{
 
-	private void OnDestroy() 
-	{
-		ObjectPoolDictionary.ObjectDestroyed(gameObject, this);
+		}
+
+		private void OnDestroy()
+		{
+			ObjectPoolDictionary.ObjectDestroyed(gameObject, this);
+		}
 	}
 }

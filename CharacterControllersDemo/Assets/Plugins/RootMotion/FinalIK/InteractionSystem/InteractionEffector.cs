@@ -63,12 +63,12 @@ namespace RootMotion.FinalIK {
 		}
 
 		// Interpolate to default values when currently not in interaction
-		public bool ResetToDefaults(float speed) {
+		public bool ResetToDefaults(float speed, float deltaTime) {
 			if (inInteraction) return false;
 			if (isPaused) return false;
 			if (defaults) return false; 
 
-			resetTimer = Mathf.MoveTowards(resetTimer, 0f, Time.deltaTime * speed);
+			resetTimer = Mathf.MoveTowards(resetTimer, 0f, deltaTime * speed);
 
 			// Pull and Reach
 			if (effector.isEndEffector) {
@@ -124,75 +124,91 @@ namespace RootMotion.FinalIK {
 			return true;
 		}
 
-		// Start interaction
-		public bool Start(InteractionObject interactionObject, string tag, float fadeInTime, bool interrupt) {
-			// If not in interaction, set effector positions to their bones
-			if (!inInteraction) {
-				effector.position = effector.bone.position;;
-				effector.rotation = effector.bone.rotation;;
-			} else {
-				if (!interrupt) return false;
-				else defaults = false;
-			}
+        // Start interaction
+        public bool Start(InteractionObject interactionObject, string tag, float fadeInTime, bool interrupt)
+        {
+            // Get the InteractionTarget
+            target = interactionObject.GetTarget(effectorType, tag);
+            if (target == null) return false;
+            interactionTarget = target.GetComponent<InteractionTarget>();
+            
+            return Start(interactionObject, interactionTarget, fadeInTime, interrupt);
+        }
 
-			// Get the InteractionTarget
-			target = interactionObject.GetTarget(effectorType, tag);
-			if (target == null) return false;
-			interactionTarget = target.GetComponent<InteractionTarget>();
+        public bool Start(InteractionObject interactionObject, InteractionTarget interactionTarget, float fadeInTime, bool interrupt)
+        {
+            this.interactionTarget = interactionTarget;
+            
+            // If not in interaction, set effector positions to their bones
+            if (!inInteraction)
+            {
+                effector.position = effector.bone.position;
+                effector.rotation = effector.bone.rotation;
+            }
+            else
+            {
+                if (!interrupt) return false;
+                else defaults = false;
+            }
+            
+            if (interactionTarget == null) return false;
+            target = interactionTarget.transform;
 
-			// Start the interaction
-			this.interactionObject = interactionObject;
-			if (interactionSystem.OnInteractionStart != null) interactionSystem.OnInteractionStart(effectorType, interactionObject);
-			interactionObject.OnStartInteraction(interactionSystem);
-			
-			// Cleared triggered events
-			triggered.Clear();
+            // Start the interaction
+            this.interactionObject = interactionObject;
+            if (interactionSystem.OnInteractionStart != null) interactionSystem.OnInteractionStart(effectorType, interactionObject);
+            interactionObject.OnStartInteraction(interactionSystem);
 
-			for (int i = 0; i < interactionObject.events.Length; i++) {
-				triggered.Add(false);
-			}
+            // Cleared triggered events
+            triggered.Clear();
 
-			// Posing the hand/foot
-			if (poser != null) {
-				if (poser.poseRoot == null) poser.weight = 0f;
+            for (int i = 0; i < interactionObject.events.Length; i++)
+            {
+                triggered.Add(false);
+            }
 
-				if (interactionTarget != null) poser.poseRoot = target.transform;
-				else poser.poseRoot = null;
+            // Posing the hand/foot
+            if (poser != null)
+            {
+                if (poser.poseRoot == null) poser.weight = 0f;
 
-				poser.AutoMapping();
-			}
+                if (interactionTarget != null) poser.poseRoot = target.transform;
+                else poser.poseRoot = null;
 
-			// See which InteractionObject.WeightCurve.Types are used
-			positionWeightUsed = interactionObject.CurveUsed(InteractionObject.WeightCurve.Type.PositionWeight);
-			rotationWeightUsed = interactionObject.CurveUsed(InteractionObject.WeightCurve.Type.RotationWeight);
-			pullUsed = interactionObject.CurveUsed(InteractionObject.WeightCurve.Type.Pull);
-			reachUsed = interactionObject.CurveUsed(InteractionObject.WeightCurve.Type.Reach);
-			pushUsed = interactionObject.CurveUsed(InteractionObject.WeightCurve.Type.Push);
-			pushParentUsed = interactionObject.CurveUsed(InteractionObject.WeightCurve.Type.PushParent);
+                poser.AutoMapping();
+            }
+
+            // See which InteractionObject.WeightCurve.Types are used
+            positionWeightUsed = interactionObject.CurveUsed(InteractionObject.WeightCurve.Type.PositionWeight);
+            rotationWeightUsed = interactionObject.CurveUsed(InteractionObject.WeightCurve.Type.RotationWeight);
+            pullUsed = interactionObject.CurveUsed(InteractionObject.WeightCurve.Type.Pull);
+            reachUsed = interactionObject.CurveUsed(InteractionObject.WeightCurve.Type.Reach);
+            pushUsed = interactionObject.CurveUsed(InteractionObject.WeightCurve.Type.Push);
+            pushParentUsed = interactionObject.CurveUsed(InteractionObject.WeightCurve.Type.PushParent);
             bendGoalWeightUsed = interactionObject.CurveUsed(InteractionObject.WeightCurve.Type.BendGoalWeight);
-			//poserUsed = interactionObject.CurveUsed(InteractionObject.WeightCurve.Type.PoserWeight);
-			if (defaults) StoreDefaults();
+            //poserUsed = interactionObject.CurveUsed(InteractionObject.WeightCurve.Type.PoserWeight);
+            if (defaults) StoreDefaults();
 
             // Reset internal values
-			timer = 0f;
-			weight = 0f;
-			fadeInSpeed = fadeInTime > 0f? 1f / fadeInTime: 1000f;
-			length = interactionObject.length;
-			
-			isPaused = false;
-			pickedUp = false;
-			pickUpPosition = Vector3.zero;
-			pickUpRotation = Quaternion.identity;
+            timer = 0f;
+            weight = 0f;
+            fadeInSpeed = fadeInTime > 0f ? 1f / fadeInTime : 1000f;
+            length = interactionObject.length;
 
-			if (interactionTarget != null) interactionTarget.RotateTo(effector.bone);
+            isPaused = false;
+            pickedUp = false;
+            pickUpPosition = Vector3.zero;
+            pickUpRotation = Quaternion.identity;
 
-			started = true;
+            if (interactionTarget != null) interactionTarget.RotateTo(effector.bone);
 
-			return true;
-		}
+            started = true;
+
+            return true;
+        }
 
 		// Update the (possibly) ongoing interaction
-		public void Update(Transform root, float speed) {
+		public void Update(Transform root, float speed, float deltaTime) {
 			if (!inInteraction) {
 				// If the InteractionObject has been destroyed, reset to defaults
 				if (started) {
@@ -209,9 +225,11 @@ namespace RootMotion.FinalIK {
 			if (interactionTarget != null && !interactionTarget.rotateOnce) interactionTarget.RotateTo(effector.bone);
 
 			if (isPaused) {
-				effector.position = target.TransformPoint(pausePositionRelative);
-				effector.rotation = target.rotation * pauseRotationRelative;
-
+                if (!pickedUp)
+                {
+                    effector.position = target.TransformPoint(pausePositionRelative);
+                    effector.rotation = target.rotation * pauseRotationRelative;
+                }
 				// Apply the current interaction state to the solver
 				interactionObject.Apply(interactionSystem.ik.solver, effectorType, interactionTarget, timer, weight);
 
@@ -219,8 +237,8 @@ namespace RootMotion.FinalIK {
 			}
 
 			// Advance the interaction timer and weight
-			timer += Time.deltaTime * speed * (interactionTarget != null? interactionTarget.interactionSpeedMlp: 1f);
-			weight = Mathf.Clamp(weight + Time.deltaTime * fadeInSpeed * speed, 0f, 1f);
+			timer += deltaTime * speed * (interactionTarget != null? interactionTarget.interactionSpeedMlp: 1f);
+			weight = Mathf.Clamp(weight + deltaTime * fadeInSpeed * speed, 0f, 1f);
 
 			// Interaction events
 			bool pickUp = false;
@@ -238,11 +256,11 @@ namespace RootMotion.FinalIK {
 			// Apply the current interaction state to the solver
 			interactionObject.Apply(interactionSystem.ik.solver, effectorType, interactionTarget, timer, weight);
 
-			if (pickUp) PickUp(root);
-			if (pause) Pause();
+            if (pickUp) PickUp(root);
+            if (pause) Pause();
 
-			// Hand poser weight
-			float poserWeight = interactionObject.GetValue (InteractionObject.WeightCurve.Type.PoserWeight, interactionTarget, timer);
+            // Hand poser weight
+            float poserWeight = interactionObject.GetValue (InteractionObject.WeightCurve.Type.PoserWeight, interactionTarget, timer);
 
 			if (poser != null) {
 				poser.weight = Mathf.Lerp (poser.weight, poserWeight, weight);
@@ -355,7 +373,7 @@ namespace RootMotion.FinalIK {
 			target = null;
 			defaults = false;
 			resetTimer = 1f;
-			if (poser != null && !pickedUp) poser.weight = 0f;
+			//if (poser != null && !pickedUp) poser.weight = 0f;
 			pickedUp = false;
 			started = false;
 
@@ -376,7 +394,7 @@ namespace RootMotion.FinalIK {
 				effector.bone.localRotation = Quaternion.Inverse(effector.bone.parent.rotation) * targetRotation;
 			}
 
-			// Positioning the interaction object to the effector (not the bone, because it is still at it's animated translation)
+			// Positioning the interaction object to the effector (not the bone, because it is still at its animated translation)
 			if (pickUpOnPostFBBIK) {
 				Vector3 bonePosition = effector.bone.position;
 				effector.bone.position = interactionSystem.transform.TransformPoint(pickUpPosition);

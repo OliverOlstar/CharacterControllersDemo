@@ -89,24 +89,36 @@ namespace RootMotion {
 			return Vector3.Slerp(fromVector, toVector, weight);
 		}
 
-		/// <summary>
-		/// Returns vector projection on axis multiplied by weight.
-		/// </summary>
-		public static Vector3 ExtractVertical(Vector3 v, Vector3 verticalAxis, float weight) {
-			if (weight == 0f) return Vector3.zero;
-			return Vector3.Project(v, verticalAxis) * weight;
-		}
+        /// <summary>
+        /// Returns vector projection on axis multiplied by weight.
+        /// </summary>
+        public static Vector3 ExtractVertical(Vector3 v, Vector3 verticalAxis, float weight)
+        {
+            if (weight <= 0f) return Vector3.zero;
+            if (verticalAxis == Vector3.up) return Vector3.up * v.y * weight;
+            return Vector3.Project(v, verticalAxis) * weight;
+        }
 
-		/// <summary>
-		/// Returns vector projected to a plane and multiplied by weight.
-		/// </summary>
-		public static Vector3 ExtractHorizontal(Vector3 v, Vector3 normal, float weight) {
-			if (weight == 0f) return Vector3.zero;
-			
-			Vector3 tangent = v;
-			Vector3.OrthoNormalize(ref normal, ref tangent);
-			return Vector3.Project(v, tangent) * weight;
-		}
+        /// <summary>
+        /// Returns vector projected to a plane and multiplied by weight.
+        /// </summary>
+        public static Vector3 ExtractHorizontal(Vector3 v, Vector3 normal, float weight)
+        {
+            if (weight <= 0f) return Vector3.zero;
+            if (normal == Vector3.up) return new Vector3(v.x, 0f, v.z) * weight;
+            Vector3 tangent = v;
+            Vector3.OrthoNormalize(ref normal, ref tangent);
+            return Vector3.Project(v, tangent) * weight;
+        }
+
+        /// <summary>
+        /// Flattens a vector on a plane defined by 'normal'.
+        /// </summary>
+        public static Vector3 Flatten(Vector3 v, Vector3 normal)
+        {
+            if (normal == Vector3.up) return new Vector3(v.x, 0f, v.z);
+            return v - Vector3.Project(v, normal);
+        }
 
         /// <summary>
         /// Clamps the direction to clampWeight from normalDirection, clampSmoothing is the number of sine smoothing iterations applied on the result.

@@ -116,7 +116,7 @@ namespace RootMotion {
 		}
 
 		/// <summary>
-		/// Creates a FromToRotation, but makes sure it's axis remains fixed near to the Quaternion singularity point.
+		/// Creates a FromToRotation, but makes sure its axis remains fixed near to the Quaternion singularity point.
 		/// </summary>
 		/// <returns>
 		/// The from to rotation around an axis.
@@ -235,9 +235,9 @@ namespace RootMotion {
 		/// <summary>
 		/// Used for matching the rotations of objects that have different orientations.
 		/// </summary>
-		public static Quaternion MatchRotation(Quaternion targetRotation, Vector3 targetforwardAxis, Vector3 targetUpAxis, Vector3 forwardAxis, Vector3 upAxis) {
-			Quaternion f = Quaternion.LookRotation(forwardAxis, upAxis);
-			Quaternion fTarget = Quaternion.LookRotation(targetforwardAxis, targetUpAxis);
+		public static Quaternion MatchRotation(Quaternion targetRotation, Vector3 targetAxis1, Vector3 targetAxis2, Vector3 axis1, Vector3 axis2) {
+			Quaternion f = Quaternion.LookRotation(axis1, axis2);
+			Quaternion fTarget = Quaternion.LookRotation(targetAxis1, targetAxis2);
 
 			Quaternion d = targetRotation * fTarget;
 			return d * Quaternion.Inverse(f);
@@ -260,6 +260,35 @@ namespace RootMotion {
             if (angle >= 180f) return angle - 360f;
             if (angle <= -180f) return angle + 360f;
             return angle;
+        }
+
+        /// <summary>
+        /// Mirrors a Quaternion on the YZ plane in provided rotation space.
+        /// </summary>
+        public static Quaternion MirrorYZ(Quaternion r, Quaternion space)
+        {
+            r = Quaternion.Inverse(space) * r;
+            Vector3 forward = r * Vector3.forward;
+            Vector3 up = r * Vector3.up;
+
+            forward.x *= -1;
+            up.x *= -1;
+
+            return space * Quaternion.LookRotation(forward, up);
+        }
+
+        /// <summary>
+        /// Mirrors a Quaternion on the world space YZ plane.
+        /// </summary>
+        public static Quaternion MirrorYZ(Quaternion r)
+        {
+            Vector3 forward = r * Vector3.forward;
+            Vector3 up = r * Vector3.up;
+
+            forward.x *= -1;
+            up.x *= -1;
+
+            return Quaternion.LookRotation(forward, up);
         }
     }
 }

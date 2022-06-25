@@ -179,7 +179,7 @@ namespace RootMotion.FinalIK {
 			}
 
 			/// <summary>
-			/// Fixes the transform to it's default local state.
+			/// Fixes the transform to its default local state.
 			/// </summary>
 			public void FixTransform() {
 				if (transform.localPosition != defaultLocalPosition) transform.localPosition = defaultLocalPosition;

@@ -22,6 +22,7 @@ namespace OliverLoescher.Camera
         [SerializeField, Range(0, 50)] private float sprintSpring = 45.0f;
         [SerializeField, Range(0, 50)] private float springDamper = 10.0f;
         private float springVel = 0;
+        private float springY = 0;
 
         [Header("FOV")]
         [SerializeField, MinMaxSlider(0, 180, true)] private Vector2 fovMinMax = new Vector2(70.0f, 110.0f);
@@ -70,9 +71,8 @@ namespace OliverLoescher.Camera
             springVel += sprintSpring * -transform.localPosition.y * pDeltaTime;
             springVel += springDamper * -springVel * pDeltaTime;
 
-            Vector3 pos = transform.localPosition;
-            pos.y += springVel * pDeltaTime;
-            transform.localPosition = pos;
+            springY += springVel * pDeltaTime;
+            transform.localPosition = transform.parent.InverseTransformVector(springY * Vector3.up);
         }
 
         private void DoFOV(float pDeltaTime)

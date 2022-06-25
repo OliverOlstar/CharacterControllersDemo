@@ -9,6 +9,7 @@ namespace OliverLoescher.Multiplayer
 	{
 		private PhotonView photonView;
 		private GameObject playerObject;
+		private Health playerHealth;
 
 		[SerializeField, AssetsOnly] private GameObject playerPrefab = null;
 		[SerializeField, AssetsOnly] private GameObject othersPrefab = null; 
@@ -31,12 +32,13 @@ namespace OliverLoescher.Multiplayer
 		public void SpawnPlayer()
 		{
 			playerObject = Instantiate(playerPrefab);
-			playerObject.GetComponent<Health>().onValueOut.AddListener(OnPlayerDeath);
+			playerHealth = playerObject.GetComponent<Health>();
+			playerHealth.onValueOut.AddListener(OnPlayerDeath);
 			PhotonView pv = playerObject.GetComponent<PhotonView>();
 
 			if (PhotonNetwork.AllocateViewID(pv))
 			{
-				photonView.RPC("RPC_SpawnOtherPlayer", RpcTarget.OthersBuffered, pv.ViewID);
+				photonView.RPC(nameof(RPC_SpawnOtherPlayer), RpcTarget.OthersBuffered, pv.ViewID);
 			}
 			else
 			{
@@ -48,7 +50,7 @@ namespace OliverLoescher.Multiplayer
 		[PunRPC]
 		public void RPC_SpawnOtherPlayer(int pViewID)
 		{
-			GameObject player = (GameObject) Instantiate(othersPrefab);
+			GameObject player = Instantiate(othersPrefab);
 			PhotonView photonView = player.GetComponent<PhotonView>();
 			photonView.ViewID = pViewID;
 		}
@@ -56,6 +58,13 @@ namespace OliverLoescher.Multiplayer
 		private void OnPlayerDeath()
 		{
 			Camera.SpectatorCamera.Instance.gameObject.SetActive(true);
+			Invoke(nameof(RespawnPlayer), 5);
+		}
+
+		private void RespawnPlayer()
+		{
+			Camera.SpectatorCamera.Instance.gameObject.SetActive(false);
+			playerHealth.Respawn();
 		}
 	}
 }

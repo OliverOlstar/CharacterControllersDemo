@@ -9,7 +9,7 @@ namespace OliverLoescher.FPS
 	public class FPS_MultiplayerEvents_Mine : MonoBehaviour
 	{
 		private PhotonView photonView = null;
-		[SerializeField] private FPS.InputBridge_FPS input = null;
+		//[SerializeField] private FPS.InputBridge_FPS input = null;
 		[SerializeField] private RigidbodyCharacter movement = null;
 
 		private void Start()

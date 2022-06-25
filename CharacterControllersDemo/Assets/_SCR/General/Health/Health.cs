@@ -8,6 +8,8 @@ namespace OliverLoescher
 {
     public class Health : CharacterValue, IDamageable
     {
+        [SerializeField] private SOTeam team = null;
+
         [Header("Death")]
         [SerializeField] private bool disableCollidersOnDeath = true;
         private Collider[] colliders = new Collider[0];
@@ -16,9 +18,6 @@ namespace OliverLoescher
         [ColorPalette("UI")] public Color deathColor = Color.grey;
         [ColorPalette("UI")] public Color damageColor = Color.red;
         [ColorPalette("UI")] public Color healColor = Color.green;
-
-        [Header("Photon")]
-        [SerializeField] private PhotonView photonView = null;
 
         protected override void Start() 
         {
@@ -44,15 +43,7 @@ namespace OliverLoescher
         [Button()]
         public virtual void Damage(float pValue, GameObject pSender, Vector3 pPoint, Vector3 pDirection)
         {
-            if (photonView == null)
-            {
-                Modify(-pValue);
-            }
-            else if (photonView.IsMine)
-            {
-                photonView.RPC("RPC_Damage", RpcTarget.Others, pValue);
-                Modify(-pValue);
-            }
+            Modify(-pValue);
         }
 
         public virtual void Death() 
@@ -66,25 +57,16 @@ namespace OliverLoescher
             }
         }
 
-        public GameObject GetGameObject() { return gameObject; }
-        public IDamageable GetParentDamageable() { return this; }
+        GameObject IDamageable.GetGameObject() => gameObject;
+        IDamageable IDamageable.GetParentDamageable() => this;
+        SOTeam IDamageable.GetTeam() => team;
 
         public void Respawn()
         {
             value = maxValue;
             foreach (BarValue bar in UIBars)
                 bar.InitValue(1);
-            isOut = false;
-        }
-
-        [PunRPC]
-        private void RPC_Damage(float pValue, PhotonMessageInfo pInfo)
-        {
-            // if (!photonView.IsMine)
-            //     return;
-
-            Debug.Log(pInfo.Sender.NickName + " Damaged " + photonView.Owner.NickName + ": " + pValue, gameObject);
-            Modify(-pValue);
+            OnValueIn();
         }
     }
 }
