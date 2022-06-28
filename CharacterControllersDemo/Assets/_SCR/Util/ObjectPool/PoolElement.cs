@@ -6,7 +6,8 @@ namespace OliverLoescher
 {
 	public class PoolElement : MonoBehaviour
 	{
-		public string poolKey { get; private set; } = string.Empty;
+		private string poolKey = string.Empty;
+		public string PoolKey => string.IsNullOrEmpty(poolKey) ? gameObject.name : poolKey;
 		public Transform parent { get; private set; } = null;
 
 		public virtual void Init(string pPoolKey, Transform pParent)
@@ -17,7 +18,7 @@ namespace OliverLoescher
 
 		public virtual void ReturnToPool()
 		{
-			ObjectPoolDictionary.Return(gameObject, this);
+			ObjectPoolDictionary.Return(this);
 		}
 
 		public virtual void OnExitPool()

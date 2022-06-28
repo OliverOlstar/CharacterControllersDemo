@@ -100,14 +100,15 @@ namespace OliverLoescher
 				return item.gameObject;
 			}
 
-			public void CheckInObject(GameObject pObject, PoolElement pElement, bool pDisable = true)
+			public void CheckInObject(PoolElement pElement, bool pDisable = true)
 			{
-				pObject.transform.SetParent(pElement.parent, true);
-				pObject.transform.localScale = MathUtil.Inverse(pElement.parent.lossyScale);
-				pObject.SetActive(!pDisable);
+				pElement.gameObject.transform.SetParent(pElement.parent, true);
+				pElement.gameObject.transform.localScale = MathUtil.Inverse(pElement.parent.lossyScale);
+				if (pElement.gameObject.activeSelf)
+					pElement.gameObject.SetActive(!pDisable);
 
 				PoolItem item = new PoolItem();
-				item.gameObject = pObject;
+				item.gameObject = pElement.gameObject;
 				item.element = pElement;
 				item.parent = pElement.parent;
 
@@ -179,6 +180,20 @@ namespace OliverLoescher
 			}
 			return dictionary[pObject.name].CheckOutObject();
 		}
+		public static GameObject Get(PoolElement pElement)
+		{
+			if (pElement == null)
+			{
+				return null;
+			}
+			if (!dictionary.ContainsKey(pElement.PoolKey))
+			{
+				PoolValues values = new PoolValues();
+				values.prefab = pElement.gameObject;
+				return Instance.CreatePool(values).CheckOutObject();
+			}
+			return dictionary[pElement.PoolKey].CheckOutObject();
+		}
 		public static GameObject Get(PoolValues pValues)
 		{
 			if (pValues.prefab == null)
@@ -192,9 +207,9 @@ namespace OliverLoescher
 			return dictionary[pValues.key].CheckOutObject();
 		}
 
-		public static void Return(GameObject pObject, PoolElement pElement, bool pDisable = true)
+		public static void Return(PoolElement pElement, bool pDisable = true)
 		{
-			dictionary[pElement.poolKey].CheckInObject(pObject, pElement, pDisable);
+			dictionary[pElement.PoolKey].CheckInObject(pElement, pDisable);
 		}
 
 		public static void ObjectDestroyed(GameObject pObject, PoolElement pElement)

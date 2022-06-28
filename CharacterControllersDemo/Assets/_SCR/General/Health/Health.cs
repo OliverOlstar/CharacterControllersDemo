@@ -6,67 +6,67 @@ using Photon.Pun;
 
 namespace OliverLoescher
 {
-    public class Health : CharacterValue, IDamageable
-    {
-        [SerializeField] private SOTeam team = null;
+	public class Health : CharacterValue, IDamageable
+	{
+		public delegate void DamageEvent(float pValue, GameObject pSender, Vector3 pPoint, Vector3 pDirection);
+		public DamageEvent onDamageEvent;
 
-        [Header("Death")]
-        [SerializeField] private bool disableCollidersOnDeath = true;
-        private Collider[] colliders = new Collider[0];
+		[SerializeField] private SOTeam team = null;
 
-        [Space]
-        [ColorPalette("UI")] public Color deathColor = Color.grey;
-        [ColorPalette("UI")] public Color damageColor = Color.red;
-        [ColorPalette("UI")] public Color healColor = Color.green;
+		[Header("Death")]
+		[SerializeField] private bool disableCollidersOnDeath = true;
+		private Collider[] colliders = new Collider[0];
 
-        protected override void Start() 
-        {
-            base.Start();
+		[Space]
+		[ColorPalette("UI")] public Color deathColor = Color.grey;
+		[ColorPalette("UI")] public Color damageColor = Color.red;
+		[ColorPalette("UI")] public Color healColor = Color.green;
 
-            if (disableCollidersOnDeath)
-            {
-                colliders = GetComponentsInChildren<Collider>();
-            }
+		protected override void Start() 
+		{
+			base.Start();
 
-            onValueOut.AddListener(Death);
+			if (disableCollidersOnDeath)
+			{
+				colliders = GetComponentsInChildren<Collider>();
+			}
 
-            Init();
-        }
+			onValueOut.AddListener(Death);
 
-        protected virtual void Init() { }
+			Init();
+		}
 
-        public virtual void Damage(float pValue, GameObject pSender, Vector3 pPoint, Vector3 pDirection, Color pColor)
-        {
-            Damage(pValue, pSender, pPoint, pDirection);
-        }
+		protected virtual void Init() { }
 
-        [Button()]
-        public virtual void Damage(float pValue, GameObject pSender, Vector3 pPoint, Vector3 pDirection)
-        {
-            Modify(-pValue);
-        }
+		public virtual void Damage(float pValue, GameObject pSender, Vector3 pPoint, Vector3 pDirection, Color pColor) => Damage(pValue, pSender, pPoint, pDirection); // IDamageable
+		[Button()] 
+		public virtual void Damage(float pValue, GameObject pSender, Vector3 pPoint, Vector3 pDirection) // IDamageable
+		{
+			Modify(-pValue);
+			onDamageEvent?.Invoke(pValue, pSender, pPoint, pDirection);
+		}
 
-        public virtual void Death() 
-        {
-            if (disableCollidersOnDeath)
-            {
-                foreach (Collider c in colliders)
-                {
-                    c.enabled = false;
-                }
-            }
-        }
+		public virtual void Death() 
+		{
+			if (disableCollidersOnDeath)
+			{
+				foreach (Collider c in colliders)
+				{
+					c.enabled = false;
+				}
+			}
+		}
 
-        GameObject IDamageable.GetGameObject() => gameObject;
-        IDamageable IDamageable.GetParentDamageable() => this;
-        SOTeam IDamageable.GetTeam() => team;
+		GameObject IDamageable.GetGameObject() => gameObject;
+		IDamageable IDamageable.GetParentDamageable() => this;
+		SOTeam IDamageable.GetTeam() => team;
 
-        public void Respawn()
-        {
-            value = maxValue;
-            foreach (BarValue bar in UIBars)
-                bar.InitValue(1);
-            OnValueIn();
-        }
-    }
+		public void Respawn()
+		{
+			value = maxValue;
+			foreach (BarValue bar in UIBars)
+				bar.InitValue(1);
+			OnValueIn();
+		}
+	}
 }

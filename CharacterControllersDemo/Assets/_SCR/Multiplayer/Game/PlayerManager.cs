@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 using Photon.Pun;
 using Sirenix.OdinInspector;
 
@@ -7,6 +8,12 @@ namespace OliverLoescher.Multiplayer
 	[RequireComponent(typeof(PhotonView))]
 	public class PlayerManager : MonoBehaviour
 	{
+		public delegate void PlayerStateChanged(PlayerManager player);
+		public static List<PlayerManager> Players = new List<PlayerManager>();
+		public static PlayerStateChanged OnPlayerJoined;
+		public static PlayerStateChanged OnPlayerLeft;
+		public static PlayerStateChanged OnPlayerDied;
+
 		private PhotonView photonView;
 		private GameObject playerObject;
 		private Health playerHealth;
@@ -16,7 +23,16 @@ namespace OliverLoescher.Multiplayer
 
 		private void Awake() 
 		{
+			Players.Add(this);
+			OnPlayerJoined?.Invoke(this);
+
 			photonView = GetComponent<PhotonView>();
+		}
+
+		private void OnDestroy()
+		{
+			Players.Remove(this);
+			OnPlayerLeft?.Invoke(this);
 		}
 
 		private void Start() 
@@ -25,7 +41,6 @@ namespace OliverLoescher.Multiplayer
 			{
 				SpawnPlayer();
 			}
-
 			Camera.SpectatorCamera.Instance.gameObject.SetActive(false);
 		}
 
@@ -58,7 +73,7 @@ namespace OliverLoescher.Multiplayer
 		private void OnPlayerDeath()
 		{
 			Camera.SpectatorCamera.Instance.gameObject.SetActive(true);
-			Invoke(nameof(RespawnPlayer), 5);
+			OnPlayerDied?.Invoke(this);
 		}
 
 		private void RespawnPlayer()

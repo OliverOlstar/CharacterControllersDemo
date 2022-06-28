@@ -11,8 +11,8 @@ namespace OliverLoescher.Weapon
 		[Required] public SOProjectile data = null;
 
 		private new Rigidbody rigidbody = null;
-		[SerializeField] private new Collider hitboxCollider = null;
-		[SerializeField] private new Collider physicsCollider = null;
+		[SerializeField] private Collider hitboxCollider = null;
+		[SerializeField] private Collider physicsCollider = null;
 		public new ProjectileSFX audio = null;
 		public GameObject sender = null;
 		private SOTeam team = null;
@@ -146,6 +146,7 @@ namespace OliverLoescher.Weapon
 				}
 				if (!isSameTeam || team.teamDamage)
 				{
+					Debug.Log($"[{nameof(Projectile)}] {nameof(DamageOther)}({other.name}, {damageable.GetGameObject().name}, {(damageable.GetTeam() == null ? "No Team" : damageable.GetTeam().name)})", other);
 					DamageOther(damageable, point);
 				}
 			}
@@ -159,7 +160,6 @@ namespace OliverLoescher.Weapon
 
 		private void DamageOther(IDamageable damageable, Vector3 point)
 		{
-			// Debug.Log("[Projectile.cs] DamageOther(" + other.name + ")", other);
 			// Rigidbody otherRb = other.GetComponentInParent<Rigidbody>();
 			// if (otherRb != null)
 			//	 otherRb.AddForceAtPosition(rigidbody.velocity.normalized * data.hitForce, point);

@@ -7,22 +7,24 @@ using System.IO;
 
 namespace OliverLoescher.Multiplayer
 {
+	[RequireComponent(typeof(PhotonView))]
 	public class RoomManager : MonoBehaviourPunCallbacks
 	{
-	#region Singleton
-			public static RoomManager Instance = null;
-			private void Awake() 
+		public static RoomManager Instance = null;
+
+		private void Awake()
+		{
+			#region Singleton
+			if (Instance != null)
 			{
-				if (Instance != null)
-				{
-					Debug.LogError("[RoomManager.cs] Instance != null, destroying other", gameObject);
-					Destroy(Instance);
-				}
-				
-				DontDestroyOnLoad(gameObject);
-				Instance = this;
+				Debug.LogError("[RoomManager.cs] Instance != null, destroying other", gameObject);
+				Destroy(Instance);
 			}
-	#endregion	
+
+			//DontDestroyOnLoad(gameObject);
+			Instance = this;
+			#endregion
+		}
 
 		public override void OnEnable() 
 		{
@@ -48,7 +50,7 @@ namespace OliverLoescher.Multiplayer
 
 				PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerManager"), Vector3.zero, Quaternion.identity);
 			}
-			else if (pScene.buildIndex == 0)
+			else if (pScene.buildIndex == 0) // Menu
 			{
 				if (Instance == this)
 					Instance = null;
