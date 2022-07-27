@@ -22,5 +22,5 @@ MonoBehaviour:
   lifeTime: {x: 4, y: 4}
   shootForce: {x: 18, y: 20}
   bulletGravity: 0.5
-  bulletCollision: 1
+  bulletCollision: {fileID: 0}
   hitForce: 8

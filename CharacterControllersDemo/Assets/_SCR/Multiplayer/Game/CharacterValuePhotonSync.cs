@@ -38,7 +38,7 @@ namespace OliverLoescher
 			{
 				if (doLogs)
 				{
-					Debug.Log($"{pInfo.Sender.NickName} Changed {view.Owner.NickName}'s {value.name}: {pValue}");
+					Debug.Log($"{pInfo.Sender.NickName} Changed {view.Owner.NickName}'s {value.GetType().ToString()}: {pValue}");
 				}
 				value.Set(pValue);
 			}

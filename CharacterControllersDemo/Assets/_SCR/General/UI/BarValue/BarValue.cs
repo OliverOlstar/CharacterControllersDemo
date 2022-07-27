@@ -116,7 +116,11 @@ public class BarValue : MonoBehaviour
 
 	public void SetValue(float pValue01)
 	{
-		if (enabled == false) { return; }
+		if (!isActiveAndEnabled)
+		{
+			SetValueInstant(pValue01);
+			return;
+		}
 
 		if (useCurve)
 			pValue01 = valueCurve.Evaluate(pValue01);
@@ -148,6 +152,18 @@ public class BarValue : MonoBehaviour
         
         ResetFade();
     }
+
+	public void SetValueInstant(float pValue01)
+	{
+		if (useCurve)
+			pValue01 = valueCurve.Evaluate(pValue01);
+
+		if (moveRoutine != null)
+			StopCoroutine(moveRoutine);
+
+		bottemBar.fillAmount = pValue01;
+		topBar.fillAmount = pValue01;
+	}
 
     private IEnumerator TopBarRoutine(float pValue01)
     {
@@ -187,7 +203,7 @@ public class BarValue : MonoBehaviour
     {
         if (pImage != null)
         {
-            if (doColorFades && !pInstant)
+            if (doColorFades && !pInstant && isActiveAndEnabled)
             {
                 if (pRoutine != null)
                     StopCoroutine(pRoutine);
