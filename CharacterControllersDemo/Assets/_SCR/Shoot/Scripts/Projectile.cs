@@ -12,7 +12,7 @@ namespace OliverLoescher.Weapon
 		public new Rigidbody rigidbody = null;
 		public Collider hitboxCollider = null;
 		public Collider physicsCollider = null;
-		public new AudioSourcePool audioSources = null;
+		public AudioSourcePool audioSources = null;
 		public GameObject sender = null;
 		private SOTeam team = null;
 
@@ -161,10 +161,6 @@ namespace OliverLoescher.Weapon
 			{
 				damageable.Damage(Mathf.RoundToInt(data.critDamageMultiplier * data.damage), sender, transform.position, rigidbody.velocity, critColor);
 			}
-
-			// Audio
-			if (audio != null)
-				audio.OnCollision();
 		}
 
 		private void DoLifeEnd()
