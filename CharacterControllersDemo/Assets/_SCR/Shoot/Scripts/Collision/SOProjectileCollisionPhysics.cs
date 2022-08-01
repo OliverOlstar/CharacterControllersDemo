@@ -14,6 +14,7 @@ namespace OliverLoescher.Weapon
 			projectile.physicsCollider.enabled = true;
 			projectile.transform.position += projectile.rigidbody.velocity.normalized * -0.25f;
 			activeSelf = false;
+			audio.Play(projectile.audioSources.GetSource());
 			return false;
 		}
 	}

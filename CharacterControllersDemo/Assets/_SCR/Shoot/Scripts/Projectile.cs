@@ -12,7 +12,7 @@ namespace OliverLoescher.Weapon
 		public new Rigidbody rigidbody = null;
 		public Collider hitboxCollider = null;
 		public Collider physicsCollider = null;
-		public new ProjectileSFX audio = null;
+		public new AudioSourcePool audioSources = null;
 		public GameObject sender = null;
 		private SOTeam team = null;
 
@@ -21,9 +21,6 @@ namespace OliverLoescher.Weapon
 		private int currentFrame = 0;
 		private int lastHitFrame = 0;
 		private Collider lastHitCollider = null;
-
-		[Header("Impact")]
-		public ParticleSystem impactParticle = null;
 
 		[Header("Floating Numbers")]
 		[ColorPalette("UI"), SerializeField] private Color hitColor = new Color(1, 0, 0, 1);
@@ -36,13 +33,7 @@ namespace OliverLoescher.Weapon
 
 		public override void ReturnToPool()
 		{
-			if (lastHitFrame != currentFrame) // if death of natural cause (lifeTime) and not because of a hit
-			{
-				PlayParticle(impactParticle, transform.position);
-			}
-
 			activeSelf = false;
-
 			CancelInvoke();
 			base.ReturnToPool();
 		}
@@ -73,7 +64,7 @@ namespace OliverLoescher.Weapon
 			previousPosition = transform.position;
 
 			team = pTeam;
-			Invoke(nameof(ReturnToPool), RandUtil.Range(data.lifeTime));
+			Invoke(nameof(DoLifeEnd), RandUtil.Range(data.lifeTime));
 		}
 
 		private void FixedUpdate() 
@@ -130,6 +121,7 @@ namespace OliverLoescher.Weapon
 				return;
 			}
 
+			bool didDamage = false;
 			IDamageable damageable = other.GetComponent<IDamageable>();
 			if (damageable != null)
 			{
@@ -142,14 +134,14 @@ namespace OliverLoescher.Weapon
 				{
 					Debug.Log($"[{nameof(Projectile)}] {nameof(DamageOther)}({other.name}, {damageable.GetGameObject().name}, {(damageable.GetTeam() == null ? "No Team" : damageable.GetTeam().name)})", other);
 					DamageOther(damageable, point);
+					didDamage = true;
 				}
 			}
 
 			lastHitFrame = currentFrame;
 			lastHitCollider = other;
 
-			PlayParticle(impactParticle, point);
-			if (data.bulletCollision.DoCollision(this, other, ref canDamage, ref activeSelf))
+			if ((didDamage ? data.projectileDamagableCollision : data.projectileEnviromentCollision).DoCollision(this, other, ref canDamage, ref activeSelf))
 			{
 				ReturnToPool();
 			}
@@ -173,6 +165,12 @@ namespace OliverLoescher.Weapon
 			// Audio
 			if (audio != null)
 				audio.OnCollision();
+		}
+
+		private void DoLifeEnd()
+		{
+			data.projectileLifeEnd.DoCollision(this, null, ref canDamage, ref activeSelf);
+			ReturnToPool();
 		}
 
 		private bool IsSender(Transform other)

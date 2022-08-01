@@ -14,6 +14,8 @@ namespace OliverLoescher.Weapon
 				projectile.transform.SetParent(other.transform);
 			canDamage = false;
 			activeSelf = false;
+			audio.Play(projectile.audioSources);
+			
 			return false;
 		}
 	}

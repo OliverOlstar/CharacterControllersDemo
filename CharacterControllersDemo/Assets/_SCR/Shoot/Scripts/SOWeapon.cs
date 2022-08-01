@@ -54,8 +54,9 @@ namespace OliverLoescher.Weapon
 		[TitleGroup("Ray/Raycast")] public float range = 5.0f;
 		[TitleGroup("Ray/Raycast")] [AssetsOnly] public GameObject hitFXPrefab = null;
 		[ShowIf("@bulletType != BulletType.Projectile")] public LayerMask layerMask = new LayerMask();
-		
+
 		[Title("Stats")]
+		public SOWeaponShootBase startShoot = null;
 		public StartType startShootingType = StartType.Instant;
 		[ShowIf("@startShootingType == StartType.InstantLimitedByFirerate || fireType == FireType.Auto")] public float secondsBetweenShots = 0.1f;
 		[ShowIf("@fireType == FireType.Burst")] public float secondsBetweenBurstShots = 0.1f;

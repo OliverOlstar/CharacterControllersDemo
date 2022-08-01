@@ -44,7 +44,11 @@ namespace OliverLoescher.Weapon
 
 		[Header("Collision")]
 		[Required, InlineEditor]
-		public SOProjectileCollisionBase bulletCollision = null;
+		public SOProjectileCollisionBase projectileEnviromentCollision = null;
+		[Required, InlineEditor]
+		public SOProjectileCollisionBase projectileDamagableCollision = null;
+		[Required, InlineEditor]
+		public SOProjectileCollisionBase projectileLifeEnd = null;
 		public float hitForce = 8;
 	}
 }

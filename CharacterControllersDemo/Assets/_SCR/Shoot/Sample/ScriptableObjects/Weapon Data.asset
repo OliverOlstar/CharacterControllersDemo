@@ -18,7 +18,7 @@ MonoBehaviour:
   bulletType: 1
   burstFireCount: 5
   bulletsPerShot: 1
-  projectilePrefab: {fileID: 0}
+  projectilePrefab: {fileID: 1527966059315699084, guid: a4d6990e0b08f024f86d036d9e56ed49, type: 3}
   range: 5
   hitFXPrefab: {fileID: 0}
   layerMask:
@@ -28,13 +28,7 @@ MonoBehaviour:
   secondsBetweenShots: 0.8
   secondsBetweenBurstShots: 0.1
   chargeSeconds: 0.5
-  spreadType: 1
-  spreadVector: {x: 0.2, y: 0.2}
-  spreadVectorMax: {x: 0.5, y: 0.5}
-  spreadRadius: 0.2
-  spreadRadiusMax: 10
-  spreadIncrease: 0.4
-  spreadDecrease: 0.6
+  spread: {fileID: 11400000, guid: 5e1919749ea49c9498a44592a5b4d980, type: 2}
   recoilForce: {x: 0, y: 0, z: 0}
   ammoType: 2
   totalAmmo: 12

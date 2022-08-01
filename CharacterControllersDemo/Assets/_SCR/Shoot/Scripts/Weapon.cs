@@ -54,44 +54,26 @@ namespace OliverLoescher.Weapon
 
 		[HideInInspector] public bool isShooting {get; private set;} = false;
 		public void ShootStart()
-		{		
-			// If shoot on click
-			if (data.startShootingType == SOWeapon.StartType.Instant)
-			{
-				ShootStartDelayed();
-			}
-			else if (data.startShootingType == SOWeapon.StartType.InstantLimitedByFirerate)
-			{
-				if (nextCanShootTime <= Time.time)
-					ShootStartDelayed();
-			}
-			else if (data.startShootingType == SOWeapon.StartType.Charge)
-			{
-				CancelInvoke(nameof(ShootStartDelayed));
-				Invoke(nameof(ShootStartDelayed), data.chargeSeconds);
-			}
+		{
+			data.startShoot.ShootStart(Shoot);
 		}
 
 		private void ShootStartDelayed()
 		{
-			if (data.fireType == SOWeapon.FireType.Single)	// Single
+			switch (data.fireType)
 			{
-				
-			}
-			else if (data.fireType == SOWeapon.FireType.Burst) // Burst
-			{
-				// If already shooting don't shoot again
-				if (isShooting == true)
-					return;
-				isShooting = true;
-				
-				burstFireActiveCount = data.burstFireCount - 1;
-			}
-			else if (data.fireType == SOWeapon.FireType.Auto) // Auto
-			{
-				isShooting = true;
-			}
+				case SOWeapon.FireType.Burst:
+					if (isShooting)
+						return;
+					isShooting = true;
 
+					burstFireActiveCount = data.burstFireCount - 1;
+					break;
+
+				case SOWeapon.FireType.Auto:
+					isShooting = true;
+					break;
+			}
 			Shoot();
 		}
 
@@ -101,11 +83,7 @@ namespace OliverLoescher.Weapon
 			{
 				isShooting = false;
 			}
-
-			if (data.startShootingType == SOWeapon.StartType.Charge)
-			{
-				CancelInvoke(nameof(ShootStartDelayed));
-			}
+			data.startShoot.ShootEnd();
 		}
 
 		private void Update()

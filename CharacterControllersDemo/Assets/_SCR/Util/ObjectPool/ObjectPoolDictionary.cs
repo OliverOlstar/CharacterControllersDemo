@@ -10,12 +10,14 @@ namespace OliverLoescher
 		[System.Serializable]
 		public class PoolValues
 		{
-			[AssetsOnly] public GameObject prefab = null;
+			[AssetsOnly]
+			public GameObject prefab = null;
 			public string key => prefab.name;
 
 			[Tooltip("What returns when all items are already checked out")]
 			public PoolReturnType returnType = PoolReturnType.Expand;
-			[HideInPlayMode] public int startingCopies = 5;
+			[HideInPlayMode]
+			public int startingCopies = 5;
 		}
 
 		private class Pool
