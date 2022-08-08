@@ -208,6 +208,18 @@ namespace OliverLoescher
 			}
 			return dictionary[pValues.key].CheckOutObject();
 		}
+		
+		public static GameObject Play(GameObject pObject, Vector3 pPosition, Quaternion pRotation, Transform pParent = null) => InternalPlay(Get(pObject), pPosition, pRotation, pParent);
+		public static GameObject Play(PoolElement pElement, Vector3 pPosition, Quaternion pRotation, Transform pParent = null) => InternalPlay(Get(pElement), pPosition, pRotation, pParent);
+		public static GameObject Play(PoolValues pValues, Vector3 pPosition, Quaternion pRotation, Transform pParent = null) => InternalPlay(Get(pValues), pPosition, pRotation, pParent);
+		private static GameObject InternalPlay(GameObject pPoolObject, Vector3 pPosition, Quaternion pRotation, Transform pParent = null)
+		{
+			pPoolObject.transform.SetParent(pParent);
+			pPoolObject.transform.position = pPosition;
+			pPoolObject.transform.rotation = pRotation;
+			pPoolObject.SetActive(true);
+			return pPoolObject;
+		}
 
 		public static void Return(PoolElement pElement, bool pDisable = true)
 		{

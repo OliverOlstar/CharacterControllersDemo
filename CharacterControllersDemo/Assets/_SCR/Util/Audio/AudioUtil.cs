@@ -22,14 +22,14 @@ namespace OliverLoescher
 		{
 			if (source == null)
 			{
-				Debug.LogWarning("PlayOneShotRandomClip() was given a null AudioSource");
+				LogWarning("PlayOneShotRandomClip() was given a null AudioSource");
 				return;
 			}
 
 			AudioClip clip = GetRandomClip(clips);
 			if (clip == null)
 			{
-				Debug.LogWarning("GetRandomClip() returned a null reference - " + source.gameObject.name);
+				LogWarning("GetRandomClip() returned a null reference - " + source.gameObject.name);
 				return;
 			}
 
@@ -73,7 +73,21 @@ namespace OliverLoescher
 			[MinMaxSlider(0, 3, true)] public Vector2 pitch = new Vector2(0.9f, 1.2f);
 
 			public void Play(in AudioSource source) => PlayOneShotRandomClip(source, clips, pitch, volume);
-			public void Play(in AudioSourcePool source) => PlayOneShotRandomClip(source.GetSource(), clips, pitch, volume);
+			public void Play(in AudioSourcePool source)
+			{
+				if (source == null)
+				{
+					LogWarning("AudioPiece.Play() was passed a null AudioSourcePool");
+					return;
+				}
+				PlayOneShotRandomClip(source.GetSource(), clips, pitch, volume);
+			}
 		}
+
+		#region Helpers
+		private static void Log(string message) => Debug.Log($"[AudioUtil] {message}");
+		private static void LogWarning(string message) => Debug.LogWarning($"[AudioUtil] {message}");
+		private static void LogError(string message) => Debug.LogError($"[AudioUtil] {message}");
+		#endregion Helpers
 	}
 }

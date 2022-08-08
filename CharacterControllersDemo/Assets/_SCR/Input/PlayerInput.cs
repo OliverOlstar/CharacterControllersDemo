@@ -1080,6 +1080,74 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Weapon"",
+            ""id"": ""2fe02872-ff28-4f63-ae96-a4c30a1a5b9d"",
+            ""actions"": [
+                {
+                    ""name"": ""Primary"",
+                    ""type"": ""Button"",
+                    ""id"": ""297c3c6a-b62a-42b7-a46c-3adb04ef9f65"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Secondary"",
+                    ""type"": ""Button"",
+                    ""id"": ""ef570398-1458-4eff-9a3f-8d1da17a6096"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""cf4e2826-98d6-4379-8944-602cddf69f4b"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Primary"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2108672c-c63e-4bf0-a09e-7fca87ed52c0"",
+                    ""path"": ""<Gamepad>/leftTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Primary"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""eebb831d-319e-4397-8ae6-60dee0c8c609"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Secondary"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a26ee5a3-0569-499d-a305-39f1a5b8072f"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Secondary"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -1152,6 +1220,10 @@ public class @PlayerInput : IInputActionCollection, IDisposable
         // Menu
         m_Menu = asset.FindActionMap("Menu", throwIfNotFound: true);
         m_Menu_Pause = m_Menu.FindAction("Pause", throwIfNotFound: true);
+        // Weapon
+        m_Weapon = asset.FindActionMap("Weapon", throwIfNotFound: true);
+        m_Weapon_Primary = m_Weapon.FindAction("Primary", throwIfNotFound: true);
+        m_Weapon_Secondary = m_Weapon.FindAction("Secondary", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -1580,6 +1652,47 @@ public class @PlayerInput : IInputActionCollection, IDisposable
         }
     }
     public MenuActions @Menu => new MenuActions(this);
+
+    // Weapon
+    private readonly InputActionMap m_Weapon;
+    private IWeaponActions m_WeaponActionsCallbackInterface;
+    private readonly InputAction m_Weapon_Primary;
+    private readonly InputAction m_Weapon_Secondary;
+    public struct WeaponActions
+    {
+        private @PlayerInput m_Wrapper;
+        public WeaponActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Primary => m_Wrapper.m_Weapon_Primary;
+        public InputAction @Secondary => m_Wrapper.m_Weapon_Secondary;
+        public InputActionMap Get() { return m_Wrapper.m_Weapon; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(WeaponActions set) { return set.Get(); }
+        public void SetCallbacks(IWeaponActions instance)
+        {
+            if (m_Wrapper.m_WeaponActionsCallbackInterface != null)
+            {
+                @Primary.started -= m_Wrapper.m_WeaponActionsCallbackInterface.OnPrimary;
+                @Primary.performed -= m_Wrapper.m_WeaponActionsCallbackInterface.OnPrimary;
+                @Primary.canceled -= m_Wrapper.m_WeaponActionsCallbackInterface.OnPrimary;
+                @Secondary.started -= m_Wrapper.m_WeaponActionsCallbackInterface.OnSecondary;
+                @Secondary.performed -= m_Wrapper.m_WeaponActionsCallbackInterface.OnSecondary;
+                @Secondary.canceled -= m_Wrapper.m_WeaponActionsCallbackInterface.OnSecondary;
+            }
+            m_Wrapper.m_WeaponActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @Primary.started += instance.OnPrimary;
+                @Primary.performed += instance.OnPrimary;
+                @Primary.canceled += instance.OnPrimary;
+                @Secondary.started += instance.OnSecondary;
+                @Secondary.performed += instance.OnSecondary;
+                @Secondary.canceled += instance.OnSecondary;
+            }
+        }
+    }
+    public WeaponActions @Weapon => new WeaponActions(this);
     private int m_KeyboardMouseSchemeIndex = -1;
     public InputControlScheme KeyboardMouseScheme
     {
@@ -1644,5 +1757,10 @@ public class @PlayerInput : IInputActionCollection, IDisposable
     public interface IMenuActions
     {
         void OnPause(InputAction.CallbackContext context);
+    }
+    public interface IWeaponActions
+    {
+        void OnPrimary(InputAction.CallbackContext context);
+        void OnSecondary(InputAction.CallbackContext context);
     }
 }

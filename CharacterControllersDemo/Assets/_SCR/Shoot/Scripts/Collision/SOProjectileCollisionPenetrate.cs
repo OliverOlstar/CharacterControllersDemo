@@ -13,7 +13,7 @@ namespace OliverLoescher.Weapon
 			{
 				projectile.rigidbody.isKinematic = true;
 				canDamage = false;
-				audio.Play(projectile.audioSources.GetSource());
+				DoCollision(projectile, other);
 				return true;
 			}
 			return false;

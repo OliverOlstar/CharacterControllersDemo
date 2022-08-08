@@ -19,18 +19,20 @@ namespace OliverLoescher.Weapon
 			RandomAllOnce
 		}
 
-		[Required] public SOWeapon data = null;
+		[Required] 
+		public SOWeapon data = null;
 		public SOTeam team = null;
-		[ShowIf("@muzzlePoints.Length > 1"), SerializeField] protected MultiMuzzleType multiMuzzleType = MultiMuzzleType.RandomNotOneAfterItself;
+		[ShowIf("@muzzlePoints.Length > 1"), SerializeField] 
+		protected MultiMuzzleType multiMuzzleType = MultiMuzzleType.RandomNotOneAfterItself;
 		public bool canShoot = true;
 
-		private float nextCanShootTime = 0;
-		private int burstFireActiveCount = 0;
-
 		[Header("References")]
-		[SerializeField] protected Transform[] muzzlePoints = new Transform[1];
-		[SerializeField] private ParticleSystem muzzleFlash = null;
-		[ShowIf("@muzzleFlash != null")] [SerializeField] private Vector3 muzzleFlashRelOffset = new Vector3();
+		[SerializeField] 
+		protected Transform[] muzzlePoints = new Transform[1];
+		[SerializeField] 
+		private ParticleSystem muzzleFlash = null;
+		[ShowIf("@muzzleFlash != null"), SerializeField] 
+		private Vector3 muzzleFlashRelOffset = new Vector3();
 
 		[Space]
 		public GameObject sender = null;
@@ -40,14 +42,20 @@ namespace OliverLoescher.Weapon
 		[FoldoutGroup("Unity Events")] public UnityEvent OnShoot;
 		[FoldoutGroup("Unity Events")] public UnityEvent OnFailedShoot;
 
+		private SOWeaponShootStartBase shootStart = null;
+		private SOWeaponSpreadBase spread = null;
+
 		private void Start() 
 		{
-			if (sender == null)
-			{
-				sender = gameObject;
-			}
+			shootStart = Instantiate(data.shootStart).Init(Shoot);
+			spread = Instantiate(data.spread).Init();
 
 			Init();
+		}
+
+		private void Reset()
+		{
+			sender = gameObject;
 		}
 
 		protected virtual void Init() {}
@@ -55,75 +63,29 @@ namespace OliverLoescher.Weapon
 		[HideInInspector] public bool isShooting {get; private set;} = false;
 		public void ShootStart()
 		{
-			data.startShoot.ShootStart(Shoot);
-		}
-
-		private void ShootStartDelayed()
-		{
-			switch (data.fireType)
-			{
-				case SOWeapon.FireType.Burst:
-					if (isShooting)
-						return;
-					isShooting = true;
-
-					burstFireActiveCount = data.burstFireCount - 1;
-					break;
-
-				case SOWeapon.FireType.Auto:
-					isShooting = true;
-					break;
-			}
-			Shoot();
+			shootStart.ShootStart();
 		}
 
 		public void ShootEnd()
 		{
-			if (data.fireType == SOWeapon.FireType.Auto)
-			{
-				isShooting = false;
-			}
-			data.startShoot.ShootEnd();
+			shootStart.ShootEnd();
 		}
 
 		private void Update()
 		{
-			if (isShooting == true && nextCanShootTime <= Time.time)
-			{
-				Shoot();
-			}
-			else
-			{
-				data.spread.OnUpdate(Time.deltaTime, isShooting);
-			}
+			shootStart.OnUpdate(Time.deltaTime);
+			spread.OnUpdate(Time.deltaTime);
 		}
 
 		public void Shoot()
 		{
 			if (canShoot)
 			{
-				// Firerate
-				nextCanShootTime = Time.time + data.secondsBetweenShots;
-
-				// If Burst
-				if (data.fireType == SOWeapon.FireType.Burst)
-				{
-					burstFireActiveCount--;
-					if (burstFireActiveCount < 1)
-					{
-						isShooting = false;
-						return;
-					}
-					else
-					{
-						// Overrride Firerate
-						nextCanShootTime = Time.time + data.secondsBetweenBurstShots;
-					}
-				}
+				shootStart.OnShoot();
 
 				// Bullet
 				Transform muzzle = GetMuzzle();
-				SpawnBullet(muzzle);
+				SpawnShot(muzzle);
 
 				// Recoil
 				if (recoilBody != null && data.recoilForce != Vector3.zero)
@@ -132,7 +94,7 @@ namespace OliverLoescher.Weapon
 				}
 
 				// Spread
-				data.spread.OnShoot();
+				spread.OnShoot();
 
 				// Particles
 				if (muzzleFlash != null)
@@ -147,8 +109,7 @@ namespace OliverLoescher.Weapon
 				}
 
 				// Audio
-				if (sourcePool != null)
-					data.shotSound.Play(sourcePool.GetSource());
+				data.shotSound.Play(sourcePool);
 
 				// Event
 				OnShoot?.Invoke();
@@ -159,9 +120,9 @@ namespace OliverLoescher.Weapon
 			}
 		}
 
-		protected virtual void SpawnBullet(Transform pMuzzle)
+		protected virtual void SpawnShot(Transform pMuzzle)
 		{
-			for (int i = 0; i < data.bulletsPerShot; i++)
+			for (int i = 0; i < data.projectilesPerShot; i++)
 			{
 				if (data.bulletType == SOWeapon.BulletType.Raycast)
 				{
@@ -169,7 +130,7 @@ namespace OliverLoescher.Weapon
 				}
 				else
 				{
-					Vector3 dir = data.spread.ApplySpread(pMuzzle.forward);
+					Vector3 dir = spread.ApplySpread(pMuzzle.forward);
 					SpawnProjectile(pMuzzle.position, dir);
 				}
 			}
@@ -178,7 +139,7 @@ namespace OliverLoescher.Weapon
 		protected virtual void OnShootFailed()
 		{
 			// Audio
-			data.failedShotSound.Play(sourcePool.GetSource());
+			data.failedShotSound.Play(sourcePool);
 
 			// Event
 			OnFailedShoot?.Invoke();
@@ -196,8 +157,7 @@ namespace OliverLoescher.Weapon
 			projectileScript.Init(pPoint, pDirection);
 
 			// Audio
-			if (sourcePool != null)
-				data.shotSound.Play(sourcePool.GetSource());
+			data.shotSound.Play(sourcePool); // TODO Move this incase bulletsPerShot > 1
 
 			// Event
 			OnShoot?.Invoke();
@@ -205,7 +165,7 @@ namespace OliverLoescher.Weapon
 
 		protected virtual void SpawnRaycast(Vector3 pPoint, Vector3 pForward)
 		{
-			Vector3 dir = data.spread.ApplySpread(pForward);
+			Vector3 dir = spread.ApplySpread(pForward);
 			if (Physics.Raycast(pPoint, dir, out RaycastHit hit, data.range, data.layerMask, QueryTriggerInteraction.Ignore)) 
 			{
 				ApplyParticleFX(hit.point, Quaternion.FromToRotation(Vector3.forward, hit.normal), hit.collider);
@@ -303,7 +263,7 @@ namespace OliverLoescher.Weapon
 			{
 				if (m == null)
 					continue;
-				data.spread.DrawGizmos(transform, m);
+				(spread == null ? data.spread : spread).DrawGizmos(transform, m);
 			}
 	#endif
 		}

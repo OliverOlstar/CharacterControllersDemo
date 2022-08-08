@@ -15,8 +15,6 @@ namespace OliverLoescher.Weapon
 		private int clipAmmo;
 		private Coroutine chargeRoutine = null;
 
-		[SerializeField] private ParticleSystem[] particles = new ParticleSystem[0];
-
 		[FoldoutGroup("Unity Events")] public UnityEvent OnReload;
 		[FoldoutGroup("Unity Events")] public UnityEvent OnStartOverHeat;
 		[FoldoutGroup("Unity Events")] public UnityEvent OnEndOverHeat;
@@ -41,13 +39,9 @@ namespace OliverLoescher.Weapon
 			if (clipAmmo == 0)
 			{
 				weapon.canShoot = false;
-				foreach (ParticleSystem p in particles)
-				{
-					p.Play();
-				}
 
 				// Audio
-				weapon.data.outOfAmmoSound.Play(weapon.sourcePool.GetSource());
+				weapon.data.outOfAmmoSound.Play(weapon.sourcePool);
 
 				OnStartOverHeat.Invoke();
 			}
@@ -88,7 +82,7 @@ namespace OliverLoescher.Weapon
 				}
 
 				// Audio
-				weapon.data.reloadSound.Play(weapon.sourcePool.GetSource());
+				weapon.data.reloadSound.Play(weapon.sourcePool);
 
 				OnReload.Invoke();
 			}
@@ -96,13 +90,9 @@ namespace OliverLoescher.Weapon
 			if (weapon.canShoot == false)
 			{
 				weapon.canShoot = true;
-				foreach (ParticleSystem p in particles)
-				{
-					p.Stop();
-				}
 
 				// Audio
-				weapon.data.onReloadedSound.Play(weapon.sourcePool.GetSource());
+				weapon.data.onReloadedSound.Play(weapon.sourcePool);
 
 				// Events
 				OnEndOverHeat.Invoke();

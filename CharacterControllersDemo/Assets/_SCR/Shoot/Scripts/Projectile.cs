@@ -7,7 +7,8 @@ namespace OliverLoescher.Weapon
 {
 	public class Projectile : PoolElement
 	{
-		[Required] public SOProjectile data = null;
+		[Required]
+		public SOProjectile data = null;
 
 		public new Rigidbody rigidbody = null;
 		public Collider hitboxCollider = null;
@@ -23,13 +24,16 @@ namespace OliverLoescher.Weapon
 		private Collider lastHitCollider = null;
 
 		[Header("Floating Numbers")]
-		[ColorPalette("UI"), SerializeField] private Color hitColor = new Color(1, 0, 0, 1);
-		[ColorPalette("UI"), SerializeField] private Color critColor = new Color(1, 1, 0, 1);
+		[ColorPalette("UI"), SerializeField]
+		private Color hitColor = new Color(1, 0, 0, 1);
+		[ColorPalette("UI"), SerializeField]
+		private Color critColor = new Color(1, 1, 0, 1);
 
 		private Vector3 startPos = new Vector3();
 		private Vector3 previousPosition = new Vector3();
 
-		[SerializeField] private float spawnOffsetZ = 0;
+		[SerializeField]
+		private float spawnOffsetZ = 0;
 
 		public override void ReturnToPool()
 		{
@@ -46,7 +50,10 @@ namespace OliverLoescher.Weapon
 			canDamage = true;
 			lastHitCollider = null;
 			hitboxCollider.enabled = true;
-			physicsCollider.enabled = false;
+			if (physicsCollider != null)
+			{
+				physicsCollider.enabled = false;
+			}
 			activeSelf = true;
 
 			base.OnExitPool();
@@ -171,6 +178,10 @@ namespace OliverLoescher.Weapon
 
 		private bool IsSender(Transform other)
 		{
+			if (sender == null)
+			{
+				return false;
+			}
 			if (other == sender.transform)
 			{
 				return true;
@@ -182,24 +193,6 @@ namespace OliverLoescher.Weapon
 			return IsSender(other.parent);
 		}
 		#endregion
-
-	#region Explosive
-	//	 public virtual void DoExplosion(Vector3 pPoint) 
-	//	 {
-	//		 PlayParticle(explosiveParticle, pPoint); // Moves explosive & particle to point
-
-	//		 explosive.ExplosionRadius = data.explosionRadius;
-	//		 explosive.ExplosionDamage = data.explosionDamage;
-	//		 explosive.ExplosionForce = data.explosionForce;
-	//		 explosive.ExplosiveUpwardsModifier = data.explosiveUpwardsModifier;
-
-	//		 explosive.DoExplosion();
-
-	//		 // Audio
-	//		 if (audio != null)
-	//			 audio.OnExplode();
-	//	 }
-	#endregion
 
 		private void PlayParticle(ParticleSystem pParticle, Vector3 pPosition)
 		{
@@ -218,6 +211,23 @@ namespace OliverLoescher.Weapon
 			Vector3 endPos = transform.position + (transform.forward * -spawnOffsetZ);
 			Gizmos.DrawLine(transform.position, endPos);
 			Gizmos.DrawWireSphere(endPos, 0.01f);
+
+			if (data == null)
+			{
+				return;
+			}
+			if (data.projectileEnviromentCollision != null)
+			{
+				data.projectileEnviromentCollision.DrawGizmos(this);
+			}
+			if (data.projectileDamagableCollision != null)
+			{
+				data.projectileDamagableCollision.DrawGizmos(this);
+			}
+			if (data.projectileLifeEnd != null)
+			{
+				data.projectileLifeEnd.DrawGizmos(this);
+			}
 		}
 	}
 }

@@ -16,7 +16,7 @@ namespace OliverLoescher.Weapon
 			spread01 = Mathf.Min(1, spread01 + spreadIncrease);
 		}
 
-		public override void OnUpdate(in float pDeltaTime, in bool pIsShooting)
+		public override void OnUpdate(in float pDeltaTime)
 		{
 			spread01 = Mathf.Max(0, spread01 - (Time.deltaTime * spreadDecrease));
 		}

@@ -8,20 +8,6 @@ namespace OliverLoescher.Weapon
 	[CreateAssetMenu(menuName = "ScriptableObject/Weapon/Weapon Data")]
 	public class SOWeapon : ScriptableObject
 	{
-		public enum FireType 
-		{
-			Single,
-			Burst,
-			Auto
-		}
-		
-		public enum StartType 
-		{
-			Instant,
-			Charge,
-			InstantLimitedByFirerate
-		}
-
 		public enum BulletType 
 		{
 			Projectile,
@@ -41,11 +27,9 @@ namespace OliverLoescher.Weapon
 		[TextArea] public string description = "";
 
 		[Title("Type")]
-		public FireType fireType = FireType.Single;
 		public BulletType bulletType =  BulletType.Projectile;
 
-		[ShowIf("@fireType == FireType.Burst")] [Min(2)] public int burstFireCount = 5;
-		[Min(1)] public int bulletsPerShot = 1;
+		[Min(1)] public int projectilesPerShot = 1;
 
 		[ShowIfGroup("Proj", Condition = "@bulletType != BulletType.Raycast")]
 		[TitleGroup("Proj/Projectile")] public GameObject projectilePrefab = null;
@@ -56,11 +40,8 @@ namespace OliverLoescher.Weapon
 		[ShowIf("@bulletType != BulletType.Projectile")] public LayerMask layerMask = new LayerMask();
 
 		[Title("Stats")]
-		public SOWeaponShootBase startShoot = null;
-		public StartType startShootingType = StartType.Instant;
-		[ShowIf("@startShootingType == StartType.InstantLimitedByFirerate || fireType == FireType.Auto")] public float secondsBetweenShots = 0.1f;
-		[ShowIf("@fireType == FireType.Burst")] public float secondsBetweenBurstShots = 0.1f;
-		[ShowIf("@startShootingType == StartType.Charge")] public float chargeSeconds = 0.5f;
+		[Required, InlineEditor]
+		public SOWeaponShootStartBase shootStart = null;
 
 		[Header("Spread")]
 		[Required, InlineEditor]

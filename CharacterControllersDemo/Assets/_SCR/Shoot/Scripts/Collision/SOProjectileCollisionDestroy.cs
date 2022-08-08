@@ -11,7 +11,18 @@ namespace OliverLoescher.Weapon
 		{
 			projectile.rigidbody.isKinematic = true;
 			canDamage = false;
-			audio.Play(projectile.audioSources.GetSource());
+
+			ObjectPoolDictionary.Play(particlePrefab, projectile.transform.position, projectile.transform.rotation);
+			audio.Play(projectile.audioSources);
+
+			if (other != null)
+			{
+				Rigidbody rb = other.GetComponent<Rigidbody>();
+				if (rb != null)
+				{
+					rb.AddForce(projectile.transform.forward * knockbackForce, ForceMode.Impulse);
+				}
+			}
 			return true;
 		}
 	}

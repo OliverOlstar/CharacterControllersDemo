@@ -1,25 +1,37 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Sirenix.OdinInspector;
 
 namespace OliverLoescher
 {
+	[RequireComponent(typeof(ParticleSystem))]
 	public class ParticlePoolElement : PoolElement
 	{
-		[SerializeField]
+		[InfoBox("Ensure particle stopping action is Callback")]
 		private ParticleSystem particle = null;
 
 		public override void Init(string pPoolKey, Transform pParent)
 		{
 			base.Init(pPoolKey, pParent);
+			particle = GetComponent<ParticleSystem>();
+			SetStoppingAction(particle);
 		}
 
-		private void Update()
+		private void Reset()
 		{
-			if (!particle.IsAlive())
-			{
-				ReturnToPool();
-			}
+			SetStoppingAction(GetComponent<ParticleSystem>());
+		}
+
+		private void SetStoppingAction(in ParticleSystem pParticle)
+		{
+			ParticleSystem.MainModule main = pParticle.main;
+			main.stopAction = ParticleSystemStopAction.Callback;
+		}
+
+		public void OnParticleSystemStopped()
+		{
+			ReturnToPool();
 		}
 
 		public override void ReturnToPool()

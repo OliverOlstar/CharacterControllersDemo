@@ -9,6 +9,6 @@ namespace OliverLoescher.Weapon
 	{
 		public override Vector3 ApplySpread(Vector3 pDirection) => pDirection;
 		public override void OnShoot() { }
-		public override void OnUpdate(in float pDeltaTime, in bool pIsShooting) { }
+		public override void OnUpdate(in float pDeltaTime) { }
 	}
 }
