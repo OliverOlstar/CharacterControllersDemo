@@ -9,7 +9,7 @@ namespace OliverLoescher.FX
 		[SerializeField] private Health health = null;
 		[Space, SerializeField] private ParticlePoolElement damageDirectionalPrefab = null;
 		[SerializeField] private ParticlePoolElement damagePrefab = null;
-		[SerializeField] private ParticlePoolElement deathPrefab = null;
+		//[SerializeField] private ParticlePoolElement deathPrefab = null;
 		//[SerializeField] private Transform deathPosition = null;
 
 		private void Start()

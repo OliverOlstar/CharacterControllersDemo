@@ -13,7 +13,7 @@ namespace OliverLoescher.Link
         {
             base.Init(pMachine);
 
-            input.onRollPerformed.AddListener(TryEnter);
+            input.Roll.onPerformed.AddListener(TryEnter);
         }
 
         public override void OnEnter()

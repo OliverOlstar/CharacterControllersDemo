@@ -59,14 +59,14 @@ namespace OliverLoescher.Link
         public override void OnEnter()
         {
             StartCoroutine(OnEnterRoutine());
-            input.onRollPerformed.AddListener(OnRollPerformed);
+            input.Roll.onPerformed.AddListener(OnRollPerformed);
             climbingUp = false;
         }
 
         public override void OnExit()
         {
             StopAllCoroutines();
-            input.onRollPerformed.RemoveListener(OnRollPerformed);
+            input.Roll.onPerformed.RemoveListener(OnRollPerformed);
 
             rootMotion.ignoreYValue = false;
             animController.SetSpeed01(0.0f);
@@ -85,8 +85,8 @@ namespace OliverLoescher.Link
 
         public override void OnUpdate()
         {
-            animController.SetStrafeSpeed01(input.moveInput.x);
-            if (climbingUp == false && input.moveInput.y == 1.0f)
+            animController.SetStrafeSpeed01(input.Move.Input.x);
+            if (climbingUp == false && input.Move.Input.y == 1.0f)
             {
                 DoClimbUp();
             }

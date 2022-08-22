@@ -25,7 +25,7 @@ namespace OliverLoescher.Link
             
             initalCharacterHeight = character.height;
 
-            input.onCrouchPerformed.AddListener(OnCrouchPerformed);
+            input.Crouch.onPerformed.AddListener(OnCrouchPerformed);
         }
 
         public override void OnEnter()
@@ -35,7 +35,7 @@ namespace OliverLoescher.Link
 
             animController.SetCrouch(true);
 
-            input.onCrouchCanceled.AddListener(OnCrouchCanceled);
+            input.Crouch.onCanceled.AddListener(OnCrouchCanceled);
         }
 
         public override void OnExit()
@@ -45,18 +45,18 @@ namespace OliverLoescher.Link
             
             animController.SetCrouch(false);
 
-            input.onCrouchCanceled.RemoveListener(OnCrouchCanceled);
-            input.SetCrouch(false);
+            input.Crouch.onCanceled.RemoveListener(OnCrouchCanceled);
+            input.Crouch.Clear();
         }
         
         public override void OnFixedUpdate()
         {
             if (grounded.isGrounded)
             {
-                if (input.moveInput != Vector2.zero)
+                if (input.Move.Input != Vector2.zero)
                 {
                     // Rotate input to camera
-                    Vector3 move = cameraForward.TransformDirection(input.moveInputVector3);
+                    Vector3 move = cameraForward.TransformDirection(input.Move.InputHorizontal);
                     // Convert to local space
                     move = transform.InverseTransformDirection(move);
 

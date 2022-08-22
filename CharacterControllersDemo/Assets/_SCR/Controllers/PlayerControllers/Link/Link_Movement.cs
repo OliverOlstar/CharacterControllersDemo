@@ -26,9 +26,6 @@ namespace OliverLoescher.Link
         [SerializeField] private OnGround grounded = null;
         [SerializeField] private Link_AnimController animController = null;
 
-        private float initalDrag;
-
-
         public override void Init(StateMachine pMachine)
         {
             base.Init(pMachine);
@@ -40,10 +37,10 @@ namespace OliverLoescher.Link
         {
             if (grounded.isGrounded)
             {
-                if (input.moveInput != Vector2.zero)
+                if (input.Move.Input != Vector2.zero)
                 {
                     // Move values
-                    Vector3 move = cameraForward.TransformDirection(input.moveInputVector3);
+                    Vector3 move = cameraForward.TransformDirection(input.Move.InputHorizontal);
                     move = new Vector3(move.x, 0.0f, move.z);
 
                     float angle = Vector3.Angle(transform.up, Vector3.ProjectOnPlane(grounded.GetAverageNormal(), transform.right));
@@ -53,7 +50,7 @@ namespace OliverLoescher.Link
 
                     // Movement
                     if (animController.GetSpeed01() > 0.1f || Quaternion.Angle(transform.rotation, targetRotation) < 30)
-                        animController.SetSpeed01(input.moveInput.magnitude * maxSpeed01);
+                        animController.SetSpeed01(input.Move.Input.magnitude * maxSpeed01);
                     
                     // Rotation
                     float rotSpeed = Mathf.Lerp(rotationIdleDampening, rotationDampening, animController.GetSpeed01()); 

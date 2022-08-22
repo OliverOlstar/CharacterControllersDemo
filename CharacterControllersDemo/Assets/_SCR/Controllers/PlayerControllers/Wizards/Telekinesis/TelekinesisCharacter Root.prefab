@@ -8962,8 +8962,28 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8803655958388182830, guid: d3c5832ffc687564699681091e4504d1, type: 3}
+      propertyPath: lookInput.scalar.x
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8803655958388182830, guid: d3c5832ffc687564699681091e4504d1, type: 3}
+      propertyPath: lookInput.scalar.y
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8803655958388182830, guid: d3c5832ffc687564699681091e4504d1, type: 3}
+      propertyPath: lookDeltaInput.scalar.x
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 8803655958388182830, guid: d3c5832ffc687564699681091e4504d1, type: 3}
+      propertyPath: lookDeltaInput.scalar.y
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 8803655958388182830, guid: d3c5832ffc687564699681091e4504d1, type: 3}
       propertyPath: onCrouch.m_PersistentCalls.m_Calls.Array.size
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8803655958388182830, guid: d3c5832ffc687564699681091e4504d1, type: 3}
+      propertyPath: moveInput.onChanged.m_PersistentCalls.m_Calls.Array.size
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8803655958388182830, guid: d3c5832ffc687564699681091e4504d1, type: 3}
       propertyPath: onCrouch.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -8974,12 +8994,20 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 8803655958388182830, guid: d3c5832ffc687564699681091e4504d1, type: 3}
+      propertyPath: sprintInput.onChanged.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8803655958388182830, guid: d3c5832ffc687564699681091e4504d1, type: 3}
       propertyPath: onCrouch.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8803655958388182830, guid: d3c5832ffc687564699681091e4504d1, type: 3}
       propertyPath: onCrouch.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8803655958388182830, guid: d3c5832ffc687564699681091e4504d1, type: 3}
+      propertyPath: primaryInput.onCanceled.m_PersistentCalls.m_Calls.Array.size
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8803655958388182830, guid: d3c5832ffc687564699681091e4504d1, type: 3}
       propertyPath: onCrouch.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
@@ -8990,6 +9018,50 @@ PrefabInstance:
       value: SetCrouched
       objectReference: {fileID: 0}
     - target: {fileID: 8803655958388182830, guid: d3c5832ffc687564699681091e4504d1, type: 3}
+      propertyPath: primaryInput.onPerformed.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8803655958388182830, guid: d3c5832ffc687564699681091e4504d1, type: 3}
+      propertyPath: moveInput.onChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1665630105069891187}
+    - target: {fileID: 8803655958388182830, guid: d3c5832ffc687564699681091e4504d1, type: 3}
+      propertyPath: moveInput.onChanged.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 1665630105069891186}
+    - target: {fileID: 8803655958388182830, guid: d3c5832ffc687564699681091e4504d1, type: 3}
+      propertyPath: primaryInput.onCanceled.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8803655958388182830, guid: d3c5832ffc687564699681091e4504d1, type: 3}
+      propertyPath: sprintInput.onChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1665630105069891187}
+    - target: {fileID: 8803655958388182830, guid: d3c5832ffc687564699681091e4504d1, type: 3}
+      propertyPath: moveInput.onChanged.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8803655958388182830, guid: d3c5832ffc687564699681091e4504d1, type: 3}
+      propertyPath: moveInput.onChanged.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8803655958388182830, guid: d3c5832ffc687564699681091e4504d1, type: 3}
+      propertyPath: primaryInput.onPerformed.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8803655958388182830, guid: d3c5832ffc687564699681091e4504d1, type: 3}
+      propertyPath: moveInput.onChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnMoveInput
+      objectReference: {fileID: 0}
+    - target: {fileID: 8803655958388182830, guid: d3c5832ffc687564699681091e4504d1, type: 3}
+      propertyPath: moveInput.onChanged.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: OnMoveInput
+      objectReference: {fileID: 0}
+    - target: {fileID: 8803655958388182830, guid: d3c5832ffc687564699681091e4504d1, type: 3}
+      propertyPath: primaryInput.onCanceled.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 3326567315385440714}
+    - target: {fileID: 8803655958388182830, guid: d3c5832ffc687564699681091e4504d1, type: 3}
       propertyPath: onCrouch.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: OliverLoescher.RigidbodyCharacter, Assembly-CSharp
       objectReference: {fileID: 0}
@@ -8998,11 +9070,79 @@ PrefabInstance:
       value: OliverLoescher.RigidbodyAnimController, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 8803655958388182830, guid: d3c5832ffc687564699681091e4504d1, type: 3}
+      propertyPath: primaryInput.onPerformed.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 3326567315385440714}
+    - target: {fileID: 8803655958388182830, guid: d3c5832ffc687564699681091e4504d1, type: 3}
+      propertyPath: sprintInput.onChanged.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8803655958388182830, guid: d3c5832ffc687564699681091e4504d1, type: 3}
+      propertyPath: sprintInput.onChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnSprintInput
+      objectReference: {fileID: 0}
+    - target: {fileID: 8803655958388182830, guid: d3c5832ffc687564699681091e4504d1, type: 3}
+      propertyPath: primaryInput.onCanceled.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8803655958388182830, guid: d3c5832ffc687564699681091e4504d1, type: 3}
+      propertyPath: primaryInput.onCanceled.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ShootEnd
+      objectReference: {fileID: 0}
+    - target: {fileID: 8803655958388182830, guid: d3c5832ffc687564699681091e4504d1, type: 3}
+      propertyPath: primaryInput.onPerformed.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8803655958388182830, guid: d3c5832ffc687564699681091e4504d1, type: 3}
+      propertyPath: primaryInput.onPerformed.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ShootStart
+      objectReference: {fileID: 0}
+    - target: {fileID: 8803655958388182830, guid: d3c5832ffc687564699681091e4504d1, type: 3}
+      propertyPath: moveInput.onChanged.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: OliverLoescher.RigidbodyCharacter, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 8803655958388182830, guid: d3c5832ffc687564699681091e4504d1, type: 3}
+      propertyPath: moveInput.onChanged.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: OliverLoescher.PlayerDodgeMovement, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 8803655958388182830, guid: d3c5832ffc687564699681091e4504d1, type: 3}
+      propertyPath: sprintInput.onChanged.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: OliverLoescher.RigidbodyCharacter, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 8803655958388182830, guid: d3c5832ffc687564699681091e4504d1, type: 3}
+      propertyPath: primaryInput.onCanceled.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: OliverLoescher.Weapon.Weapon, OliverLoescher.Weapon
+      objectReference: {fileID: 0}
+    - target: {fileID: 8803655958388182830, guid: d3c5832ffc687564699681091e4504d1, type: 3}
+      propertyPath: primaryInput.onPerformed.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: OliverLoescher.Weapon.Weapon, OliverLoescher.Weapon
+      objectReference: {fileID: 0}
+    - target: {fileID: 8803655958388182830, guid: d3c5832ffc687564699681091e4504d1, type: 3}
       propertyPath: onCrouch.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 8803655958388182830, guid: d3c5832ffc687564699681091e4504d1, type: 3}
       propertyPath: onCrouch.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 8803655958388182830, guid: d3c5832ffc687564699681091e4504d1, type: 3}
+      propertyPath: moveInput.onChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 8803655958388182830, guid: d3c5832ffc687564699681091e4504d1, type: 3}
+      propertyPath: moveInput.onChanged.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 8803655958388182830, guid: d3c5832ffc687564699681091e4504d1, type: 3}
+      propertyPath: sprintInput.onChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 8803655958388182830, guid: d3c5832ffc687564699681091e4504d1, type: 3}
+      propertyPath: primaryInput.onCanceled.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 8803655958388182830, guid: d3c5832ffc687564699681091e4504d1, type: 3}
+      propertyPath: primaryInput.onPerformed.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 8803655958587180412, guid: d3c5832ffc687564699681091e4504d1, type: 3}

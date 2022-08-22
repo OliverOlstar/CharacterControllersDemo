@@ -25,7 +25,7 @@ namespace OliverLoescher.Link
 
         public override bool CanEnter()
         {
-            return (machine.IsDefaultState() && animController.GetSpeed01() >= 0.75f && Vector3.Angle(transform.forward, input.moveInputVector3) >= 165);
+            return (machine.IsDefaultState() && animController.GetSpeed01() >= 0.75f && Vector3.Angle(transform.forward, input.Move.InputHorizontal) >= 165);
         }
 
         private void ReturnToDefault()

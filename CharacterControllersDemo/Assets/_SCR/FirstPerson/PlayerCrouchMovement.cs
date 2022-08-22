@@ -15,9 +15,9 @@ namespace OliverLoescher.FPS
 		{
 			if (fpsInput != null)
 			{
-				fpsInput.onCrouchPerformed.AddListener(Play);
-				fpsInput.onCrouchCanceled.AddListener(Cancel);
-				fpsInput.onSprintPerformed.AddListener(Cancel);
+				fpsInput.Crouch.onPerformed.AddListener(Play);
+				fpsInput.Crouch.onCanceled.AddListener(Cancel);
+				fpsInput.Sprint.onPerformed.AddListener(Cancel);
 			}
 			if (dodgeMovement != null)
 			{
@@ -51,7 +51,7 @@ namespace OliverLoescher.FPS
 
 		public void OnMoveStateChanged(RigidbodyCharacter.State state)
 		{
-			if (state == RigidbodyCharacter.State.Default && fpsInput.isCrouching && fpsInput.isSprinting)
+			if (state == RigidbodyCharacter.State.Default && fpsInput.Crouch.Input && fpsInput.Sprint.Input)
 			{
 				Play();
 			}

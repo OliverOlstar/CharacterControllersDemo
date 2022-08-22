@@ -5162,8 +5162,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cameraTransform: {fileID: 4780935136320291127}
   cameraYClamp: {x: -50, y: 70}
-  sensitivityDelta: 1
-  sensitivityUpdate: 1
 --- !u!114 &4746869788087367458
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5588,148 +5586,106 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1cc02bde2e592641941cf96d6a72a9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lookSensitivity: 5
-  lookMultipler: {x: 1, y: 1}
-  onLook:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 3452116999988166372}
-        m_TargetAssemblyTypeName: OliverLoescher.Camera.FirstPersonCamera, Assembly-CSharp
-        m_MethodName: OnCameraMove
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  lookDeltaSensitivity: 0.05
-  lookDeltaMultipler: {x: 1, y: 1}
-  onLookDelta:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 3452116999988166372}
-        m_TargetAssemblyTypeName: OliverLoescher.Camera.FirstPersonCamera, Assembly-CSharp
-        m_MethodName: OnCameraMoveDelta
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  lookInvertY: 0
-  onMove:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 694287692}
-        m_TargetAssemblyTypeName: OliverLoescher.RigidbodyCharacter, Assembly-CSharp
-        m_MethodName: OnMoveInput
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 694287693}
-        m_TargetAssemblyTypeName: PlayerDodgeMovement, Assembly-CSharp
-        m_MethodName: OnMoveInput
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  toggleSprint: 1
-  onSprint:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 694287692}
-        m_TargetAssemblyTypeName: OliverLoescher.RigidbodyCharacter, Assembly-CSharp
-        m_MethodName: OnSprintInput
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  onSprintPerformed:
-    m_PersistentCalls:
-      m_Calls: []
-  onSprintCanceled:
-    m_PersistentCalls:
-      m_Calls: []
-  toggleCrouch: 1
-  onCrouch:
-    m_PersistentCalls:
-      m_Calls: []
-  onCrouchPerformed:
-    m_PersistentCalls:
-      m_Calls: []
-  onCrouchCanceled:
-    m_PersistentCalls:
-      m_Calls: []
-  onJump:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 7160184455124172228}
-        m_TargetAssemblyTypeName: OliverLoescher.RigidbodyJump, Assembly-CSharp
-        m_MethodName: OnJumpInput
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  onPrimary:
-    m_PersistentCalls:
-      m_Calls: []
-  onPrimaryPerformed:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 4122999933957278453}
-        m_TargetAssemblyTypeName: Weapon, Assembly-CSharp
-        m_MethodName: ShootStart
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  onPrimaryCanceled:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 4122999933957278453}
-        m_TargetAssemblyTypeName: Weapon, Assembly-CSharp
-        m_MethodName: ShootEnd
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+  lookInput:
+    input: {x: 0, y: 0}
+    scalar: {x: 1, y: 1}
+    invertY: 0
+    onChanged:
+      m_PersistentCalls:
+        m_Calls: []
+    onUpdate:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 3452116999988166372}
+          m_TargetAssemblyTypeName: OliverLoescher.Camera.FirstPersonCamera, OliverLoescher.Camera
+          m_MethodName: OnCameraMove
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  lookDeltaInput:
+    input: {x: 0, y: 0}
+    scalar: {x: 1, y: 1}
+    invertY: 0
+    onChanged:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 3452116999988166372}
+          m_TargetAssemblyTypeName: OliverLoescher.Camera.FirstPersonCamera, OliverLoescher.Camera
+          m_MethodName: OnCameraMove
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  moveInput:
+    input: {x: 0, y: 0}
+    scalar: {x: 1, y: 1}
+    invertY: 0
+    onChanged:
+      m_PersistentCalls:
+        m_Calls: []
+  sprintInput:
+    isToggle: 0
+    input: 0
+    onChanged:
+      m_PersistentCalls:
+        m_Calls: []
+    onPerformed:
+      m_PersistentCalls:
+        m_Calls: []
+    onCanceled:
+      m_PersistentCalls:
+        m_Calls: []
+  crouchInput:
+    isToggle: 0
+    input: 0
+    onChanged:
+      m_PersistentCalls:
+        m_Calls: []
+    onPerformed:
+      m_PersistentCalls:
+        m_Calls: []
+    onCanceled:
+      m_PersistentCalls:
+        m_Calls: []
+  jumpInput:
+    onPerformed:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 7160184455124172228}
+          m_TargetAssemblyTypeName: OliverLoescher.RigidbodyJump, Assembly-CSharp
+          m_MethodName: OnJumpInput
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  primaryInput:
+    isToggle: 0
+    input: 0
+    onChanged:
+      m_PersistentCalls:
+        m_Calls: []
+    onPerformed:
+      m_PersistentCalls:
+        m_Calls: []
+    onCanceled:
+      m_PersistentCalls:
+        m_Calls: []
 --- !u!1 &8803655958587180412
 GameObject:
   m_ObjectHideFlags: 0
