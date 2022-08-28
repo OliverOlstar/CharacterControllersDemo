@@ -22,5 +22,7 @@ MonoBehaviour:
   lifeTime: {x: 4, y: 4}
   shootForce: {x: 18, y: 20}
   bulletGravity: 0.5
-  bulletCollision: {fileID: 11400000, guid: 86f417334b0e9974b9dffef51b7b794b, type: 2}
+  projectileEnviromentCollision: {fileID: 11400000, guid: 86f417334b0e9974b9dffef51b7b794b, type: 2}
+  projectileDamagableCollision: {fileID: 11400000, guid: 86f417334b0e9974b9dffef51b7b794b, type: 2}
+  projectileLifeEnd: {fileID: 11400000, guid: 86f417334b0e9974b9dffef51b7b794b, type: 2}
   hitForce: 8

@@ -12,3 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a03de31a2e66256459de6400963c3afb, type: 3}
   m_Name: Destroy
   m_EditorClassIdentifier: 
+  particlePrefab: {fileID: 725595537708434221, guid: 5091aa5df26d689478ba2ec1ab2a9aa7, type: 3}
+  audio:
+    clips: []
+    volume: 1
+    pitch: {x: 0.9, y: 1.2}
+  knockbackForce: 300

@@ -1012,12 +1012,12 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1565295350}
-        m_TargetAssemblyTypeName: OliverLoescher.UI.MenuManager, Assembly-CSharp
+        m_TargetAssemblyTypeName: OliverLoescher.UI.MenuManager, OliverLoescher.Multiplayer
         m_MethodName: OpenMenu
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 1939179888}
-          m_ObjectArgumentAssemblyTypeName: OliverLoescher.UI.Menu, Assembly-CSharp
+          m_ObjectArgumentAssemblyTypeName: OliverLoescher.UI.Menu, OliverLoescher.Multiplayer
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -1350,12 +1350,12 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1565295350}
-        m_TargetAssemblyTypeName: OliverLoescher.UI.MenuManager, Assembly-CSharp
+        m_TargetAssemblyTypeName: OliverLoescher.UI.MenuManager, OliverLoescher.Multiplayer
         m_MethodName: OpenMenu
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 2063516872}
-          m_ObjectArgumentAssemblyTypeName: OliverLoescher.UI.Menu, Assembly-CSharp
+          m_ObjectArgumentAssemblyTypeName: OliverLoescher.UI.Menu, OliverLoescher.Multiplayer
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -2290,12 +2290,12 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1565295350}
-        m_TargetAssemblyTypeName: OliverLoescher.UI.MenuManager, Assembly-CSharp
+        m_TargetAssemblyTypeName: OliverLoescher.UI.MenuManager, OliverLoescher.Multiplayer
         m_MethodName: OpenMenu
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 2063516872}
-          m_ObjectArgumentAssemblyTypeName: OliverLoescher.UI.Menu, Assembly-CSharp
+          m_ObjectArgumentAssemblyTypeName: OliverLoescher.UI.Menu, OliverLoescher.Multiplayer
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -2423,12 +2423,12 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1565295350}
-        m_TargetAssemblyTypeName: OliverLoescher.UI.MenuManager, Assembly-CSharp
+        m_TargetAssemblyTypeName: OliverLoescher.UI.MenuManager, OliverLoescher.Multiplayer
         m_MethodName: OpenMenu
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 1733593086}
-          m_ObjectArgumentAssemblyTypeName: OliverLoescher.UI.Menu, Assembly-CSharp
+          m_ObjectArgumentAssemblyTypeName: OliverLoescher.UI.Menu, OliverLoescher.Multiplayer
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -3310,12 +3310,12 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1565295350}
-        m_TargetAssemblyTypeName: OliverLoescher.UI.MenuManager, Assembly-CSharp
+        m_TargetAssemblyTypeName: OliverLoescher.UI.MenuManager, OliverLoescher.Multiplayer
         m_MethodName: OpenMenu
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 2063516872}
-          m_ObjectArgumentAssemblyTypeName: OliverLoescher.UI.Menu, Assembly-CSharp
+          m_ObjectArgumentAssemblyTypeName: OliverLoescher.UI.Menu, OliverLoescher.Multiplayer
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 

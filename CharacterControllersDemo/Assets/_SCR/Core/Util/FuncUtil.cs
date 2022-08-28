@@ -20,5 +20,21 @@ namespace OliverLoescher
 			}
 			return pAngle;
 		}
+
+		public static bool TryGetAndRemove<TKey, TValue>(ref Dictionary<TKey, TValue> pDictionary, TKey pKey, out TValue pValue)
+		{
+			if (pDictionary.TryGetValue(pKey, out pValue) && pDictionary.Remove(pKey))
+			{
+				return true;
+			}
+			return false;
+		}
+
+		public static TValue GetAndRemove<TKey, TValue>(ref Dictionary<TKey, TValue> pDictionary, TKey pKey)
+		{
+			pDictionary.TryGetValue(pKey, out TValue pValue);
+			pDictionary.Remove(pKey);
+			return pValue;
+		}
 	}
 }

@@ -7,14 +7,14 @@ namespace OliverLoescher.Weapon
 	[CreateAssetMenu(menuName = "ScriptableObject/Weapon/Collision/Physics")]
 	public class SOProjectileCollisionPhysics : SOProjectileCollisionBase
 	{
-		public override bool DoCollision(Projectile projectile, Collider other, ref bool canDamage, ref bool activeSelf)
+		public override bool DoCollision(Projectile pProjectile, Collider pOther, ref bool canDamage, ref bool activeSelf)
 		{
-			projectile.rigidbody.useGravity = true;
-			projectile.hitboxCollider.enabled = false;
-			projectile.physicsCollider.enabled = true;
-			projectile.transform.position += projectile.rigidbody.velocity.normalized * -0.25f;
+			pProjectile.rigidbody.useGravity = true;
+			pProjectile.hitboxCollider.enabled = false;
+			pProjectile.physicsCollider.enabled = true;
+			pProjectile.transform.position += pProjectile.rigidbody.velocity.normalized * -0.25f;
 			activeSelf = false;
-			DoCollision(projectile, other);
+			base.DoCollision(pProjectile, pOther, ref canDamage, ref activeSelf);
 			return false;
 		}
 	}

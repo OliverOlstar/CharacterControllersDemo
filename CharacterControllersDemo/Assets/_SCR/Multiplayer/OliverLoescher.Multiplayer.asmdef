@@ -1,12 +1,14 @@
 {
-    "name": "OliverLoescher.Weapon.Multiplayer",
-    "rootNamespace": "OliverLoescher.Weapon.Multiplayer",
+    "name": "OliverLoescher.Multiplayer",
+    "rootNamespace": "OliverLoescher.Multiplayer",
     "references": [
         "GUID:5b10c1f9ecd537f4dbe3d211152286e8",
         "GUID:81741247162146e40bdf68cc474125d7",
-        "GUID:bf7e626b9d1615a45b4f590debd0883a",
+        "GUID:6b15c90db464c3a45852cd13eb287d98",
         "GUID:57c32fc907df0f54e8e6e8f0d2488336",
-        "GUID:831409e8f9d13b5479a3baef9822ad34"
+        "GUID:831409e8f9d13b5479a3baef9822ad34",
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "GUID:4307f53044263cf4b835bd812fc161a4"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

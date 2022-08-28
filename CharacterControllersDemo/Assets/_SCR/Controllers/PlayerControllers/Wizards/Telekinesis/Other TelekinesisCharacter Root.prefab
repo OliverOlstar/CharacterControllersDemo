@@ -5856,89 +5856,6 @@ MonoBehaviour:
     m_PostInfinity: 1
     m_RotationOrder: 4
   bounceFrequncy: 4
---- !u!114 &1520674299
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1702329587217814787}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb758c00d7ff4594f9693c4157ef4622, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  health: {fileID: 3581132756918100774}
-  disableObjects:
-  - {fileID: 1702329589094343753}
-  puppetMaster: {fileID: 1843484877}
---- !u!114 &1520674300
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1702329587217814787}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 400bf42b73bac904f8b90da3f53fc8ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  valueSyncs:
-  - value: {fileID: 1702329588714772749}
-    doLogs: 0
-  - value: {fileID: 3581132756918100774}
-    doLogs: 1
---- !u!114 &1520674304
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1702329587217814787}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b1dd158673c60142adb1815a5a31a85, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  crouchMovement: {fileID: 1520674306}
-  animController: {fileID: 1050181232}
---- !u!114 &1520674306
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1702329589094343753}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 045880e25f74b564fb3efe700da42e8e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rigidbody: {fileID: 1702329589094343759}
-  cameraOffset: {fileID: 1520674305}
-  animController: {fileID: 1050181232}
-  crouchCameraOffset: -0.4
-  feetCollider: {fileID: 1702329589094343758}
-  slidePhyicsMat: {fileID: 13400000, guid: 967c6715b9342be4d96214e9733ba62b, type: 2}
-  slideCameraOffset: -0.4
-  sliderVelocity: 5
---- !u!114 &703176614426173728
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1702329589094343753}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b9d32f85d6225f7448badb9bf507b8aa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  health: {fileID: 3581132756918100774}
-  damageDirectionalPrefab: {fileID: 1959219102751335380, guid: 7194f88f26921dc489edd7e75ef73d5d, type: 3}
-  damagePrefab: {fileID: 2460693389568444919, guid: 04f6f308bd2d35947a3a6b2a626d1980, type: 3}
-  deathPrefab: {fileID: 5770122956436622210, guid: 14c970e5088917041882baa0106b1400, type: 3}
 --- !u!1 &1995774351692123649
 GameObject:
   m_ObjectHideFlags: 0
@@ -7791,6 +7708,88 @@ MonoBehaviour:
   m_SelectedFaces: 
   m_SelectedEdges: []
   m_SelectedVertices: 
+--- !u!114 &1520674299
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1702329587217814787}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb758c00d7ff4594f9693c4157ef4622, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: {fileID: 3581132756918100774}
+  disableObjects:
+  - {fileID: 1702329589094343753}
+  puppetMaster: {fileID: 1843484877}
+--- !u!114 &1520674300
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1702329587217814787}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 400bf42b73bac904f8b90da3f53fc8ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  valueSyncs:
+  - value: {fileID: 1702329588714772749}
+    doLogs: 0
+  - value: {fileID: 3581132756918100774}
+    doLogs: 1
+--- !u!114 &1520674304
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1702329587217814787}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b1dd158673c60142adb1815a5a31a85, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  crouchMovement: {fileID: 1520674306}
+  animController: {fileID: 1050181232}
+--- !u!114 &1520674306
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1702329589094343753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 045880e25f74b564fb3efe700da42e8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rigidbody: {fileID: 1702329589094343759}
+  cameraOffset: {fileID: 1520674305}
+  animController: {fileID: 1050181232}
+  crouchCameraOffset: -0.4
+  feetCollider: {fileID: 1702329589094343758}
+  slidePhyicsMat: {fileID: 13400000, guid: 967c6715b9342be4d96214e9733ba62b, type: 2}
+  slideCameraOffset: -0.4
+  sliderVelocity: 5
+--- !u!114 &703176614426173728
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1702329589094343753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9d32f85d6225f7448badb9bf507b8aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: {fileID: 3581132756918100774}
+  damageDirectionalPrefab: {fileID: 1959219102751335380, guid: 7194f88f26921dc489edd7e75ef73d5d, type: 3}
+  damagePrefab: {fileID: 2460693389568444919, guid: 04f6f308bd2d35947a3a6b2a626d1980, type: 3}
 --- !u!114 &1520674305
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9039,6 +9038,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2510571501457542829, guid: 246daed67b4217d448fabc2f7786e72e, type: 3}
       propertyPath: m_Layer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2694806228847371840, guid: 246daed67b4217d448fabc2f7786e72e, type: 3}
+      propertyPath: magnitude
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3319314439823984152, guid: 246daed67b4217d448fabc2f7786e72e, type: 3}

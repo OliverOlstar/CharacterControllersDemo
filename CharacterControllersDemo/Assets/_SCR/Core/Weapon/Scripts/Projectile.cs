@@ -17,8 +17,8 @@ namespace OliverLoescher.Weapon
 		public GameObject sender = null;
 		private SOTeam team = null;
 
-		private bool canDamage = true;
-		private bool activeSelf = true;
+		protected bool canDamage = true;
+		protected bool activeSelf = true;
 		private int currentFrame = 0;
 		private int lastHitFrame = 0;
 		private Collider lastHitCollider = null;
@@ -59,7 +59,7 @@ namespace OliverLoescher.Weapon
 			base.OnExitPool();
 		}
 
-		public void Init(Vector3 pPosition, Vector3 pDirection, SOTeam pTeam = null)
+		public void Init(Vector3 pPosition, Vector3 pDirection, GameObject pSender, SOTeam pTeam = null)
 		{
 			transform.position = pPosition;
 			transform.rotation = Quaternion.LookRotation(pDirection);
@@ -70,14 +70,17 @@ namespace OliverLoescher.Weapon
 			startPos = transform.position;
 			previousPosition = transform.position;
 
+			sender = pSender;
 			team = pTeam;
 			Invoke(nameof(DoLifeEnd), RandUtil.Range(data.lifeTime));
 		}
 
 		private void FixedUpdate() 
 		{
-			if (activeSelf == false)
+			if (!activeSelf)
+			{
 				return;
+			}
 
 			bool updateRot = false;
 			if (data.bulletGravity > 0)
@@ -92,44 +95,41 @@ namespace OliverLoescher.Weapon
 			}
 		}
 
-		private void Update() 
+		protected virtual void Update() 
 		{
-			if (activeSelf == false)
-				return;
-
-			currentFrame++; // Used to ignore collision on first two frames
-
-			if (currentFrame >= 1 && data.useRaycast) // Raycast Projectile
+			if (!activeSelf || !canDamage)
 			{
-				if (canDamage && Physics.Linecast(previousPosition, transform.position, out RaycastHit hit, data.layerMask, QueryTriggerInteraction.Ignore))
-				{
-					// if (data.bulletCollision != WeaponData.BulletCollision.Penetrate)
-					//	 transform.position = hit.point;
-					DoHitOther(hit.collider, hit.point);
-				}
+				return;
 			}
 
+			currentFrame++; // Used to ignore collision on first two frames
+			if (currentFrame >= -1 && data.useRaycast && // Raycast Projectile
+				Physics.Linecast(previousPosition, transform.position, out RaycastHit hit, data.layerMask, QueryTriggerInteraction.Ignore))
+			{
+				DoHitOther(hit.collider, hit.point);
+			}
 			previousPosition = transform.position;
 		}
 
-		private void OnTriggerEnter(Collider other) 
+		protected virtual void OnTriggerEnter(Collider other) 
 		{
-			if (activeSelf == false)
+			if (!activeSelf)
+			{
 				return;
-				
+			}
 			DoHitOther(other, transform.position);
 		}
 
 	#region Hit/Damage
-		private void DoHitOther(Collider other, Vector3 point)
+		private void DoHitOther(Collider pOther, Vector3 pPoint)
 		{
-			if (canDamage == false || currentFrame < 1 || other.isTrigger || other == lastHitCollider || IsSender(other.transform))
+			if (canDamage == false || currentFrame < 1 || pOther.isTrigger || pOther == lastHitCollider || IsSender(pOther.transform))
 			{
 				return;
 			}
 
 			bool didDamage = false;
-			IDamageable damageable = other.GetComponent<IDamageable>();
+			IDamageable damageable = pOther.GetComponent<IDamageable>();
 			if (damageable != null)
 			{
 				bool isSameTeam = SOTeam.Compare(damageable.GetTeam(), team);
@@ -139,16 +139,20 @@ namespace OliverLoescher.Weapon
 				}
 				if (!isSameTeam || team.teamDamage)
 				{
-					Debug.Log($"[{nameof(Projectile)}] {nameof(DamageOther)}({other.name}, {damageable.GetGameObject().name}, {(damageable.GetTeam() == null ? "No Team" : damageable.GetTeam().name)})", other);
-					DamageOther(damageable, point);
+					Debug.Log($"[{nameof(Projectile)}] {nameof(DamageOther)}({pOther.name}, {damageable.GetGameObject().name}, {(damageable.GetTeam() == null ? "No Team" : damageable.GetTeam().name)})", pOther);
+					DamageOther(damageable, pPoint);
 					didDamage = true;
 				}
 			}
 
 			lastHitFrame = currentFrame;
-			lastHitCollider = other;
+			lastHitCollider = pOther;
+			DoHitOtherInternal(pOther, didDamage);
+		}
 
-			if ((didDamage ? data.projectileDamagableCollision : data.projectileEnviromentCollision).DoCollision(this, other, ref canDamage, ref activeSelf))
+		protected virtual void DoHitOtherInternal(Collider pOther, bool pDidDamage)
+		{
+			if ((pDidDamage ? data.projectileDamagableCollision : data.projectileEnviromentCollision).DoCollision(this, pOther, ref canDamage, ref activeSelf))
 			{
 				ReturnToPool();
 			}
@@ -170,7 +174,7 @@ namespace OliverLoescher.Weapon
 			}
 		}
 
-		private void DoLifeEnd()
+		protected virtual void DoLifeEnd()
 		{
 			data.projectileLifeEnd.DoCollision(this, null, ref canDamage, ref activeSelf);
 			ReturnToPool();

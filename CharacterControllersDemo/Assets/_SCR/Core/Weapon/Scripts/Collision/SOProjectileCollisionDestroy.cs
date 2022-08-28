@@ -12,7 +12,10 @@ namespace OliverLoescher.Weapon
 			projectile.rigidbody.isKinematic = true;
 			canDamage = false;
 
-			ObjectPoolDictionary.Play(particlePrefab, projectile.transform.position, projectile.transform.rotation);
+			if (particlePrefab != null)
+			{
+				ObjectPoolDictionary.Play(particlePrefab, projectile.transform.position, projectile.transform.rotation);
+			}
 			audio.Play(projectile.audioSources);
 
 			if (other != null)

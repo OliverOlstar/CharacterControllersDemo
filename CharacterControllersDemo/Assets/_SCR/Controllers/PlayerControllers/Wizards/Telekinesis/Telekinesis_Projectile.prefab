@@ -1016,11 +1016,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: bffbc094c1dfaf849b5790b0fb5f25e6, type: 2}
+  rigidbody: {fileID: 7401478483716165537}
   hitboxCollider: {fileID: 6814629326868493549}
   physicsCollider: {fileID: 2029652679065505240}
-  audio: {fileID: 0}
+  audioSources: {fileID: 0}
   sender: {fileID: 0}
-  impactParticle: {fileID: 0}
   hitColor: {r: 1, g: 0, b: 0, a: 1}
   critColor: {r: 1, g: 1, b: 0, a: 1}
   spawnOffsetZ: 0

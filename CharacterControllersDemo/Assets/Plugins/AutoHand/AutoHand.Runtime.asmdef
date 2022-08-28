@@ -1,10 +1,8 @@
 {
-    "name": "OliverLoescher.Weapon",
-    "rootNamespace": "OliverLoescher.Weapon",
+    "name": "AutoHand",
+    "rootNamespace": "",
     "references": [
-        "GUID:5b10c1f9ecd537f4dbe3d211152286e8",
-        "GUID:81741247162146e40bdf68cc474125d7",
-        "GUID:75469ad4d38634e559750d17036d5f7c"
+        "GUID:776d03a35f1b52c4a9aed9f56d7b4229"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

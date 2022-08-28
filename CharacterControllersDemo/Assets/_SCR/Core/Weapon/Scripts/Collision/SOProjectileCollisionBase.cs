@@ -13,16 +13,15 @@ namespace OliverLoescher.Weapon
 		[SerializeField, Min(0.0f)]
 		protected float knockbackForce = 300.0f;
 
-		public abstract bool DoCollision(Projectile projectile, Collider other, ref bool canDamage, ref bool activeSelf);
-		protected void DoCollision(Projectile projectile, Collider other)
+		public virtual bool DoCollision(Projectile projectile, Collider other, ref bool canDamage, ref bool activeSelf)
 		{
-			Rigidbody rb = other.GetComponent<Rigidbody>();
-			if (rb != null)
+			if (other != null && other.TryGetComponent(out Rigidbody rb))
 			{
 				rb.AddForce(projectile.transform.forward * knockbackForce, ForceMode.Impulse);
 			}
 			ObjectPoolDictionary.Play(particlePrefab, projectile.transform.position, projectile.transform.rotation);
 			audio.Play(projectile.audioSources);
+			return true;
 		}
 		public virtual void DrawGizmos(Projectile pProjectile) { }
 	}

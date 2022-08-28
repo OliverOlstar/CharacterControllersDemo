@@ -49,6 +49,7 @@ namespace OliverLoescher.FPS
 		{
 			lookInput.Initalize(InputSystem.Instance.FPS.CameraMove, IsValid);
 			lookDeltaInput.Initalize(InputSystem.Instance.FPS.CameraMoveDelta, IsValid);
+			moveInput.Initalize(InputSystem.Instance.FPS.Move, IsValid);
 			sprintInput.Initalize(InputSystem.Instance.FPS.Sprint, IsValid);
 			crouchInput.Initalize(InputSystem.Instance.FPS.Crouch, IsValid);
 			jumpInput.Initalize(InputSystem.Instance.FPS.Jump, IsValid);

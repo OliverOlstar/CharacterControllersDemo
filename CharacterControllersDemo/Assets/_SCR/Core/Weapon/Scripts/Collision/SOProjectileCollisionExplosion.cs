@@ -20,7 +20,7 @@ namespace OliverLoescher.Weapon
 		{
 			pProjectile.rigidbody.isKinematic = true;
 			canDamage = false;
-			DoCollision(pProjectile, pOther);
+			base.DoCollision(pProjectile, pOther, ref canDamage, ref activeSelf);
 			Explode(pProjectile.transform.position, pProjectile);
 			return true;
 		}

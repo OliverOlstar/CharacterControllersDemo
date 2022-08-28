@@ -1,12 +1,12 @@
 {
-    "name": "OliverLoescher.Weapon",
-    "rootNamespace": "OliverLoescher.Weapon",
+    "name": "OliverLoescher.Editor",
+    "rootNamespace": "OliverLoescher.Editor",
     "references": [
-        "GUID:5b10c1f9ecd537f4dbe3d211152286e8",
-        "GUID:81741247162146e40bdf68cc474125d7",
-        "GUID:75469ad4d38634e559750d17036d5f7c"
+        "GUID:5b10c1f9ecd537f4dbe3d211152286e8"
     ],
-    "includePlatforms": [],
+    "includePlatforms": [
+        "Editor"
+    ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,

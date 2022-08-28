@@ -49,6 +49,9 @@ MonoBehaviour:
   - RPC_OnValueChanged
   - RPC_RespawnOtherPlayer
   - RPC_SpawnPlayer
+  - RPC_Projectile_ReturnToPool
+  - RPC_Projectile_DoCollision
+  - RPC_Projectile_DoLifeEnd
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 0

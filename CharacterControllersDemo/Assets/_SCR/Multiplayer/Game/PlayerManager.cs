@@ -80,6 +80,7 @@ namespace OliverLoescher.Multiplayer
 				playerHealth = playerObject.GetComponent<Health>();
 				PhotonView photonView = playerObject.GetComponent<PhotonView>();
 				photonView.ViewID = pViewID;
+				playerObject.SetActive(true);
 			}
 		}
 

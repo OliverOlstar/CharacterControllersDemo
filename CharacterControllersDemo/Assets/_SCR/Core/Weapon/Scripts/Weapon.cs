@@ -145,7 +145,7 @@ namespace OliverLoescher.Weapon
 			OnFailedShoot?.Invoke();
 		}
 
-		protected virtual void SpawnProjectile(Vector3 pPoint, Vector3 pDirection)
+		protected virtual Projectile SpawnProjectile(Vector3 pPoint, Vector3 pDirection)
 		{
 			// Spawn projectile
 			GameObject projectile;
@@ -153,14 +153,13 @@ namespace OliverLoescher.Weapon
 			projectile.SetActive(true);
 
 			Projectile projectileScript = projectile.GetComponentInChildren<Projectile>();
-			projectileScript.sender = sender;
-			projectileScript.Init(pPoint, pDirection);
+			projectileScript.Init(pPoint, pDirection, sender);
 
 			// Audio
 			data.shotSound.Play(sourcePool); // TODO Move this incase bulletsPerShot > 1
-
-			// Event
 			OnShoot?.Invoke();
+
+			return projectileScript;
 		}
 
 		protected virtual void SpawnRaycast(Vector3 pPoint, Vector3 pForward)
@@ -267,5 +266,10 @@ namespace OliverLoescher.Weapon
 			}
 	#endif
 		}
+
+		#region Helpers
+		protected void Log(string pMessage) => Debug.Log($"[{GetType().Name}] {pMessage}", this);
+		protected void LogError(string pMessage) => Debug.LogError($"[{GetType().Name}] {pMessage}", this);
+		#endregion
 	}
 }
