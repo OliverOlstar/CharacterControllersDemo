@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Sirenix.OdinInspector;
+using OliverLoescher;
 
 public class BarValue : MonoBehaviour
 {
@@ -28,11 +29,11 @@ public class BarValue : MonoBehaviour
 	[Header("Timings")]
 	[SerializeField, Min(0.0f)] private float delay = 0.75f;
 	[Tooltip("Seconds for bar to fill from 0% to 100% (0% to 50% will take half the amount of seconds)")]
-	[SerializeField, DisableInPlayMode, Min(0.00001f)] private float seconds = 1.0f;
+	[SerializeField, DisableInPlayMode, Min(Util.NEARZERO)] private float seconds = 1.0f;
 	private float inverseSeconds;
 
 	[Space]
-	[ShowIf("@doColorFades && coloringImage != null"), DisableInPlayMode, SerializeField, Min(0.00001f)] private float colorSeconds = 0.1f;
+	[ShowIf("@doColorFades && coloringImage != null"), DisableInPlayMode, SerializeField, Min(Util.NEARZERO)] private float colorSeconds = 0.1f;
 	private float inverseColorSeconds;
 
 	[Space]

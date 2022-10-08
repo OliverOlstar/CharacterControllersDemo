@@ -15,12 +15,12 @@ namespace OliverLoescher.Weapon
 
 		public override void ShootStart()
 		{
-			CoroutineUtil.Stop(ref coroutine);
-			coroutine = CoroutineUtil.Start(ShootDelayed());
+			MonoUtil.Stop(ref coroutine);
+			coroutine = MonoUtil.Start(ShootDelayed());
 		}
 		public override void ShootEnd()
 		{
-			CoroutineUtil.Stop(ref coroutine);
+			MonoUtil.Stop(ref coroutine);
 		}
 
 		public IEnumerator ShootDelayed()

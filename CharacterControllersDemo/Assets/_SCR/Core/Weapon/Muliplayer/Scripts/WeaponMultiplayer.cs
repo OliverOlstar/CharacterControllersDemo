@@ -27,7 +27,6 @@ namespace OliverLoescher.Weapon.Multiplayer
 			if (projectile is ProjectileMultiplayer projectileMultiplayer)
 			{
 				projectileMultiplayer.InitMultiplayer(id, this, true);
-				mActiveProjectiles.Add(id, projectileMultiplayer);
 			}
 
 			if (IsValid)
@@ -57,7 +56,7 @@ namespace OliverLoescher.Weapon.Multiplayer
 
 		public void Projectile_DoLifeEnd(int pID, Vector3 pPosition)
 		{
-			if (mActiveProjectiles.Remove(pID) && IsValid)
+			if (IsValid)
 			{
 				mPhotonView.RPC(nameof(RPC_Projectile_DoLifeEnd), RpcTarget.Others, pID, pPosition);
 			}
@@ -65,7 +64,7 @@ namespace OliverLoescher.Weapon.Multiplayer
 
 		public void Projectile_DoCollision(int pID, Vector3 pPosition, bool pDidDamage)
 		{
-			if (mActiveProjectiles.Remove(pID) && IsValid)
+			if (IsValid)
 			{
 				mPhotonView.RPC(nameof(RPC_Projectile_DoCollision), RpcTarget.Others, pID, pPosition, pDidDamage);
 			}
@@ -76,7 +75,7 @@ namespace OliverLoescher.Weapon.Multiplayer
 		[PunRPC]
 		public void RPC_ShootFailed()
 		{
-			OnShootFailed();
+			base.OnShootFailed();
 		}
 
 		[PunRPC]
@@ -95,13 +94,13 @@ namespace OliverLoescher.Weapon.Multiplayer
 		[PunRPC]
 		public void RPC_ShootRaycast(Vector3 pPoint, Vector3 pForward)
 		{
-			SpawnRaycast(pPoint, pForward);
+			base.SpawnRaycast(pPoint, pForward);
 		}
 
 		[PunRPC]
 		public void RPC_Projectile_DoLifeEnd(int pID, Vector3 pPosition)
 		{
-			if (FuncUtil.TryGetAndRemove(ref mActiveProjectiles, pID, out ProjectileMultiplayer projectile))
+			if (Util.TryGetAndRemove(ref mActiveProjectiles, pID, out ProjectileMultiplayer projectile))
 			{
 				projectile.transform.position = pPosition;
 				projectile.ForceLifeEnd();
@@ -111,16 +110,15 @@ namespace OliverLoescher.Weapon.Multiplayer
 		[PunRPC]
 		public void RPC_Projectile_DoCollision(int pID, Vector3 pPosition, bool pDidDamage)
 		{
-			if (FuncUtil.TryGetAndRemove(ref mActiveProjectiles, pID, out ProjectileMultiplayer projectile))
+			if (!mActiveProjectiles.TryGetValue(pID, out ProjectileMultiplayer projectile))
 			{
-				projectile.transform.position = pPosition;
-				projectile.ForceCollision(pDidDamage);
+				return;
 			}
-		}
-
-		private void ForceProjectileCollision()
-		{
-
+			projectile.transform.position = pPosition;
+			if (projectile.ForceCollision(pDidDamage))
+			{
+				mActiveProjectiles.Remove(pID);
+			}
 		}
 		#endregion
 	}

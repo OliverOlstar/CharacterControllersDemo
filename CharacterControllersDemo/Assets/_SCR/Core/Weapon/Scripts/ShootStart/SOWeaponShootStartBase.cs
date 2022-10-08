@@ -8,8 +8,8 @@ namespace OliverLoescher.Weapon
 {
 	public abstract class SOWeaponShootStartBase : ScriptableObject
 	{
-		[SerializeField, Required, InlineEditor]
-		protected SOWeaponShootTypeBase shootType = null;
+		[Required, InlineEditor]
+		public SOWeaponShootTypeBase shootType = null;
 
 		public virtual void ShootStart() => shootType.ShootStart();
 		public virtual void ShootEnd() => shootType.ShootEnd();

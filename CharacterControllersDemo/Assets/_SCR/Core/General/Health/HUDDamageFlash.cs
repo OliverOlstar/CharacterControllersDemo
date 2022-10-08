@@ -11,7 +11,7 @@ namespace OliverLoescher
         [SerializeField] private Image image = null;
         private Color initalColor;
 
-        [SerializeField] [Range(0.001f, 1.0f)] private float flashSeconds = 0.1f;
+        [SerializeField] [Range(Util.NEARZERO, 1.0f)] private float flashSeconds = 0.1f;
 
         private Health health;
 

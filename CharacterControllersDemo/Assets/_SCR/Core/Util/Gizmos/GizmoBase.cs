@@ -2,29 +2,41 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GizmoBase : MonoBehaviour
+namespace OliverLoescher.Debug2
 {
-	[SerializeField] private Color color = new Color(0, 0.5f, 1, 1);
-	[SerializeField] private bool alwaysShow = false;
-
-	protected virtual void OnDrawGizmos() 
+	public abstract class GizmoBase : MonoBehaviour
 	{
-		if (alwaysShow == true) 
-		{
-			DrawGizmos();
-		}
-	}
+		[SerializeField] private Color color = new Color(0, 0.5f, 1, 1);
+		[SerializeField] private bool alwaysShow = false;
 
-	protected virtual void OnDrawGizmosSelected() 
-	{
-		if (alwaysShow == false) 
+		private void Awake()
 		{
-			DrawGizmos();
+			if (!Application.isEditor)
+			{
+				Debug.LogWarning($"This {GetType()} exist, destory it. Please clean these up. {Util.GetPath(transform)}");
+				DestroyImmediate(this);
+			}
 		}
-	}
 
-	protected virtual void DrawGizmos() 
-	{ 
-		Gizmos.color = color;
+		protected virtual void OnDrawGizmos()
+		{
+			if (alwaysShow == true)
+			{
+				DrawGizmos();
+			}
+		}
+
+		protected virtual void OnDrawGizmosSelected()
+		{
+			if (alwaysShow == false)
+			{
+				DrawGizmos();
+			}
+		}
+
+		protected virtual void DrawGizmos()
+		{
+			Gizmos.color = color;
+		}
 	}
 }

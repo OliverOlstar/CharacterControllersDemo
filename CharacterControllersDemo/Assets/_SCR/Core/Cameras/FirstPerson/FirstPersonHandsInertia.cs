@@ -49,8 +49,8 @@ namespace OliverLoescher.Camera
             lastRotation = transform.parent.eulerAngles;
 
             Vector3 rot = transform.localEulerAngles;
-            rot.y = Calculate(FuncUtil.SafeAngle(rot.y), motion.y * tiltMagnitude.x, tiltMax.x, tiltDampening.x);
-            rot.x = Calculate(FuncUtil.SafeAngle(rot.x), motion.x * tiltMagnitude.y, tiltMax.y, tiltDampening.y);
+            rot.y = Calculate(Util.SafeAngle(rot.y), motion.y * tiltMagnitude.x, tiltMax.x, tiltDampening.x);
+            rot.x = Calculate(Util.SafeAngle(rot.x), motion.x * tiltMagnitude.y, tiltMax.y, tiltDampening.y);
             transform.localRotation = Quaternion.Euler(rot);
 
             float v = Mathf.Min(maxMagnitude, rigid.velocity.sqrMagnitude) * targetMagnitude;

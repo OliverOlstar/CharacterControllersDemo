@@ -16,6 +16,8 @@ namespace OliverLoescher.Input
 		[BoxGroup, SerializeField] 
 		private Vector2 scalar = Vector2.one;
 		[BoxGroup, SerializeField]
+		private bool normalize = false;
+		[BoxGroup, SerializeField]
 		private bool invertY = false;
 
 		[BoxGroup]
@@ -46,6 +48,10 @@ namespace OliverLoescher.Input
 			input = ctx.ReadValue<Vector2>();
 			input.x *= scalar.x;
 			input.y *= scalar.y * (invertY ? -1 : 1);
+			if (normalize)
+			{
+				input.Normalize();
+			}
 			onChanged?.Invoke(input);
 		}
 	}

@@ -28,7 +28,12 @@ public class MoveBetweenPoints : MonoBehaviour
         moveTransform.position = points[index].point + initalPosition;
     }
 
-    private void FixedUpdate() 
+	private void Reset()
+	{
+		moveTransform = transform;
+	}
+
+	private void FixedUpdate() 
     {
         if (Time.time > moveTime)
         {

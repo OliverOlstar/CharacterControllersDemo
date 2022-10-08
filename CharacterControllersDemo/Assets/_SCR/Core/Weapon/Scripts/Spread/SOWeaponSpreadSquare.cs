@@ -13,7 +13,7 @@ namespace OliverLoescher.Weapon
 
 		public override Vector3 ApplySpread(Vector3 pDirection)
 		{
-			return Quaternion.Euler(RandUtil.Range(spreadVector.y), RandUtil.Range(spreadVector.x), 0) * pDirection;
+			return Quaternion.Euler(Util.Range(spreadVector.y), Util.Range(spreadVector.x), 0) * pDirection;
 		}
 
 #if UNITY_EDITOR

@@ -2,14 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GizmoForward : GizmoBase
+namespace OliverLoescher.Debug2
 {
-	[SerializeField] private float magnitude = 1;
-
-	protected override void DrawGizmos()
+	public class GizmoForward : GizmoBase
 	{
-		base.DrawGizmos();
-		
-		Gizmos.DrawLine(transform.position, transform.position + (transform.forward * magnitude));
+		[SerializeField] private float magnitude = 1;
+
+		protected override void DrawGizmos()
+		{
+			base.DrawGizmos();
+
+			Gizmos.DrawLine(transform.position, transform.position + (transform.forward * magnitude));
+		}
 	}
 }

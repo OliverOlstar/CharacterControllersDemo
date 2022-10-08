@@ -25,13 +25,13 @@ namespace OliverLoescher.Weapon
 			weapon = GetComponent<Weapon>();
 			weapon.OnShoot.AddListener(OnShoot);
 
-			clipAmmo = weapon.data.clipAmmo;
-			totalAmmo = weapon.data.totalAmmo - clipAmmo;
+			clipAmmo = weapon.Data.clipAmmo;
+			totalAmmo = weapon.Data.totalAmmo - clipAmmo;
 		}
 
 		public void OnShoot()
 		{
-			if (weapon.data.ammoType == SOWeapon.AmmoType.Null)
+			if (weapon.Data.ammoType == SOWeapon.AmmoType.Null)
 				return;
 
 			// Ammo
@@ -41,12 +41,12 @@ namespace OliverLoescher.Weapon
 				weapon.canShoot = false;
 
 				// Audio
-				weapon.data.outOfAmmoSound.Play(weapon.sourcePool);
+				weapon.Data.outOfAmmoSound.Play(weapon.sourcePool);
 
 				OnStartOverHeat.Invoke();
 			}
 
-			if (weapon.data.ammoType == SOWeapon.AmmoType.Limited && totalAmmo <= 0)
+			if (weapon.Data.ammoType == SOWeapon.AmmoType.Limited && totalAmmo <= 0)
 			{
 				// If totally out of ammo
 				if (clipAmmo <= 0)
@@ -66,23 +66,23 @@ namespace OliverLoescher.Weapon
 
 		private IEnumerator AmmoRoutine()
 		{
-			yield return new WaitForSeconds(Mathf.Max(0, weapon.data.reloadDelaySeconds - weapon.data.reloadIntervalSeconds));
+			yield return new WaitForSeconds(Mathf.Max(0, weapon.Data.reloadDelaySeconds - weapon.Data.reloadIntervalSeconds));
 
-			while (clipAmmo < weapon.data.clipAmmo && (totalAmmo > 0 || weapon.data.ammoType == SOWeapon.AmmoType.Unlimited))
+			while (clipAmmo < weapon.Data.clipAmmo && (totalAmmo > 0 || weapon.Data.ammoType == SOWeapon.AmmoType.Unlimited))
 			{
-				yield return new WaitForSeconds(weapon.data.reloadIntervalSeconds);
+				yield return new WaitForSeconds(weapon.Data.reloadIntervalSeconds);
 
 				// Clip Ammo
 				clipAmmo++;
 
 				// Total Ammo
-				if (weapon.data.ammoType == SOWeapon.AmmoType.Limited)
+				if (weapon.Data.ammoType == SOWeapon.AmmoType.Limited)
 				{
 					totalAmmo--;
 				}
 
 				// Audio
-				weapon.data.reloadSound.Play(weapon.sourcePool);
+				weapon.Data.reloadSound.Play(weapon.sourcePool);
 
 				OnReload.Invoke();
 			}
@@ -92,7 +92,7 @@ namespace OliverLoescher.Weapon
 				weapon.canShoot = true;
 
 				// Audio
-				weapon.data.onReloadedSound.Play(weapon.sourcePool);
+				weapon.Data.onReloadedSound.Play(weapon.sourcePool);
 
 				// Events
 				OnEndOverHeat.Invoke();
@@ -105,7 +105,7 @@ namespace OliverLoescher.Weapon
 			totalAmmo += pValue;
 
 			// Check for recharge
-			if (totalAmmo > 0 && clipAmmo < weapon.data.clipAmmo)
+			if (totalAmmo > 0 && clipAmmo < weapon.Data.clipAmmo)
 			{
 				if (chargeRoutine != null)
 					StopCoroutine(chargeRoutine);

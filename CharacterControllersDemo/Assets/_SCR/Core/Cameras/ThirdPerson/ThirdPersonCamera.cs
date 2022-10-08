@@ -7,29 +7,42 @@ namespace OliverLoescher
 {
     public class ThirdPersonCamera : MonoBehaviour
     {
-        //[SerializeField] private InputBridge_Camera input = null;
+        [SerializeField] 
+		private InputBridge_Camera input = null;
+		[SerializeField, DisableInPlayMode]
+		private MonoUtil.UpdateType updateType = default;
 
-        [Header("Follow")]
+		[Header("Follow")]
         public Transform followTransform = null;
-        [SerializeField] private Vector3 offset = new Vector3(0.0f, 0.5f, 0.0f);
+        [SerializeField]
+		private Vector3 offset = new Vector3(0.0f, 0.5f, 0.0f);
         public Transform cameraTransform = null; // Should be child
-        [SerializeField] private Vector3 childOffset = new Vector3(0.0f, 2.0f, -5.0f);
+        [SerializeField]
+		private Vector3 childOffset = new Vector3(0.0f, 2.0f, -5.0f);
         
         [Header("Look")]
-        [SerializeField] private Transform lookTransform = null;
-        [SerializeField, MinMaxSlider(-90, 90, true)] private Vector2 lookYClamp = new Vector2(-40, 50);
-        [SerializeField] private float sensitivityDelta = 1.0f;
-        [SerializeField] private float sensitivityUpdate = 1.0f;
+        [SerializeField]
+		private Transform lookTransform = null;
+        [SerializeField, MinMaxSlider(-90, 90, true)] 
+		private Vector2 lookYClamp = new Vector2(-40, 50);
+        [SerializeField]
+		private float sensitivityDelta = 1.0f;
+        [SerializeField]
+		private float sensitivityUpdate = 1.0f;
         private Vector2 lookInput = new Vector2();
 
         [Header("Zoom")]
-        [SerializeField] private float zoomSpeed = 1.0f;
-        [SerializeField] private Vector2 zoomDistanceClamp = new Vector2(1.0f, 5.0f);
+        [SerializeField]
+		private float zoomSpeed = 1.0f;
+        [SerializeField]
+		private Vector2 zoomDistanceClamp = new Vector2(1.0f, 5.0f);
         private float currZoom = 0.5f;
 
         [Header("Collision")]
-        [SerializeField] private LayerMask collisionLayers = new LayerMask();
-        [SerializeField] private float collisionRadius = 0.2f;
+        [SerializeField] 
+		private LayerMask collisionLayers = new LayerMask();
+        [SerializeField] 
+		private float collisionRadius = 0.2f;
 
 		private void Reset()
         {
@@ -47,21 +60,28 @@ namespace OliverLoescher
             currZoom = childOffset.magnitude;
             cameraTransform.localPosition = childOffset;
 
-            //if (input != null)
-            //{
-            //    input.onLook.AddListener(OnLook);
-            //    input.onLookDelta.AddListener(OnLookDelta);
-            //    input.onZoom.AddListener(OnZoom);
-            //}
-        }
+            if (input != null)
+			{
+				input.Look.onChanged.AddListener(OnLook);
+				input.LookDelta.onChanged.AddListener(OnLookDelta);
+				input.Zoom.onChanged.AddListener(OnZoom);
+			}
 
-        private void LateUpdate() 
+			MonoUtil.RegisterUpdate(this, Tick, updateType, MonoUtil.Priorities.Cameras);
+		}
+
+		private void OnDestroy()
+		{
+			MonoUtil.DeregisterUpdate(this, updateType);
+		}
+
+		private void Tick(float pDeltaTime) 
         {
             DoFollow();
             
             if (lookInput != Vector2.zero)
             {
-                RotateCamera(lookInput * sensitivityUpdate * Time.deltaTime);
+                RotateCamera(lookInput * sensitivityUpdate * pDeltaTime);
             }
 
             DoZoomUpdate();
@@ -83,7 +103,7 @@ namespace OliverLoescher
                 return;
 			}
             Vector3 euler = lookTransform.eulerAngles;
-            euler.x = Mathf.Clamp(FuncUtil.SafeAngle(euler.x - pInput.y), lookYClamp.x, lookYClamp.y);
+            euler.x = Mathf.Clamp(Util.SafeAngle(euler.x - pInput.y), lookYClamp.x, lookYClamp.y);
             euler.y = euler.y + pInput.x;
             euler.z = 0.0f;
             lookTransform.rotation = Quaternion.Euler(euler);

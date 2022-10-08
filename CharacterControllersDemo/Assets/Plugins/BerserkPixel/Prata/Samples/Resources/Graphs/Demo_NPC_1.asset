@@ -1,0 +1,81 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a2ef5589ae749c6b7f83e5b11c4de96, type: 3}
+  m_Name: Demo_NPC_1
+  m_EditorClassIdentifier: 
+  NodeLinks:
+  - BaseNodeGuid: 3ee05442-5a0c-4a8e-b672-3e36c294dd79
+    PortName: Next
+    TargetNodeGuid: 2a83636a-98de-4b38-97a6-f7da3a8527fa
+  - BaseNodeGuid: 2a83636a-98de-4b38-97a6-f7da3a8527fa
+    PortName: Next Dialog
+    TargetNodeGuid: 71a2b872-d9b0-4698-97cd-72c1d55b6f15
+  - BaseNodeGuid: 71a2b872-d9b0-4698-97cd-72c1d55b6f15
+    PortName: Yes!
+    TargetNodeGuid: 27ce7e5e-62ae-455a-b332-67c1f329d994
+  - BaseNodeGuid: 71a2b872-d9b0-4698-97cd-72c1d55b6f15
+    PortName: What?
+    TargetNodeGuid: c64f0c58-f814-4c71-95a4-1be73a67374b
+  - BaseNodeGuid: c64f0c58-f814-4c71-95a4-1be73a67374b
+    PortName: Now I hear it!
+    TargetNodeGuid: 27ce7e5e-62ae-455a-b332-67c1f329d994
+  - BaseNodeGuid: c64f0c58-f814-4c71-95a4-1be73a67374b
+    PortName: Leave
+    TargetNodeGuid: 1c2a773a-a00b-4f09-901e-6fb748a9c350
+  DialogNodes:
+  - Guid: 2a83636a-98de-4b38-97a6-f7da3a8527fa
+    Content:
+      characterID: 8a426ecd-b324-4ffc-8c55-78e015465973
+      emotion: 2
+      DialogText: Sometimes this forest can talk to you!
+    Position: {x: 235, y: 134}
+    Type: 1
+    Choices:
+    - Next Dialog
+  - Guid: 71a2b872-d9b0-4698-97cd-72c1d55b6f15
+    Content:
+      characterID: 8a426ecd-b324-4ffc-8c55-78e015465973
+      emotion: 4
+      DialogText: Can you hear it?
+    Position: {x: 557, y: 22}
+    Type: 2
+    Choices:
+    - Yes!
+    - What?
+  - Guid: c64f0c58-f814-4c71-95a4-1be73a67374b
+    Content:
+      characterID: 8a426ecd-b324-4ffc-8c55-78e015465973
+      emotion: 3
+      DialogText: Yes! Pay attention now!
+    Position: {x: 924, y: 134}
+    Type: 2
+    Choices:
+    - Now I hear it!
+    - Leave
+  - Guid: 27ce7e5e-62ae-455a-b332-67c1f329d994
+    Content:
+      characterID: de9bc64b-3ecd-49b7-80f1-a72ea9267f72
+      emotion: 4
+      DialogText: I can hear it!
+    Position: {x: 1153, y: -170}
+    Type: 1
+    Choices:
+    - Next Dialog
+  - Guid: 1c2a773a-a00b-4f09-901e-6fb748a9c350
+    Content:
+      characterID: de9bc64b-3ecd-49b7-80f1-a72ea9267f72
+      emotion: 5
+      DialogText: Please leave me alone
+    Position: {x: 1370, y: 174}
+    Type: 1
+    Choices:
+    - Next Dialog

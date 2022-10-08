@@ -46,7 +46,7 @@ namespace OliverLoescher
 
 		public static void PlayOneShotRandomClip(in AudioSource source, in AudioClip[] clips, in Vector2 pitch)
 		{
-			source.pitch = RandUtil.Range(pitch);
+			source.pitch = Util.Range(pitch);
 			PlayOneShotRandomClip(source, clips);
 		}
 
@@ -60,7 +60,7 @@ namespace OliverLoescher
 		public static void PlayOneShotRandomClip(in AudioSource source, in AudioClip[] clips, in Vector2 pitch, in float volume)
 		{
 			source.volume = volume;
-			source.pitch = RandUtil.Range(pitch);
+			source.pitch = Util.Range(pitch);
 			PlayOneShotRandomClip(source, clips);
 		}
 		

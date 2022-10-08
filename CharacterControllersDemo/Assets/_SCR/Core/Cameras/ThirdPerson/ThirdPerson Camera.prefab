@@ -89,15 +89,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   input: {fileID: 4786023228314485988}
+  updateType: 1
   followTransform: {fileID: 0}
   offset: {x: 0, y: 0.5, z: 0}
   cameraTransform: {fileID: 4214231727571656805}
   childOffset: {x: 0, y: 0.5, z: -5}
   lookTransform: {fileID: 1533356268896167371}
   lookYClamp: {x: -15, y: 50}
-  sensitivityDelta: 1
+  sensitivityDelta: 0.2
   sensitivityUpdate: 1
-  zoomSpeed: 0.02
+  zoomSpeed: -0.02
   zoomDistanceClamp: {x: 1, y: 25}
   collisionLayers:
     serializedVersion: 2
@@ -115,20 +116,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4bdf7a83cca099845bc99858ee71c815, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lookSensitivity: 150
-  lookMultipler: {x: 1, y: 1}
-  onLook:
-    m_PersistentCalls:
-      m_Calls: []
-  lookDeltaSensitivity: 0.05
-  lookDeltaMultipler: {x: 1, y: 1}
-  onLookDelta:
-    m_PersistentCalls:
-      m_Calls: []
-  lookInvertY: 0
-  onZoom:
-    m_PersistentCalls:
-      m_Calls: []
+  lookInput:
+    input: {x: 0, y: 0}
+    scalar: {x: 1, y: 1}
+    normalize: 0
+    invertY: 0
+    onChanged:
+      m_PersistentCalls:
+        m_Calls: []
+    onUpdate:
+      m_PersistentCalls:
+        m_Calls: []
+  lookDeltaInput:
+    input: {x: 0, y: 0}
+    scalar: {x: 1, y: 1}
+    normalize: 0
+    invertY: 0
+    onChanged:
+      m_PersistentCalls:
+        m_Calls: []
+  zoomInput:
+    input: 0.5
+    onChanged:
+      m_PersistentCalls:
+        m_Calls: []
 --- !u!1 &5560140426852447709
 GameObject:
   m_ObjectHideFlags: 0
@@ -154,7 +165,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5560140426852447709}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2, z: -5}
+  m_LocalPosition: {x: 0, y: 0.5, z: -5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 6091109129074886579}

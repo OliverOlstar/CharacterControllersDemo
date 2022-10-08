@@ -61,7 +61,7 @@ namespace OliverLoescher.Camera
             Vector3 rot = transform.localEulerAngles;
             rot.z = pRelMotion.x * -tiltMagnitude;
 			rot.z = Mathf.Clamp(rot.z, -tiltMax, tiltMax);
-			rot.z = Mathf.Lerp(FuncUtil.SafeAngle(transform.localEulerAngles.z), rot.z, pDeltaTime * tiltDampening);
+			rot.z = Mathf.Lerp(Util.SafeAngle(transform.localEulerAngles.z), rot.z, pDeltaTime * tiltDampening);
             transform.localRotation = Quaternion.Euler(rot);
         }
 
@@ -81,7 +81,7 @@ namespace OliverLoescher.Camera
 			{
                 return;
 			}
-            float fov01 = FuncUtil.SmoothStep(fovVelocity, MathUtil.Horizontalize(rigid.velocity).magnitude);
+            float fov01 = Util.SmoothStep(fovVelocity, Util.Horizontalize(rigid.velocity).magnitude);
             camera.m_Lens.FieldOfView = Mathf.Lerp(camera.m_Lens.FieldOfView, Mathf.Lerp(fovMinMax.x, fovMinMax.y, fov01), pDeltaTime * fovDampening);
         }
     }

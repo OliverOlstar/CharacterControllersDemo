@@ -50,7 +50,7 @@ namespace OliverLoescher
 
 		void Update()
         {
-            Quaternion toRotation = Quaternion.LookRotation(MathUtil.Horizontalize(lookTransform.forward));
+            Quaternion toRotation = Quaternion.LookRotation(Util.Horizontalize(lookTransform.forward));
             if (rotationDampening > 0)
             {
                 transform.rotation = Quaternion.Lerp(transform.rotation, toRotation, rotationDampening * Time.deltaTime);

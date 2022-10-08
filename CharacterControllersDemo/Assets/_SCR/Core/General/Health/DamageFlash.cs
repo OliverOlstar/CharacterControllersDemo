@@ -15,8 +15,8 @@ namespace OliverLoescher
         private Color[] initalColors;
 
         [Header("Time")]
-        [SerializeField] [Range(0.001f, 1.0f)] private float flashSeconds = 0.1f;
-        [SerializeField] [Range(0.001f, 5.0f)] private float flashDeathSeconds = 0.1f;
+        [SerializeField] [Range(Util.NEARZERO, 1.0f)] private float flashSeconds = 0.1f;
+        [SerializeField] [Range(Util.NEARZERO, 5.0f)] private float flashDeathSeconds = 0.1f;
 
         private void Start()
         {

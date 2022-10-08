@@ -1,3 +1,4 @@
+using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,6 +7,9 @@ namespace OliverLoescher
 {
 	public class FollowTarget : MonoBehaviour
 	{
+		[SerializeField, DisableInPlayMode]
+		private MonoUtil.UpdateType updateType = default;
+
 		[Header("Position")]
 		public Transform posTarget = null;
 		public Vector3 posOffset = new Vector3();
@@ -16,7 +20,17 @@ namespace OliverLoescher
 		public Vector3 rotOffset = new Vector3();
 		[Min(0)] public float rotDampening = 0.0f;
 
-		private void LateUpdate() 
+		private void Start()
+		{
+			MonoUtil.RegisterUpdate(this, Tick, updateType, MonoUtil.Priorities.Cameras);
+		}
+
+		private void OnDestroy()
+		{
+			MonoUtil.DeregisterUpdate(this, updateType);
+		}
+
+		private void Tick(float pDeltaTime) 
 		{
 			if (posTarget != null)
 			{
@@ -27,7 +41,7 @@ namespace OliverLoescher
 				}
 				else
 				{
-					transform.position = Vector3.Lerp(transform.position, pos, Time.deltaTime * posDampening);
+					transform.position = Vector3.Lerp(transform.position, pos, pDeltaTime * posDampening);
 				}
 			}
 			
@@ -40,8 +54,25 @@ namespace OliverLoescher
 				}
 				else
 				{
-					transform.rotation = Quaternion.Lerp(transform.rotation, rot, Time.deltaTime * rotDampening);
+					transform.rotation = Quaternion.Lerp(transform.rotation, rot, pDeltaTime * rotDampening);
 				}
+			}
+		}
+
+		private void OnDrawGizmosSelected()
+		{
+			if (Application.isPlaying)
+			{
+				return;
+			}
+
+			if (posTarget != null)
+			{
+				transform.position = posTarget.position + posOffset;
+			}
+			if (rotTarget != null)
+			{
+				transform.rotation = rotTarget.rotation * Quaternion.Euler(posOffset);
 			}
 		}
 	}

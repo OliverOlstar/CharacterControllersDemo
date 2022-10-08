@@ -41,7 +41,7 @@ namespace OliverLoescher.GunGenerator
 			Gizmos.matrix = transform.localToWorldMatrix;
 
 			Vector3 offset = new Vector3(0.0f, 0.0f, surfaceAreaLength * 0.5f);
-			Vector3 scale = new Vector3(surfaceAreaWidth, 0.0001f, surfaceAreaLength);
+			Vector3 scale = new Vector3(surfaceAreaWidth, Util.NEARZERO, surfaceAreaLength);
 
 			if (surfaceAreaAxis.sqrMagnitude == 1)
 			{

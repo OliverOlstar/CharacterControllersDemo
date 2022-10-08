@@ -64,7 +64,7 @@ namespace OliverLoescher.Weapon
 			transform.position = pPosition;
 			transform.rotation = Quaternion.LookRotation(pDirection);
 
-			rigidbody.velocity = pDirection.normalized * RandUtil.Range(data.shootForce);
+			rigidbody.velocity = pDirection.normalized * Util.Range(data.shootForce);
 			transform.position += transform.forward * spawnOffsetZ;
 
 			startPos = transform.position;
@@ -72,7 +72,7 @@ namespace OliverLoescher.Weapon
 
 			sender = pSender;
 			team = pTeam;
-			Invoke(nameof(DoLifeEnd), RandUtil.Range(data.lifeTime));
+			Invoke(nameof(DoLifeEnd), Util.Range(data.lifeTime));
 		}
 
 		private void FixedUpdate() 
@@ -150,12 +150,14 @@ namespace OliverLoescher.Weapon
 			DoHitOtherInternal(pOther, didDamage);
 		}
 
-		protected virtual void DoHitOtherInternal(Collider pOther, bool pDidDamage)
+		protected virtual bool DoHitOtherInternal(Collider pOther, bool pDidDamage)
 		{
 			if ((pDidDamage ? data.projectileDamagableCollision : data.projectileEnviromentCollision).DoCollision(this, pOther, ref canDamage, ref activeSelf))
 			{
 				ReturnToPool();
+				return true;
 			}
+			return false;
 		}
 
 		private void DamageOther(IDamageable damageable, Vector3 point)

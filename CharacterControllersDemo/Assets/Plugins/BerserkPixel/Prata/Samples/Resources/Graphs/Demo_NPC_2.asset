@@ -1,0 +1,77 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a2ef5589ae749c6b7f83e5b11c4de96, type: 3}
+  m_Name: Demo_NPC_2
+  m_EditorClassIdentifier: 
+  NodeLinks:
+  - BaseNodeGuid: 37b06ade-2941-491f-9a06-289c43795ec4
+    PortName: Next
+    TargetNodeGuid: dd80e189-a621-42dd-be01-e835d8fa9597
+  - BaseNodeGuid: dd80e189-a621-42dd-be01-e835d8fa9597
+    PortName: Next Dialog
+    TargetNodeGuid: c84f3c0b-9115-49a0-a0c8-34b685225765
+  - BaseNodeGuid: c84f3c0b-9115-49a0-a0c8-34b685225765
+    PortName: Next Dialog
+    TargetNodeGuid: 165c9dd2-e919-4702-8b70-f691628052d1
+  - BaseNodeGuid: 165c9dd2-e919-4702-8b70-f691628052d1
+    PortName: Leave me alone
+    TargetNodeGuid: a27b24e8-c985-4454-9e9c-b24f496367ba
+  - BaseNodeGuid: 165c9dd2-e919-4702-8b70-f691628052d1
+    PortName: '?'
+    TargetNodeGuid: bd8d4d37-3a2c-46a2-a9d2-5bc3cc571c1d
+  DialogNodes:
+  - Guid: dd80e189-a621-42dd-be01-e835d8fa9597
+    Content:
+      characterID: 680ed16b-e56f-4702-b0d4-2115aca4daae
+      emotion: 0
+      DialogText: Can you hear it?
+    Position: {x: 221, y: 169}
+    Type: 1
+    Choices:
+    - Next Dialog
+  - Guid: c84f3c0b-9115-49a0-a0c8-34b685225765
+    Content:
+      characterID: de9bc64b-3ecd-49b7-80f1-a72ea9267f72
+      emotion: 5
+      DialogText: ... ok?
+    Position: {x: 544, y: 137}
+    Type: 1
+    Choices:
+    - Next Dialog
+  - Guid: 165c9dd2-e919-4702-8b70-f691628052d1
+    Content:
+      characterID: 680ed16b-e56f-4702-b0d4-2115aca4daae
+      emotion: 4
+      DialogText: It's coming!
+    Position: {x: 829, y: 144}
+    Type: 2
+    Choices:
+    - Leave me alone
+    - '?'
+  - Guid: a27b24e8-c985-4454-9e9c-b24f496367ba
+    Content:
+      characterID: 680ed16b-e56f-4702-b0d4-2115aca4daae
+      emotion: 1
+      DialogText: Ok...
+    Position: {x: 1263, y: 113}
+    Type: 1
+    Choices:
+    - Next Dialog
+  - Guid: bd8d4d37-3a2c-46a2-a9d2-5bc3cc571c1d
+    Content:
+      characterID: 680ed16b-e56f-4702-b0d4-2115aca4daae
+      emotion: 4
+      DialogText: The end is here!
+    Position: {x: 1263, y: 346}
+    Type: 1
+    Choices:
+    - Next Dialog

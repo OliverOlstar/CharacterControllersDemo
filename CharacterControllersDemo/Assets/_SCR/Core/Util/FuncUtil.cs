@@ -4,8 +4,16 @@ using UnityEngine;
 
 namespace OliverLoescher 
 {
-	public static class FuncUtil
+	public static partial class Util
 	{
+		#region Application
+		public static bool IsApplicationQuitting = false;
+		static void Quit() => IsApplicationQuitting = true;
+
+		[RuntimeInitializeOnLoadMethod]
+		static void RunOnStart() => Application.quitting += Quit;
+		#endregion Application
+
 		public static float SmoothStep(float pMin, float pMax, float pIn)
 		{
 			return Mathf.Clamp01((pIn - pMin) / (pMax - pMin));
@@ -35,6 +43,27 @@ namespace OliverLoescher
 			pDictionary.TryGetValue(pKey, out TValue pValue);
 			pDictionary.Remove(pKey);
 			return pValue;
+		}
+
+		public static bool OutsideCapsule(Vector3 pVector, Vector3 pCenter, Vector3 pUp, float pHeight, float pRadius)
+		{
+			pHeight -= pRadius * 2.0f;
+			if (pHeight <= 0.0f)
+			{
+				return Util.DistanceGreaterThan(pVector, pCenter, pRadius);
+			}
+			else if (pVector.y > pCenter.y + pHeight * 0.5f)
+			{
+				return Util.DistanceGreaterThan(pVector, pCenter + (pUp * pHeight * 0.5f), pRadius);
+			}
+			else if (pVector.y < pCenter.y - pHeight * 0.5f)
+			{
+				return Util.DistanceGreaterThan(pVector, pCenter + (-pUp * pHeight * 0.5f), pRadius);
+			}
+			else
+			{
+				return Util.DistanceOnPlaneEqualGreaterThan(pVector, pCenter, pRadius, pUp);
+			}
 		}
 	}
 }

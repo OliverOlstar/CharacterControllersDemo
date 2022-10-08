@@ -49,7 +49,7 @@ namespace OliverLoescher.SoapCar
         {
             if (grounded.isGrounded)
             {
-                bool movingForward = Vector3.Dot(MathUtil.Horizontalize(transform.forward), MathUtil.Horizontalize(rigid.velocity)) >= 0;
+                bool movingForward = Vector3.Dot(Util.Horizontalize(transform.forward), Util.Horizontalize(rigid.velocity)) >= 0;
                 bool inputingForward = moveInput.y >= 0;
 
                 // Movement

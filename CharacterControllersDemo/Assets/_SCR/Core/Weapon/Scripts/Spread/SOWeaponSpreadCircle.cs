@@ -14,7 +14,7 @@ namespace OliverLoescher.Weapon
 		public override Vector3 ApplySpread(Vector3 pDirection)
 		{
 			float spread = Mathf.Lerp(spreadRadius, spreadRadiusMax, spread01);
-			return Quaternion.Euler(RandUtil.GetRandomPointOnCircle(spread)) * pDirection;
+			return Quaternion.Euler(Util.GetRandomPointOnCircle(spread)) * pDirection;
 		}
 
 #if UNITY_EDITOR

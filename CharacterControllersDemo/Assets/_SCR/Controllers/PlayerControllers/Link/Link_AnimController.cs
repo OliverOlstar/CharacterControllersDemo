@@ -79,7 +79,7 @@ namespace OliverLoescher.Link
             float v = animator.GetFloat(pValue);
             if (pTarget01 != v)
             {
-                if (Mathf.Abs(pTarget01 - v) < 0.001f)
+                if (Mathf.Abs(pTarget01 - v) < Util.NEARZERO)
                 {
                     // Round if close enough
                     animator.SetFloat(pValue, (pTarget01));

@@ -1,0 +1,17 @@
+{
+  "name": "com.berserkpixel.prata",
+  "version": "1.1.0",
+  "displayName": "Prata: Dialog System",
+  "description": "Prata is an easy to use dialog system. It makes creating a conversation a breeze with it’s in-built dialog graph tool.",
+  "unity": "2019.4",
+  "keywords": [
+    "dialog",
+    "dialog system",
+    "tool"
+  ],
+  "author": {
+    "name": "Berserk Pixel Game Studio",
+    "email": "hello@berserkpixel.studio",
+    "url": "https://berserkpixel.studio/"
+  }
+}

@@ -56,16 +56,16 @@ namespace OliverLoescher.Weapon.Multiplayer
 			base.DoLifeEnd();
 		}
 
-		protected override void DoHitOtherInternal(Collider pOther, bool pDidDamage)
+		protected override bool DoHitOtherInternal(Collider pOther, bool pDidDamage)
 		{
 			if (mIsMine)
 			{
 				mWeapon.Projectile_DoCollision(ID, transform.position, pDidDamage);
 			}
-			base.DoHitOtherInternal(pOther, pDidDamage);
+			return base.DoHitOtherInternal(pOther, pDidDamage);
 		}
 
 		public void ForceLifeEnd() => base.DoLifeEnd();
-		public void ForceCollision(bool pDidDamage) => base.DoHitOtherInternal(null, pDidDamage);
+		public bool ForceCollision(bool pDidDamage) => base.DoHitOtherInternal(null, pDidDamage);
 	}
 }

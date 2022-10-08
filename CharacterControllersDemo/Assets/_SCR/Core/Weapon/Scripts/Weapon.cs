@@ -19,8 +19,8 @@ namespace OliverLoescher.Weapon
 			RandomAllOnce
 		}
 
-		[Required] 
-		public SOWeapon data = null;
+		[SerializeField, Required] 
+		private SOWeapon data = null;
 		public SOTeam team = null;
 		[ShowIf("@muzzlePoints.Length > 1"), SerializeField] 
 		protected MultiMuzzleType multiMuzzleType = MultiMuzzleType.RandomNotOneAfterItself;
@@ -44,9 +44,15 @@ namespace OliverLoescher.Weapon
 
 		private SOWeaponShootStartBase shootStart = null;
 		private SOWeaponSpreadBase spread = null;
+		public bool isShooting { get; private set; } = false;
 
 		private void Start() 
 		{
+			if (data == null)
+			{
+				return;
+			}
+
 			shootStart = Instantiate(data.shootStart).Init(Shoot);
 			spread = Instantiate(data.spread).Init();
 
@@ -58,9 +64,15 @@ namespace OliverLoescher.Weapon
 			sender = gameObject;
 		}
 
-		protected virtual void Init() {}
+		protected virtual void Init() { }
 
-		[HideInInspector] public bool isShooting {get; private set;} = false;
+		public SOWeapon Data => data;
+		public void SetData(SOWeapon pData)
+		{
+			data = pData;
+			Start();
+		}
+
 		public void ShootStart()
 		{
 			shootStart.ShootStart();
@@ -73,6 +85,10 @@ namespace OliverLoescher.Weapon
 
 		private void Update()
 		{
+			if (shootStart == null || spread == null)
+			{
+				return;
+			}
 			shootStart.OnUpdate(Time.deltaTime);
 			spread.OnUpdate(Time.deltaTime);
 		}

@@ -140,8 +140,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: {fileID: 8763821419528049097}
-  damageImpactPrefab: {fileID: 2018986638600810406, guid: 85d1576b78ff51843a8898bb717ca4d8, type: 3}
-  damageLoopingPrefab: {fileID: 2018986638600810406, guid: 947b15ff9c8dd344a96fbd2b567e34d5, type: 3}
+  damageDirectionalPrefab: {fileID: 1959219102751335380, guid: 7194f88f26921dc489edd7e75ef73d5d, type: 3}
+  damagePrefab: {fileID: 2460693389568444919, guid: 04f6f308bd2d35947a3a6b2a626d1980, type: 3}
 --- !u!1 &8156012443726203713
 GameObject:
   m_ObjectHideFlags: 0

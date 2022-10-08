@@ -105,7 +105,7 @@ namespace OliverLoescher
 			public void CheckInObject(PoolElement pElement, bool pDisable = true)
 			{
 				pElement.gameObject.transform.SetParent(pElement.parent, true);
-				pElement.gameObject.transform.localScale = MathUtil.Inverse(pElement.parent.lossyScale);
+				pElement.gameObject.transform.localScale = Util.Inverse(pElement.parent.lossyScale);
 				if (pElement.gameObject.activeSelf)
 					pElement.gameObject.SetActive(!pDisable);
 

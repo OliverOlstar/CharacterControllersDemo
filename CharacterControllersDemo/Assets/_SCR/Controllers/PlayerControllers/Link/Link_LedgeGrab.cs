@@ -80,7 +80,7 @@ namespace OliverLoescher.Link
             rootMotion.ignoreYValue = true;
             yield return new WaitForSeconds(0.5f);
             transform.position = wallTopPoint + (Vector3.down * holdDown) + (wallNormal * holdDistance);
-            transform.rotation = Quaternion.LookRotation(MathUtil.Horizontalize(-wallNormal));
+            transform.rotation = Quaternion.LookRotation(Util.Horizontalize(-wallNormal));
         }
 
         public override void OnUpdate()

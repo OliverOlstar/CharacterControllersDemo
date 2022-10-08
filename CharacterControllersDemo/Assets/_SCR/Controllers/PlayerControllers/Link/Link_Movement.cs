@@ -44,7 +44,7 @@ namespace OliverLoescher.Link
                     move = new Vector3(move.x, 0.0f, move.z);
 
                     float angle = Vector3.Angle(transform.up, Vector3.ProjectOnPlane(grounded.GetAverageNormal(), transform.right));
-                    float maxSpeed01 = 1 - (FuncUtil.SmoothStep(slowAngleRange, angle) * (1 - maxAngleSlow));
+                    float maxSpeed01 = 1 - (Util.SmoothStep(slowAngleRange, angle) * (1 - maxAngleSlow));
 
                     targetRotation = Quaternion.LookRotation(move);
 

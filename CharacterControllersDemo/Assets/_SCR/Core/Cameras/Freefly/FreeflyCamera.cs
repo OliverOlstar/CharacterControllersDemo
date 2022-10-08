@@ -46,7 +46,7 @@ namespace OliverLoescher.Camera
         protected virtual void DoRotateCamera(Vector2 pInput)
         {
             Vector3 euler = lookTransform.eulerAngles;
-            euler.x = Mathf.Clamp(FuncUtil.SafeAngle(euler.x - pInput.y), cameraYClamp.x, cameraYClamp.y);
+            euler.x = Mathf.Clamp(Util.SafeAngle(euler.x - pInput.y), cameraYClamp.x, cameraYClamp.y);
             euler.y = euler.y + pInput.x;
             euler.z = 0.0f;
             lookTransform.rotation = Quaternion.Euler(euler);
