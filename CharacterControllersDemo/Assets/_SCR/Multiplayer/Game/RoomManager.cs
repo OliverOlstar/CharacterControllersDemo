@@ -57,5 +57,11 @@ namespace OliverLoescher.Multiplayer
 				Destroy(gameObject);
 			}
 		}
+
+		public void ExitGame()
+        {
+			PhotonNetwork.LeaveRoom();
+			SceneManager.LoadScene(0);
+        }
 	}
 }

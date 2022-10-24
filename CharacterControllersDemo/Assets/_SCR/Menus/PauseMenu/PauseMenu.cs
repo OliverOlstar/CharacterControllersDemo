@@ -7,19 +7,20 @@ namespace OliverLoescher
 {
 	public class PauseMenu : MonoBehaviour
 	{
-		[SerializeField] private GameObject menuObject = null;
+		[SerializeField]
+		private GameObject menuObject = null;
 
-#region Initialize
-		private void Start() 
+		#region Initialize
+		private void Start()
 		{
 			Application.focusChanged += OnFocusLost;
 			InputSystem.Instance.Menu.Pause.performed += OnInput;
-			
+
 			menuObject.SetActive(false);
 			Cursor.lockState = CursorLockMode.Locked;
 		}
 
-		private void OnDestroy() 
+		private void OnDestroy()
 		{
 			Application.focusChanged -= OnFocusLost;
 			InputSystem.Instance.FPS.CameraMove.performed -= OnInput;
@@ -30,26 +31,32 @@ namespace OliverLoescher
 			InputSystem.Instance.Menu.Enable();
 		}
 
-		private void OnDisable() 
+		private void OnDisable()
 		{
 			InputSystem.Instance.Menu.Disable();
 		}
 
 		public void OnInput(InputAction.CallbackContext ctx) => TogglePause();
-#endregion
+		#endregion
 
 		public void OnFocusLost(bool pFocused)
 		{
 			if (pFocused == false && PauseSystem.isPaused == false)
+			{
 				OnPause();
+			}
 		}
 
 		public void TogglePause()
 		{
 			if (PauseSystem.isPaused)
+			{
 				OnUnpause();
-			else   
+			}
+			else
+			{
 				OnPause();
+			}
 		}
 
 		public void OnPause()

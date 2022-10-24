@@ -1,16 +1,36 @@
+using System;
+using UnityEngine;
 
-public abstract class Singleton<T> where T : class, new()
+
+namespace OliverLoescher
 {
-    private static T _Instance = null;
-    public static T Instance
+	public abstract class Singleton<T> where T : class, new()
 	{
-		get
+		private static T _Instance = null;
+		private static ISingleton _InstanceInterface = null;
+
+		public static T Instance
 		{
-			if (_Instance == null)
+			get
 			{
-				_Instance = new T();
+				// Create
+				if (_Instance == null)
+				{
+					_Instance = new T();
+					_InstanceInterface = (_Instance is ISingleton i) ? i : null;
+				}
+				// Access
+				if (_InstanceInterface != null)
+				{
+					_InstanceInterface.OnAccessed();
+				}
+				return _Instance;
 			}
-			return _Instance;
 		}
+
+		protected static void Log(string pMessage) => Debug.Log($"[{typeof(T).Name}] {pMessage}");
+		protected static void LogWarning(string pMessage) => Debug.LogWarning($"[{typeof(T).Name}] {pMessage}");
+		protected static void LogError(string pMessage) => Debug.LogError($"[{typeof(T).Name}] {pMessage}");
+		protected static void LogExeception(string pMessage) => Debug.LogException(new System.Exception($"[{typeof(T).Name}] {pMessage}"));
 	}
 }

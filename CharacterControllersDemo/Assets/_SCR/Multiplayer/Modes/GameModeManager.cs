@@ -12,15 +12,23 @@ namespace OliverLoescher.Multiplayer
 
 		private void Awake()
 		{
-			gameMode.Play(PlayerManager.Players);
+			gameMode.Play();
 			PlayerManager.OnPlayerJoined += OnPlayerJoined;
 			PlayerManager.OnPlayerLeft += OnPlayerLeft;
 			PlayerManager.OnPlayerDied += OnPlayerDied;
 		}
 
-		private void OnPlayerJoined(PlayerManager newPlayer)
+        private void OnDestroy()
 		{
-			if (!gameMode.IsInActive)
+			gameMode.Stop();
+			PlayerManager.OnPlayerJoined -= OnPlayerJoined;
+			PlayerManager.OnPlayerLeft -= OnPlayerLeft;
+			PlayerManager.OnPlayerDied -= OnPlayerDied;
+		}
+
+        private void OnPlayerJoined(PlayerManager newPlayer)
+		{
+			if (gameMode.IsActive)
 			{
 				gameMode.OnPlayerJoined(newPlayer);
 			}
@@ -28,7 +36,7 @@ namespace OliverLoescher.Multiplayer
 
 		private void OnPlayerLeft(PlayerManager player)
 		{
-			if (!gameMode.IsInActive)
+			if (gameMode.IsActive)
 			{
 				gameMode.OnPlayerLeft(player);
 			}
@@ -36,10 +44,22 @@ namespace OliverLoescher.Multiplayer
 
 		private void OnPlayerDied(PlayerManager deadPlayer)
 		{
-			if (!gameMode.IsInActive)
+			if (gameMode.IsActive)
 			{
 				gameMode.OnPlayerDied(deadPlayer);
 			}
 		}
+
+		public void TogglePaused()
+        {
+			if (gameMode.IsPaused)
+            {
+				gameMode.Resume();
+            }
+			else
+            {
+				gameMode.Pause();
+            }
+        }
 	}
 }

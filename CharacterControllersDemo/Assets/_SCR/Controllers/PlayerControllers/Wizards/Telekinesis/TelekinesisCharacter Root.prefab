@@ -2546,6 +2546,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26a55ca339755de449686cccf8844fa3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  updateType: 0
   posTarget: {fileID: 7868175242149353026}
   posOffset: {x: 0, y: 0, z: 0}
   posDampening: 0
@@ -5509,7 +5510,6 @@ MonoBehaviour:
   health: {fileID: 5412202274897350956}
   damageDirectionalPrefab: {fileID: 1959219102751335380, guid: 7194f88f26921dc489edd7e75ef73d5d, type: 3}
   damagePrefab: {fileID: 2460693389568444919, guid: 04f6f308bd2d35947a3a6b2a626d1980, type: 3}
-  deathPrefab: {fileID: 5770122956436622210, guid: 14c970e5088917041882baa0106b1400, type: 3}
 --- !u!114 &133379071
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8748,6 +8748,10 @@ PrefabInstance:
     - target: {fileID: 152021979464373952, guid: d3c5832ffc687564699681091e4504d1, type: 3}
       propertyPath: m_Layer
       value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 266292436672723331, guid: d3c5832ffc687564699681091e4504d1, type: 3}
+      propertyPath: planeDistance
+      value: 0.101
       objectReference: {fileID: 0}
     - target: {fileID: 358985950651333307, guid: d3c5832ffc687564699681091e4504d1, type: 3}
       propertyPath: m_Layer

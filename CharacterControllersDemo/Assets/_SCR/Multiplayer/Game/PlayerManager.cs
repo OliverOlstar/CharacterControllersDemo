@@ -40,6 +40,7 @@ namespace OliverLoescher.Multiplayer
 			if (photonView.IsMine)
 			{
 				SpawnSelfPlayer();
+				ScreenMessage.LargeMessage("Test Message", 5);
 			}
 			Camera.SpectatorCamera.Instance.gameObject.SetActive(false);
 		}
