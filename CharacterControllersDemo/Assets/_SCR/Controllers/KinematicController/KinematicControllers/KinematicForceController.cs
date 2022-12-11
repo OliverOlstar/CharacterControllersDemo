@@ -16,17 +16,17 @@ public class KinematicForceController : KinematicController
 
 	[Header("Move")]
 	[SerializeField, Min(0.0f)]
-	private float forwardAccel = 5.0f;
+	private float forwardAcceleration = 5.0f;
 	[SerializeField, Min(0.0f)]
-	private float sideAccel = 5.0f;
+	private float sideAcceleration = 5.0f;
 	[SerializeField, Min(0.0f)]
 	private float drag = 5.0f;
 
 	[Header("Sprint")]
 	[SerializeField, Min(0.0f)]
-	private float sprintForwardAccel = 5.0f;
+	private float sprintForwardAcceleration = 5.0f;
 	[SerializeField, Min(0.0f)]
-	private float sprintSideAccel = 5.0f;
+	private float sprintSideAcceleration = 5.0f;
 
 	[Header("Jump")]
 	[SerializeField, Min(0.0f)]
@@ -61,8 +61,8 @@ public class KinematicForceController : KinematicController
 	}
 
 	public bool IsSprinting => input.Sprint.Input;
-	private float ForwardAccel => IsSprinting ? sprintForwardAccel : forwardAccel;
-	private float SideAccel => IsSprinting ? sprintSideAccel : sideAccel;
+	private float ForwardAcceleration => IsSprinting ? sprintForwardAcceleration : forwardAcceleration;
+	private float SideAcceleration => IsSprinting ? sprintSideAcceleration : sideAcceleration;
 
 	private void Start()
 	{
@@ -92,8 +92,8 @@ public class KinematicForceController : KinematicController
 			return;
 		}
 
-		velocity += Forward() * input.Move.Input.y * pDeltaTime * ForwardAccel;
-		velocity += Right() * input.Move.Input.x * pDeltaTime * SideAccel;
+		velocity += Forward() * input.Move.Input.y * pDeltaTime * ForwardAcceleration;
+		velocity += Right() * input.Move.Input.x * pDeltaTime * SideAcceleration;
 	}
 
 	private void DoJump()

@@ -43,6 +43,7 @@ namespace Prototype
 		private Vector3 initalOffset;
 		private Vector3 targetPosition;
 		private Vector3 previousOffset;
+		private Capsule capsule;
 
 		private float PercentToMax01 => core == null ? 0.0f : core.SpeedPercent01;
 		private float MaxDistance => Mathf.Lerp(maxDistance, maxDistanceMax, PercentToMax01);
@@ -57,6 +58,7 @@ namespace Prototype
 		{
 			initalOffset = localPosition;
 			targetPosition = core.Body.TransformPoint(initalOffset);
+			capsule = new Capsule(core.Body);
 		}
 
 		public override void Tick()
@@ -104,7 +106,7 @@ namespace Prototype
 
 		private void IdleTick()
 		{
-			if (Util.OutsideCapsule(transform.position, targetPosition, core.Up, MaxHeight, MaxDistance))
+			if (PointIntersectsCapsule(transform.position, targetPosition))
 			{
 				SwitchState(IsBlocked() ? State.Blocked : State.Stepping);
 			}
@@ -133,7 +135,7 @@ namespace Prototype
 			transform.position = Vector3.Lerp(transform.position, core.Body.TransformPoint(previousOffset), 0.25f);
 			previousOffset = localPosition;
 
-			if (!IsBlocked() || Util.OutsideCapsule(transform.position, targetPosition, core.Up, maxHeightMax, maxDistanceMax))
+			if (!IsBlocked() || PointIntersectsCapsule(transform.position, targetPosition))
 			{
 				SwitchState(State.Stepping);
 			}
@@ -149,6 +151,13 @@ namespace Prototype
 				}
 			}
 			return false;
+		}
+
+		private bool PointIntersectsCapsule(Vector3 pPosition, Vector3 pTarget)
+		{
+			capsule.height = MaxHeight;
+			capsule.radius = MaxDistance;
+			return capsule.PointIntersects(transform.position, targetPosition);
 		}
 
 		private void OnDrawGizmos()
@@ -174,7 +183,7 @@ namespace Prototype
 			Gizmos.DrawLine(pos + (t.up * StepHeight.x), pos + (t.up * StepHeight.y));
 			Util.GizmoCapsule(initalOffset, maxDistance, maxHeight, t.localToWorldMatrix);
 			Util.GizmoCapsule(initalOffset, maxDistanceMax, maxHeightMax, t.localToWorldMatrix);
-			Gizmos.color = Util.OutsideCapsule(transform.position, pos, t.up, MaxHeight, MaxDistance) ? Color.red : Color.cyan;
+			Gizmos.color = PointIntersectsCapsule(transform.position, pos) ? Color.red : Color.cyan;
 			Util.GizmoCapsule(initalOffset, MaxDistance, MaxHeight, t.localToWorldMatrix);
 			Gizmos.color = Color.white;
 		}

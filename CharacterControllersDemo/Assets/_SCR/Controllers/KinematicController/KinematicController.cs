@@ -19,6 +19,8 @@ public class KinematicController : MonoBehaviour
 	protected Transform upTransform = null;
 	[SerializeField]
 	private int collisionIterations = 3;
+	[SerializeField]
+	private float stepUpHeight = 0.1f;
 
 	[Header("Capsule")]
 	[SerializeField]
@@ -38,6 +40,19 @@ public class KinematicController : MonoBehaviour
 	public Vector3 Up => upTransform == null ? transform.up : upTransform.up;
 	private bool IsValidGround(in Vector3 normal) => Vector3.Dot(Up, normal) > groundAllowDot;
 
+	public Vector3 position
+	{
+		get
+		{
+			return transform.position - (Up * stepUpHeight);
+		}
+
+		set
+		{
+			transform.position = value + (Up * stepUpHeight);
+		}
+	}
+
 	private void FixedUpdate()
 	{
 		UpdateGrounded();
@@ -52,14 +67,14 @@ public class KinematicController : MonoBehaviour
 			pMove = Util.Horizontalize(pMove, groundNormal, pMove.magnitude);
 			pMove.y += y;
 		}
-		CheckCollisions(transform.position, pMove, collisionIterations, out Vector3 resultPos, out _);
-		transform.position = resultPos;
+		CheckCollisions(position, pMove, collisionIterations, out Vector3 resultPos, out _);
+		position = resultPos;
 	}
 
 	private void UpdateGrounded()
 	{
 		// TODO do less casts for grounded
-		if (verticalVelocity <= Util.NEARZERO && CheckCollisions(transform.position, Up * -groundedDistance, 0, out Vector3 resultPos, out Vector3 collisionNormal) && IsValidGround(collisionNormal))
+		if (verticalVelocity <= Util.NEARZERO && CheckCollisions(position, Up * -groundedDistance, 0, out Vector3 resultPos, out Vector3 collisionNormal) && IsValidGround(collisionNormal))
 		{
 			verticalVelocity = 0.0f;
 			groundNormal = collisionNormal;
@@ -68,10 +83,10 @@ public class KinematicController : MonoBehaviour
 		else
 		{
 			verticalVelocity += -gravity * Time.fixedDeltaTime;
-			isGrounded = CheckCollisions(transform.position, Up * verticalVelocity, 1, out resultPos, out collisionNormal) && IsValidGround(collisionNormal);
+			isGrounded = CheckCollisions(position, Up * verticalVelocity, 1, out resultPos, out collisionNormal) && IsValidGround(collisionNormal);
 			groundNormal = isGrounded ? collisionNormal : Up;
 		}
-		transform.position = resultPos;
+		position = resultPos;
 	}
 
 	private bool CheckCollisions(Vector3 pCurrPos, Vector3 pMovement, int iterations, out Vector3 resultPos, out Vector3 collisionNormal) // Returns resulting position
@@ -111,6 +126,6 @@ public class KinematicController : MonoBehaviour
 		Vector3 pos = transform.position;
 		Vector3 up = Up * ((height * 0.5f) - radius);
 		Util.GizmoCapsule(pos + center + up, pos + center - up, radius);
-		Gizmos.DrawLine(transform.position, transform.position - (Up * groundedDistance));
+		Gizmos.DrawLine(pos, pos - (Up * groundedDistance));
 	}
 }

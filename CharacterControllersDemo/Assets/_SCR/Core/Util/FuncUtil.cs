@@ -44,26 +44,5 @@ namespace OliverLoescher
 			pDictionary.Remove(pKey);
 			return pValue;
 		}
-
-		public static bool OutsideCapsule(Vector3 pVector, Vector3 pCenter, Vector3 pUp, float pHeight, float pRadius)
-		{
-			pHeight -= pRadius * 2.0f;
-			if (pHeight <= 0.0f)
-			{
-				return Util.DistanceGreaterThan(pVector, pCenter, pRadius);
-			}
-			else if (pVector.y > pCenter.y + pHeight * 0.5f)
-			{
-				return Util.DistanceGreaterThan(pVector, pCenter + (pUp * pHeight * 0.5f), pRadius);
-			}
-			else if (pVector.y < pCenter.y - pHeight * 0.5f)
-			{
-				return Util.DistanceGreaterThan(pVector, pCenter + (-pUp * pHeight * 0.5f), pRadius);
-			}
-			else
-			{
-				return Util.DistanceOnPlaneEqualGreaterThan(pVector, pCenter, pRadius, pUp);
-			}
-		}
 	}
 }
