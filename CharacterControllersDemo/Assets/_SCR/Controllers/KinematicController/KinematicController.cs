@@ -71,7 +71,7 @@ public class KinematicController : MonoBehaviour
 	{
 		Vector3 resultPosition = pPosition;
 		Vector3 collisionNormal = groundNormal;
-		//bool canSnapUp = true;
+		bool canSnapUp = true;
 
 		while (true)
 		{
@@ -88,15 +88,15 @@ public class KinematicController : MonoBehaviour
 
 			// TODO Fix trying to snap up at times that don't make sense!!!!!!!!!
 			// Collision but maybe can snap up
-			//if (canSnapUp && CheckMoveSnap(pMovement, pLayerMask, 0.0f, pSnapUpHeight, ref resultPosition, ref collisionNormal))
-			//{
-			//	// Snap and continue original movement
-			//	pMovement -= movementToTarget;
-			//	pPosition = resultPosition;
-			//	canSnapUp = false;
-			//	continue;
-			//}
-			//canSnapUp = true;
+			if (canSnapUp && CheckMoveSnap(pMovement, pLayerMask, 0.0f, pSnapUpHeight, ref resultPosition, ref collisionNormal))
+			{
+				// Snap and continue original movement
+				pMovement -= movementToTarget;
+				pPosition = resultPosition;
+				canSnapUp = false;
+				continue;
+			}
+			canSnapUp = true;
 
 			// Out of bounces
 			if (pBounces <= 0)
@@ -142,8 +142,8 @@ public class KinematicController : MonoBehaviour
 
 	private bool CheckMoveSnap(Vector3 pMovement, LayerMask pLayerMask, float pSnapDownHeight, float pSnapUpHeight, ref Vector3 resultPosition, ref Vector3 collisionNormal)
 	{
-		pMovement = Util.Horizontalize(pMovement);
 		float magnitude = pMovement.magnitude;
+		pMovement = Util.Horizontalize(pMovement);
 		if (magnitude <= Util.NEARZERO)
 		{
 			return false;
@@ -159,6 +159,6 @@ public class KinematicController : MonoBehaviour
 	private void OnDrawGizmos()
 	{
 		capsule.DrawGizmos(transform.position);
-		Gizmos.DrawLine(transform.position, transform.position - (capsule.Up * stepDownHeight));
+		Gizmos.DrawLine(transform.position, transform.position - (capsule.Up * groundedDistance));
 	}
 }
