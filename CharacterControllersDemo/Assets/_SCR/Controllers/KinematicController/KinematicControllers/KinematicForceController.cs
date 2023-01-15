@@ -2,6 +2,7 @@ using OliverLoescher;
 using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 public class KinematicForceController : KinematicController
@@ -39,25 +40,25 @@ public class KinematicForceController : KinematicController
 	{
 		if (forwardTransform == null)
 		{
-			if (upTransform == null)
+			if (Capsule.upTransform == null)
 			{
 				return Vector3.forward;
 			}
-			return Vector3.ProjectOnPlane(Vector3.forward, Up).normalized;
+			return Vector3.ProjectOnPlane(Vector3.forward, Capsule.Up).normalized;
 		}
-		return Vector3.ProjectOnPlane(forwardTransform.forward, Up).normalized;
+		return Vector3.ProjectOnPlane(forwardTransform.forward, Capsule.Up).normalized;
 	}
 	public Vector3 Right()
 	{
 		if (forwardTransform == null)
 		{
-			if (upTransform == null)
+			if (Capsule.upTransform == null)
 			{
 				return Vector3.right;
 			}
-			return Vector3.ProjectOnPlane(Vector3.right, Up).normalized;
+			return Vector3.ProjectOnPlane(Vector3.right, Capsule.Up).normalized;
 		}
-		return Vector3.ProjectOnPlane(forwardTransform.right, Up).normalized;
+		return Vector3.ProjectOnPlane(forwardTransform.right, Capsule.Up).normalized;
 	}
 
 	public bool IsSprinting => input.Sprint.Input;
@@ -101,6 +102,7 @@ public class KinematicForceController : KinematicController
 		if (isGrounded)
 		{
 			verticalVelocity = jumpForce;
+			isGrounded = false;
 		}
 	}
 }

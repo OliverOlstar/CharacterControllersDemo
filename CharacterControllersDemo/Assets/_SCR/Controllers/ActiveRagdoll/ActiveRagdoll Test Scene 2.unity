@@ -7585,12 +7585,13 @@ MonoBehaviour:
   gravity: 0.55
   groundedDistance: 0.01
   groundAllowDot: 0.65
-  upTransform: {fileID: 619959586}
   collisionIterations: 3
-  stepUpHeight: 0
-  radius: 0.2
-  height: 1.6
-  center: {x: 0, y: 0.8, z: 0}
+  stepUpHeight: 0.3
+  capsule:
+    center: {x: 0, y: 0.8, z: 0}
+    radius: 0.2
+    height: 1.6
+    upTransform: {fileID: 0}
   layerMask:
     serializedVersion: 2
     m_Bits: 65
@@ -7602,7 +7603,7 @@ MonoBehaviour:
   drag: 8
   sprintForwardAcceleration: 120
   sprintSideAcceleration: 120
-  jumpForce: 0.125
+  jumpForce: 0.15
 --- !u!1 &625897415
 GameObject:
   m_ObjectHideFlags: 0
@@ -10866,12 +10867,13 @@ MonoBehaviour:
   gravity: 0.55
   groundedDistance: 0.01
   groundAllowDot: 0.65
-  upTransform: {fileID: 970760265}
   collisionIterations: 3
   stepUpHeight: 0.1
-  radius: 0.05
-  height: 1.6
-  center: {x: 0, y: 0.8, z: 0}
+  capsule:
+    center: {x: 0, y: 0, z: 0}
+    radius: 0
+    height: 0
+    upTransform: {fileID: 0}
   layerMask:
     serializedVersion: 2
     m_Bits: 65

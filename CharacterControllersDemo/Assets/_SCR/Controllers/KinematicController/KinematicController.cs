@@ -4,6 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
+using System.Text.RegularExpressions;
+using RootMotion.Dynamics;
 
 [InfoBox("1. IsGround could be done better\n2. Moving object will pass through instead of push\n3. Doesn't move with moving objects\n4. No good solution to make getting over little ledges")]
 public class KinematicController : MonoBehaviour
@@ -11,52 +13,31 @@ public class KinematicController : MonoBehaviour
 	[Header("Movement")]
 	[SerializeField, Min(0.0f)]
 	private float gravity = 9.81f;
-	[SerializeField]
-	private float groundedDistance = 0.05f;
 	[SerializeField, Range(-1.0f, 1.0f)]
 	private float groundAllowDot = 0.5f;
 	[SerializeField]
-	protected Transform upTransform = null;
-	[SerializeField]
 	private int collisionIterations = 3;
-	[SerializeField]
+	[SerializeField, Min(0)]
 	private float stepUpHeight = 0.1f;
+	[SerializeField, Min(0)]
+	private float stepDownHeight = 0.1f;
+	[SerializeField, Min(0)]
+	private float groundedDistance = 0.05f;
 
 	[Header("Capsule")]
 	[SerializeField]
-	private float radius = 1.0f;
-	[SerializeField]
-	private float height = 1.0f;
-	[SerializeField]
-	private Vector3 center = Vector3.zero;
+	private Capsule capsule = new Capsule();
 	[SerializeField]
 	private LayerMask layerMask = new LayerMask();
 
 	protected bool isGrounded = false;
 	protected float verticalVelocity = 0.0f;
 	protected Vector3 groundNormal = Vector3.up;
+	private Vector3 storedMovement = Vector3.zero;
 
 	public bool IsGrounded => isGrounded;
-	public Vector3 Up => upTransform == null ? transform.up : upTransform.up;
-	private bool IsValidGround(in Vector3 normal) => Vector3.Dot(Up, normal) > groundAllowDot;
-
-	public Vector3 position
-	{
-		get
-		{
-			return transform.position - (Up * stepUpHeight);
-		}
-
-		set
-		{
-			transform.position = value + (Up * stepUpHeight);
-		}
-	}
-
-	private void FixedUpdate()
-	{
-		UpdateGrounded();
-	}
+	public Capsule Capsule => capsule;
+	private bool IsValidGround(in Vector3 normal) => Vector3.Dot(capsule.Up, normal) > groundAllowDot;
 
 	public void Move(Vector3 pMove)
 	{
@@ -67,65 +48,117 @@ public class KinematicController : MonoBehaviour
 			pMove = Util.Horizontalize(pMove, groundNormal, pMove.magnitude);
 			pMove.y += y;
 		}
-		CheckCollisions(position, pMove, collisionIterations, out Vector3 resultPos, out _);
-		position = resultPos;
+		storedMovement += pMove; // Cache until next fixed update
 	}
 
-	private void UpdateGrounded()
+	private void FixedUpdate()
 	{
-		// TODO do less casts for grounded
-		if (verticalVelocity <= Util.NEARZERO && CheckCollisions(position, Up * -groundedDistance, 0, out Vector3 resultPos, out Vector3 collisionNormal) && IsValidGround(collisionNormal))
+		if (isGrounded)
 		{
-			verticalVelocity = 0.0f;
-			groundNormal = collisionNormal;
-			isGrounded = true;
+			verticalVelocity = Mathf.Max(verticalVelocity, 0.0f);
 		}
 		else
 		{
 			verticalVelocity += -gravity * Time.fixedDeltaTime;
-			isGrounded = CheckCollisions(position, Up * verticalVelocity, 1, out resultPos, out collisionNormal) && IsValidGround(collisionNormal);
-			groundNormal = isGrounded ? collisionNormal : Up;
+			storedMovement += new Vector3(0.0f, verticalVelocity, 0.0f);
 		}
-		position = resultPos;
+
+		transform.position = TryGetMoveResult(storedMovement, transform.position, collisionIterations, layerMask, stepDownHeight, stepUpHeight);
+		storedMovement = Vector3.zero;
 	}
 
-	private bool CheckCollisions(Vector3 pCurrPos, Vector3 pMovement, int iterations, out Vector3 resultPos, out Vector3 collisionNormal) // Returns resulting position
+	private Vector3 TryGetMoveResult(Vector3 pMovement, Vector3 pPosition, int pBounces, LayerMask pLayerMask, float pSnapDownHeight, float pSnapUpHeight)
 	{
-		resultPos = pCurrPos + pMovement;
-		collisionNormal = Up;
+		Vector3 resultPosition = pPosition;
+		Vector3 collisionNormal = groundNormal;
+		//bool canSnapUp = true;
 
-		// Raycast
-		RaycastHit? nearestHit = null;
-		Vector3 up = Up * ((height * 0.5f) - radius);
-		foreach (RaycastHit hit in Physics.CapsuleCastAll(pCurrPos + center + up, pCurrPos + center - up, radius, pMovement, pMovement.magnitude, layerMask))
+		while (true)
 		{
-			if (!nearestHit.HasValue || nearestHit.Value.distance > hit.distance)
+			if (!capsule.CheckCollisions(pMovement, pPosition, pLayerMask, out resultPosition, out collisionNormal))
 			{
-				nearestHit = hit;
+				// No Collision
+				if (isGrounded && !CheckSnap(pLayerMask, pSnapDownHeight, 0.01f, ref resultPosition, ref collisionNormal))
+				{
+					isGrounded = false; // Failed snap down
+				}
+				break; // Exit having not collided
 			}
-		}
+			Vector3 movementToTarget = resultPosition - pPosition;
 
-		// Result
-		if (nearestHit.HasValue)
-		{
-			Vector3 movementToTarget = pMovement.normalized * (nearestHit.Value.distance - Util.NEARZERO);
-			resultPos = pCurrPos + movementToTarget;
-			collisionNormal = /*IsValidGround(nearestHit.Value.normal) ?*/ nearestHit.Value.normal /*: Util.Horizontalize(nearestHit.Value.normal, Up, true)*/; // Slope you can't walk up or down, consider them as just flat walls
+			// TODO Fix trying to snap up at times that don't make sense!!!!!!!!!
+			// Collision but maybe can snap up
+			//if (canSnapUp && CheckMoveSnap(pMovement, pLayerMask, 0.0f, pSnapUpHeight, ref resultPosition, ref collisionNormal))
+			//{
+			//	// Snap and continue original movement
+			//	pMovement -= movementToTarget;
+			//	pPosition = resultPosition;
+			//	canSnapUp = false;
+			//	continue;
+			//}
+			//canSnapUp = true;
+
+			// Out of bounces
+			if (pBounces <= 0)
+			{
+				isGrounded = IsValidGround(collisionNormal); // Reached ground
+				break; // Exit having collided
+			}
+
+			// Collision but couldn't snap, then Bounce
 			pMovement = Vector3.ProjectOnPlane(pMovement - movementToTarget, collisionNormal);
-
-			if (iterations > 0)
-			{
-				return CheckCollisions(resultPos, pMovement, --iterations, out resultPos, out collisionNormal);
-			}
+			pPosition = resultPosition;
+			pBounces--;
 		}
-		return nearestHit.HasValue;
+
+		if (!isGrounded && CheckSnap(pLayerMask, groundedDistance, 0.01f, ref resultPosition, ref collisionNormal))
+		{
+			isGrounded = true; // Snap to ground
+		}
+		groundNormal = isGrounded ? collisionNormal : capsule.Up;
+		return resultPosition;
+	}
+
+	private bool CheckSnap(LayerMask pLayerMask, float pSnapDownHeight, float pSnapUpHeight, ref Vector3 resultPosition, ref Vector3 collisionNormal)
+	{
+		if (pSnapDownHeight < 0 && pSnapUpHeight < 0)
+		{
+			return false;
+		}
+
+		Vector3 snapMovement = new Vector3(0.0f, -(pSnapDownHeight + pSnapUpHeight), 0.0f);
+		Vector3 snapPosition = resultPosition + new Vector3(0.0f, pSnapUpHeight, 0.0f);
+
+		if (capsule.CheckCollisions(snapMovement, snapPosition, pLayerMask, out Vector3 snapResultPosition, out Vector3 snapCollisionNormal) &&
+			(snapResultPosition.y - resultPosition.y) <= pSnapUpHeight && // Block snapping above snap height
+			IsValidGround(snapCollisionNormal)) // Only snap to valid ground
+		{
+			resultPosition = snapResultPosition;
+			collisionNormal = snapCollisionNormal;
+			return true;
+		}
+		return false;
+	}
+
+	private bool CheckMoveSnap(Vector3 pMovement, LayerMask pLayerMask, float pSnapDownHeight, float pSnapUpHeight, ref Vector3 resultPosition, ref Vector3 collisionNormal)
+	{
+		pMovement = Util.Horizontalize(pMovement);
+		float magnitude = pMovement.magnitude;
+		if (magnitude <= Util.NEARZERO)
+		{
+			return false;
+		}
+
+		Vector3 offset = pMovement * (Mathf.Min(capsule.radius, magnitude) + Util.NEARZERO);
+		resultPosition += offset;
+		bool snapped = CheckSnap(pLayerMask, pSnapDownHeight, pSnapUpHeight, ref resultPosition, ref collisionNormal);
+		resultPosition -= offset;
+		return snapped;
 	}
 
 	private void OnDrawGizmos()
 	{
-		Vector3 pos = transform.position;
-		Vector3 up = Up * ((height * 0.5f) - radius);
-		Util.GizmoCapsule(pos + center + up, pos + center - up, radius);
-		Gizmos.DrawLine(pos, pos - (Up * groundedDistance));
+		capsule.DrawGizmos(transform.position);
+		Gizmos.DrawLine(transform.position, transform.position - (capsule.Up * stepDownHeight));
 	}
 }

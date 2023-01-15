@@ -11,7 +11,7 @@ public class KinematicForceControllerValues : CharacterValues
 
 	public override Vector3 Forward => controller.Forward();
 	public override Vector3 Right => controller.Right();
-	public override Vector3 Up => controller.Up;
+	public override Vector3 Up => controller.Capsule.Up;
 
 	public override Vector3 Velocity => controller.Velocity;
 

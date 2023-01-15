@@ -21,9 +21,6 @@ namespace OliverLoescher
 			radius = 0.5f;
 			height = 2.0f;
 			upTransform = pUpTransform;
-#if DEBUG
-			debugMovements = new List<Movement2>();
-#endif
 		}
 		public Capsule(Vector3 pCenter, float pRadius, float pHeight, Transform pUpTransform = null)
 		{
@@ -31,9 +28,6 @@ namespace OliverLoescher
 			radius = pRadius;
 			height = pHeight;
 			upTransform = pUpTransform;
-#if DEBUG
-			debugMovements = new List<Movement2>();
-#endif
 		}
 
 		public bool PointIntersects(Vector3 pPoint, Vector3 pPosition)
@@ -58,17 +52,15 @@ namespace OliverLoescher
 			}
 		}
 
-		public bool CheckCollisions(Vector3 pMovement, Vector3 pPosition, int pIterations, LayerMask pLayerMask, out Vector3 resultPosition, out Vector3 collisionNormal) // Returns resulting position
+		public bool CheckCollisions(Vector3 pMovement, Vector3 pPosition, LayerMask pLayerMask, out Vector3 resultPosition, out Vector3 collisionNormal)
 		{
-#if DEBUG
-			if (debugMovements == null)
-			{
-				debugMovements = new List<Movement2>();
-			}
-#endif
-
 			resultPosition = pPosition + pMovement;
 			collisionNormal = Up; // Default result
+
+			if (pMovement.sqrMagnitude == 0)
+			{
+				return false;
+			}
 
 			// Raycast
 			RaycastHit? nearestHit = null;
@@ -81,70 +73,45 @@ namespace OliverLoescher
 				}
 			}
 
-			// Result
+			// Collision
 			if (nearestHit.HasValue)
 			{
 				Vector3 movementToTarget = pMovement.normalized * (nearestHit.Value.distance - Util.NEARZERO);
 				resultPosition = pPosition + movementToTarget;
 				collisionNormal = /*IsValidGround(nearestHit.Value.normal) ?*/ nearestHit.Value.normal /*: Util.Horizontalize(nearestHit.Value.normal, Up, true)*/; // Slope you can't walk up or down, consider them as just flat walls
-				pMovement = Vector3.ProjectOnPlane(pMovement - movementToTarget, collisionNormal);
-
-				if (pIterations > 0)
-				{
-#if DEBUG
-					debugMovements.Add(new Movement2(pPosition, resultPosition, 0.1f));
-#endif
-					return CheckCollisions(resultPosition, pMovement, --pIterations, pLayerMask, out resultPosition, out collisionNormal);
-				}
+				return true;
 			}
-#if DEBUG
-			debugMovements.Add(new Movement2(pPosition, resultPosition, 0.1f));
-#endif
-			return nearestHit.HasValue;
+			return false;
 		}
 
-#if DEBUG
-		private struct Movement2
+		public bool CheckCollisions(Vector3 pMovement, Vector3 pPosition, int pBounces, LayerMask pLayerMask, out Vector3 resultPosition, out Vector3 collisionNormal)
 		{
-			public Vector3 fromPosition;
-			public Vector3 toPosition;
-			public float lifeEndTime;
-			public Color color;
+			bool didCollide = false;
 
-			public Movement2(Vector3 pFrom, Vector3 pTo, float pLifeTime)
+			do
 			{
-				fromPosition = pFrom;
-				toPosition = pTo;
-				lifeEndTime = Time.time + pLifeTime;
-				color = new Color(Mathf.Pow(Random.value, 2), Mathf.Pow(Random.value, 2), Mathf.Pow(Random.value, 2));
-			}
-		}
+				if (!CheckCollisions(pMovement, pPosition, pLayerMask, out resultPosition, out collisionNormal))
+				{
+					break; // No collision, stop bouncing
+				}
+				didCollide = true;
 
-		private List<Movement2> debugMovements;
-#endif
+				// Bounce
+				Vector3 movementToTarget = resultPosition - pPosition;
+				pMovement = Vector3.ProjectOnPlane(pMovement - movementToTarget, collisionNormal);
+				pPosition = resultPosition;
+				pBounces--;
+			}
+			while (pBounces >= 0);
+
+			return didCollide;
+		}
 
 		public void DrawGizmos(Vector3 pPosition)
 		{
 			pPosition += center;
 			Vector3 up = Up * ((height * 0.5f) - radius);
 			Util.GizmoCapsule(pPosition + up, pPosition - up, radius);
-
-#if DEBUG
-			for (int i = 0; debugMovements != null && i < debugMovements.Count; i++)
-			{
-				if (debugMovements[i].lifeEndTime <= Time.time)
-				{
-					debugMovements.RemoveAt(i);
-					i--;
-					continue;
-				}
-
-				Gizmos.color = debugMovements[i].color;
-				Gizmos.DrawLine(debugMovements[i].fromPosition, debugMovements[i].toPosition);
-				Util.GizmoCapsule(debugMovements[i].toPosition + up + center, debugMovements[i].toPosition - up + center, radius);
-				Gizmos.color = Color.white;
-#endif
-			}
 		}
 	}
 
@@ -184,10 +151,10 @@ namespace OliverLoescher
 			return capsule.PointIntersects(pPoint, pPosition);
 		}
 
-		public bool CheckCollisions(Vector3 pMovement, Vector3 pPosition, int pIterations, LayerMask pLayerMask, out Vector3 resultPosition, out Vector3 collisionNormal) // Returns resulting position
+		public bool CheckCollisions(Vector3 pMovement, Vector3 pPosition, int pBounces, LayerMask pLayerMask, out Vector3 resultPosition, out Vector3 collisionNormal) // Returns resulting position
 		{
 			UpdateCapsuleValues();
-			return capsule.CheckCollisions(pMovement, pPosition, pIterations, pLayerMask, out resultPosition, out collisionNormal);
+			return capsule.CheckCollisions(pMovement, pPosition, pBounces, pLayerMask, out resultPosition, out collisionNormal);
 		}
 
 		public void DrawGizmos(Vector3 pPosition)
