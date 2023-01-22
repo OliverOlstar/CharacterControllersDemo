@@ -8,8 +8,8 @@ using UnityEngine.ProBuilder;
 
 public class KinematicCharacterController : MonoBehaviour
 {
-	[SerializeField, DisableInPlayMode]
-	private MonoUtil.UpdateType updateType = default;
+	[SerializeField]
+	private MonoUtil.Updateable updateable = new MonoUtil.Updateable(MonoUtil.UpdateType.Fixed, MonoUtil.Priorities.CharacterController);
 
 	[Header("References")]
 	[SerializeField]
@@ -93,13 +93,13 @@ public class KinematicCharacterController : MonoBehaviour
 
 	private void Start()
 	{
-		MonoUtil.RegisterUpdate(this, Tick, updateType, MonoUtil.Priorities.CharacterControllers);
+		updateable.Register(Tick);
 		input.Jump.onPerformed.AddListener(DoJump);
 	}
 
 	private void OnDestroy()
 	{
-		MonoUtil.DeregisterUpdate(this, updateType);
+		updateable.Deregister();
 		input.Jump.onPerformed.RemoveListener(DoJump);
 	}
 

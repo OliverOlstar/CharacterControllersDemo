@@ -1,3 +1,4 @@
+using Core;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -36,12 +37,13 @@ namespace OliverLoescher.Weapon
 					rb.AddExplosionForce(explosionForce, pPoint, explosionRadius, explosiveUpwardsModifier);
 				}
 				IDamageable damageable = hit.GetComponent<IDamageable>();
-				List<IDamageable> hitDamagables = new List<IDamageable>();
+				List<IDamageable> hitDamagables = ListPool<IDamageable>.Request();
 				if (damageable != null && !hitDamagables.Contains(damageable.GetParentDamageable()))
 				{
 					hitDamagables.Add(damageable.GetParentDamageable());
 					damageable.Damage(explosionDamage, pProjectile.sender, pPoint, (hit.transform.position - pPoint).normalized);
 				}
+				ListPool<IDamageable>.Return(hitDamagables);
 			}
 		}
 

@@ -8,8 +8,8 @@ namespace OliverLoescher
     public class CameraFollowRigidbodyRadius : MonoBehaviour
     {
         [SerializeField] private Rigidbody target = null;
-		[SerializeField, DisableInPlayMode]
-		private MonoUtil.UpdateType updateType = default;
+		[SerializeField]
+		private MonoUtil.Updateable updateable = new MonoUtil.Updateable(MonoUtil.UpdateType.Late, MonoUtil.Priorities.Camera);
 
 		[Header("Look")]
         [SerializeField] private float lookVelocity = 1.0f;
@@ -23,12 +23,12 @@ namespace OliverLoescher
 
 		private void Start()
 		{
-			MonoUtil.RegisterUpdate(this, Tick, updateType, MonoUtil.Priorities.Cameras);
+			updateable.Register(Tick);
 		}
 
 		private void OnDestroy()
 		{
-			MonoUtil.DeregisterUpdate(this, updateType);
+			updateable.Deregister();
 		}
 
 		void Tick(float pDeltaTime)

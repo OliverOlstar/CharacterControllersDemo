@@ -1,3 +1,4 @@
+using Sirenix.OdinInspector;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -30,68 +31,95 @@ namespace OliverLoescher
 
 		public static class Priorities
 		{
-			public const int First = int.MaxValue;
-			public const int Cameras = -100;
+			public const int First = int.MinValue;
+			public const int Input = -2000;
+			public const int UI = -1000;
 			public const int Default = 0;
-			public const int ModelControllers = 100;
-			public const int CharacterControllers = 200;
-			public const int Last = int.MinValue;
+			public const int CharacterController = 400;
+			public const int ModelController = 500;
+			public const int Camera = 1000;
+			public const int Last = int.MaxValue;
 		}
 
-		private struct Updatable
+		public struct Updateable
 		{
-			public int key { get; }
-			public Action<float> action { get; }
-			public float priority { get; }
+			private Action<float> action;
+			[SerializeField, DisableInPlayMode]
+			private UpdateType type;
+			[SerializeField, DisableInPlayMode]
+			private float priority;
 
-			public Updatable(int pKey, Action<float> pAction, float pPriority)
+			public Action<float> Action => action;
+			public UpdateType Type => type;
+			public float Priority => priority;
+
+			public Updateable(UpdateType pType, float pPriority)
 			{
-				key = pKey;
-				action = pAction;
+				action = null;
+				type = pType;
 				priority = pPriority;
 			}
+
+			public void Register(Action<float> pAction)
+			{
+				if (pAction == null)
+				{
+					LogExeception("Register() was passed a null action");
+					return;
+				}
+				if (action != null)
+				{
+					if (action.Method == pAction.Method)
+					{
+						LogWarning("Register() was passed the same method which was already registered, returning.");
+						return;
+					}
+					Deregister(); // Remove old action before registering the new one
+				}
+				action = pAction;
+				RegisterUpdate(this);
+			}
+
+			public void Deregister()
+			{
+				DeregisterUpdate(this);
+				action = null;
+			}
+
+			public override string ToString()
+			{
+				return $"Updateable(Action: {action.Target} - {action.Method.Name}, Type {type}, Priority {priority})";
+			}
 		}
 
-		private List<Updatable> updatables = new List<Updatable>();
-		private List<Updatable> earlyUpdatables = new List<Updatable>();
-		private List<Updatable> lateUpdatables = new List<Updatable>();
-		private List<Updatable> fixedUpdatables = new List<Updatable>();
+		private static List<Updateable> updatables = new List<Updateable>();
+		private static List<Updateable> earlyUpdatables = new List<Updateable>();
+		private static List<Updateable> lateUpdatables = new List<Updateable>();
+		private static List<Updateable> fixedUpdatables = new List<Updateable>();
 
-		public static void RegisterUpdate(UnityEngine.Object pKey, Action<float> pUpdatable, UpdateType pType, int pPriority)
+		private static void RegisterUpdate(in Updateable pUpdatable)
 		{
-			if (Instance == null)
-			{
-				return;
-			}
-			ref List<Updatable> items = ref Instance.GetUpdatables(pType);
+			ref List<Updateable> items = ref GetUpdatables(pUpdatable.Type);
 			int index;
 			for (index = 0; index < items.Count; index++)
 			{
-				if (items[index].priority <= pPriority)
+				if (items[index].Priority <= pUpdatable.Priority)
 				{
 					break;
 				}
 			}
-			items.Insert(index, new Updatable(pKey.GetInstanceID(), pUpdatable, pPriority));
+			items.Insert(index, pUpdatable);
 		}
 
-		public static void DeregisterUpdate(UnityEngine.Object pKey, UpdateType pType)
+		private static void DeregisterUpdate(in Updateable pUpdatable)
 		{
-			if (Instance == null)
+			if (!GetUpdatables(pUpdatable.Type).Remove(pUpdatable))
 			{
-				return;
+				LogError($"DeregisterUpdate() Failed to remove {pUpdatable}.");
 			}
-			ref List<Updatable> items = ref Instance.GetUpdatables(pType);
-			int i = items.FindIndex(u => u.key == pKey.GetInstanceID());
-			if (i < 0)
-			{
-				Debug.LogError($"Updatable {pKey.name} could not be found and failed to be removed.");
-				return;
-			}
-			items.RemoveAt(i);
 		}
 
-		private ref List<Updatable> GetUpdatables(UpdateType pType)
+		private static ref List<Updateable> GetUpdatables(UpdateType pType)
 		{
 			switch (pType)
 			{
@@ -108,29 +136,29 @@ namespace OliverLoescher
 
 		private void Update()
 		{
-			foreach (Updatable updatable in Instance.earlyUpdatables)
+			foreach (Updateable updatable in earlyUpdatables)
 			{
-				updatable.action.Invoke(Time.deltaTime);
+				updatable.Action.Invoke(Time.deltaTime);
 			}
-			foreach (Updatable updatable in Instance.updatables)
+			foreach (Updateable updatable in updatables)
 			{
-				updatable.action.Invoke(Time.deltaTime);
+				updatable.Action.Invoke(Time.deltaTime);
 			}
 		}
 
 		private void LateUpdate()
 		{
-			foreach (Updatable updatable in Instance.lateUpdatables)
+			foreach (Updateable updatable in lateUpdatables)
 			{
-				updatable.action.Invoke(Time.deltaTime);
+				updatable.Action.Invoke(Time.deltaTime);
 			}
 		}
 
 		private void FixedUpdate()
 		{
-			foreach (Updatable updatable in Instance.fixedUpdatables)
+			foreach (Updateable updatable in fixedUpdatables)
 			{
-				updatable.action.Invoke(Time.fixedDeltaTime);
+				updatable.Action.Invoke(Time.fixedDeltaTime);
 			}
 		}
 		#endregion Updatables

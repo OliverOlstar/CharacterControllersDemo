@@ -7,8 +7,8 @@ namespace OliverLoescher
 {
 	public class FollowTarget : MonoBehaviour
 	{
-		[SerializeField, DisableInPlayMode]
-		private MonoUtil.UpdateType updateType = default;
+		[SerializeField]
+		private MonoUtil.Updateable updateable = new MonoUtil.Updateable(MonoUtil.UpdateType.Default, MonoUtil.Priorities.Camera);
 
 		[Header("Position")]
 		public Transform posTarget = null;
@@ -22,12 +22,12 @@ namespace OliverLoescher
 
 		private void Start()
 		{
-			MonoUtil.RegisterUpdate(this, Tick, updateType, MonoUtil.Priorities.Cameras);
+			updateable.Register(Tick);
 		}
 
 		private void OnDestroy()
 		{
-			MonoUtil.DeregisterUpdate(this, updateType);
+			updateable.Deregister();
 		}
 
 		private void Tick(float pDeltaTime) 

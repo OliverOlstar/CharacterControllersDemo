@@ -21,7 +21,7 @@ namespace OliverLoescher
 		public InputModule_Scroll Zoom => zoomInput;
 
 		public override InputActionMap Actions => InputSystem.Instance.Camera.Get();
-		public override IEnumerable<InputModule_Base> GetAllInputModules()
+		public override IEnumerable<IInputModule> GetAllInputModules()
 		{
 			yield return lookInput;
 			yield return lookDeltaInput;

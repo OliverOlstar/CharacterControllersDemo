@@ -9,8 +9,8 @@ namespace OliverLoescher
     {
         [SerializeField] 
 		private InputBridge_Camera input = null;
-		[SerializeField, DisableInPlayMode]
-		private MonoUtil.UpdateType updateType = default;
+		[SerializeField]
+		private MonoUtil.Updateable updateable = new MonoUtil.Updateable(MonoUtil.UpdateType.Late, MonoUtil.Priorities.Camera);
 
 		[Header("Follow")]
         public Transform followTransform = null;
@@ -67,12 +67,12 @@ namespace OliverLoescher
 				input.Zoom.onChanged.AddListener(OnZoom);
 			}
 
-			MonoUtil.RegisterUpdate(this, Tick, updateType, MonoUtil.Priorities.Cameras);
+			updateable.Register(Tick);
 		}
 
 		private void OnDestroy()
 		{
-			MonoUtil.DeregisterUpdate(this, updateType);
+			updateable.Deregister();
 		}
 
 		private void Tick(float pDeltaTime) 

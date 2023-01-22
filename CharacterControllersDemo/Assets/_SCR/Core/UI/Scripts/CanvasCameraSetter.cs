@@ -19,7 +19,7 @@ namespace OliverLoescher.UI
             }
 			canvas.renderMode = RenderMode.ScreenSpaceCamera;
 			canvas.worldCamera = Camera.main;
-			canvas.planeDistance = 1.01f;
+			canvas.planeDistance = planeDistance;
 			Destroy(this);
 		}
 	}

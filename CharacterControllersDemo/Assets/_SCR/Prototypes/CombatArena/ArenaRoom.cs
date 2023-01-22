@@ -1,3 +1,4 @@
+using Core;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,7 +11,7 @@ public class ArenaRoom : MonoBehaviour
 		if (edges.Count < 2)
 			return edges.ToArray();
 
-		List<ArenaRoomGenerator.Edge> list = new List<ArenaRoomGenerator.Edge>(edges);
+		List<ArenaRoomGenerator.Edge> list = ListPool<ArenaRoomGenerator.Edge>.Request(edges);
 		ArenaRoomGenerator.Edge[] rand = new ArenaRoomGenerator.Edge[edges.Count];
 
 		while (list.Count > 0)

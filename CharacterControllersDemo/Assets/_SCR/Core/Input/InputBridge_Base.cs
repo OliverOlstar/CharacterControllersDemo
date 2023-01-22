@@ -8,11 +8,13 @@ namespace OliverLoescher.Input
     public abstract class InputBridge_Base : MonoBehaviour
 	{
 		public abstract InputActionMap Actions { get; }
-		public abstract IEnumerable<InputModule_Base> GetAllInputModules();
+		public abstract IEnumerable<IInputModule> GetAllInputModules();
+		[SerializeField]
+		private MonoUtil.Updateable updateable = new MonoUtil.Updateable(MonoUtil.UpdateType.Early, MonoUtil.Priorities.Input);
 
 		protected virtual void Awake()
 		{
-			foreach (InputModule_Base module in GetAllInputModules())
+			foreach (IInputModule module in GetAllInputModules())
 			{
 				module.Enable();
 			}
@@ -21,7 +23,7 @@ namespace OliverLoescher.Input
 
 		protected virtual void OnDestroy()
 		{
-			foreach (InputModule_Base module in GetAllInputModules())
+			foreach (IInputModule module in GetAllInputModules())
 			{
 				module.Disable();
 			}
@@ -31,16 +33,26 @@ namespace OliverLoescher.Input
 		protected virtual void OnEnable()
 		{
 			Actions.Enable();
+			updateable.Register(Tick);
 		}
 
 		protected virtual void OnDisable()
 		{
 			Actions.Disable();
+			updateable.Deregister();
+		}
+
+		public virtual void Tick(float pDeltaTime)
+		{
+			foreach (IInputModule module in GetAllInputModules())
+			{
+				module.Update(pDeltaTime);
+			}
 		}
 
 		public virtual void ClearInputs()
 		{
-			foreach (InputModule_Base module in GetAllInputModules())
+			foreach (IInputModule module in GetAllInputModules())
 			{
 				module.Clear();
 			}

@@ -20,7 +20,7 @@ namespace OliverLoescher.FPS
 		public InputModule_Toggle Secondary => secondaryInput;
 
 		public override InputActionMap Actions => InputSystem.Instance.Weapon.Get();
-		public override IEnumerable<InputModule_Base> GetAllInputModules()
+		public override IEnumerable<IInputModule> GetAllInputModules()
 		{
 			yield return primaryInput;
 			yield return secondaryInput;

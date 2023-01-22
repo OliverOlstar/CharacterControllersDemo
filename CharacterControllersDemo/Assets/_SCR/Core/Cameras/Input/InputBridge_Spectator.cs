@@ -34,7 +34,7 @@ namespace OliverLoescher.Camera
 		public InputModule_Toggle Target => targetInput;
 
 		public override InputActionMap Actions => InputSystem.Instance.SpectatorCamera.Get();
-		public override IEnumerable<InputModule_Base> GetAllInputModules()
+		public override IEnumerable<IInputModule> GetAllInputModules()
 		{
 			yield return lookInput;
 			yield return lookDeltaInput;

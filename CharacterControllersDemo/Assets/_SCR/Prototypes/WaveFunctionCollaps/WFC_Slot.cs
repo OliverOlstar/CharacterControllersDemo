@@ -9,7 +9,7 @@ namespace OliverLoescher.WaveFunctionCollapse
 	{
 		private Vector3 m_Position = Vector3.zero;
 		private Transform container = null;
-		public List<WFC_Module> States = new List<WFC_Module>();
+		public List<WFC_Module> States;
 		public bool isSet = false;
 
 		public Dictionary<Vector3Int, int[]> edges = new Dictionary<Vector3Int, int[]>();

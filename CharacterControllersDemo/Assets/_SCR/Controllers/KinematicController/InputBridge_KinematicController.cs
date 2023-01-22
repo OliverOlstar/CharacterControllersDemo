@@ -31,7 +31,7 @@ public class InputBridge_KinematicController : InputBridge_Base
 	public InputModule_Toggle Primary => primaryInput;
 
 	public override InputActionMap Actions => OliverLoescher.InputSystem.Instance.FPS.Get();
-	public override IEnumerable<InputModule_Base> GetAllInputModules()
+	public override IEnumerable<IInputModule> GetAllInputModules()
 	{
 		yield return lookInput;
 		yield return lookDeltaInput;

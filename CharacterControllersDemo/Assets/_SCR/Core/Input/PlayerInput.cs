@@ -1044,6 +1044,208 @@ public class @PlayerInput : IInputActionCollection, IDisposable
             ]
         },
         {
+            ""name"": ""EagleEye"",
+            ""id"": ""60c13063-c6ce-4b82-8e8d-40064d4d5a58"",
+            ""actions"": [
+                {
+                    ""name"": ""Move"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""eadada03-2bb9-4f98-aaf4-b49949414607"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""MoveDelta"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""536ea923-e53a-46b3-b65b-51d2f268a901"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""MoveDeltaButton"",
+                    ""type"": ""Button"",
+                    ""id"": ""4fc64eb2-411e-4ed5-96a0-607a222a3b73"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Zoom"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""6e083b34-cbff-4146-bfd0-ec48f845a1f0"",
+                    ""expectedControlType"": ""Analog"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Rotate"",
+                    ""type"": ""Value"",
+                    ""id"": ""c61cf329-0707-4a7a-bb62-4279bdba83e2"",
+                    ""expectedControlType"": ""Analog"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""161ae353-cfeb-4eef-ac9a-57969a308ac0"",
+                    ""path"": ""<Gamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""WASD"",
+                    ""id"": ""724dfba0-2c47-4587-829f-80bf9519ff14"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""50b6ae49-a864-4629-9127-43207861852a"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""a581ad4f-f7c6-4361-90ba-d0cbdc6df094"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""06e51b02-f9f8-4b4f-80e2-48269936093e"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""2861b059-45cc-4a51-b9b7-18139010fac3"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""94811e57-d101-48e9-824c-c52c401a47fe"",
+                    ""path"": ""<Mouse>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""MoveDelta"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""29820657-fd4d-4570-8c77-51fdbfab8d2e"",
+                    ""path"": ""<Mouse>/scroll/y"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Zoom"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bf233849-3c50-4761-abc0-e5516f109247"",
+                    ""path"": ""<Gamepad>/dpad/y"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Zoom"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8b1e5e51-282e-43a9-a2c9-14db5d3335d4"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""MoveDeltaButton"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""QE"",
+                    ""id"": ""f1e1aff7-5f92-4a6d-8fcf-8a4217c514b2"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Rotate"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""97169752-759f-4ef7-9e3f-e5834dd20be5"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Rotate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""ef2ddf7b-cb73-4d17-91e1-8f193fad2fd1"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Rotate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""faae9dc5-6e3a-48f2-bbf9-0ec904bd2b01"",
+                    ""path"": ""<Gamepad>/rightStick/x"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Rotate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
             ""name"": ""Menu"",
             ""id"": ""16c7761e-a5f0-43a4-a262-6617516e8312"",
             ""actions"": [
@@ -1217,6 +1419,13 @@ public class @PlayerInput : IInputActionCollection, IDisposable
         m_Camera_Look = m_Camera.FindAction("Look", throwIfNotFound: true);
         m_Camera_LookDelta = m_Camera.FindAction("LookDelta", throwIfNotFound: true);
         m_Camera_Zoom = m_Camera.FindAction("Zoom", throwIfNotFound: true);
+        // EagleEye
+        m_EagleEye = asset.FindActionMap("EagleEye", throwIfNotFound: true);
+        m_EagleEye_Move = m_EagleEye.FindAction("Move", throwIfNotFound: true);
+        m_EagleEye_MoveDelta = m_EagleEye.FindAction("MoveDelta", throwIfNotFound: true);
+        m_EagleEye_MoveDeltaButton = m_EagleEye.FindAction("MoveDeltaButton", throwIfNotFound: true);
+        m_EagleEye_Zoom = m_EagleEye.FindAction("Zoom", throwIfNotFound: true);
+        m_EagleEye_Rotate = m_EagleEye.FindAction("Rotate", throwIfNotFound: true);
         // Menu
         m_Menu = asset.FindActionMap("Menu", throwIfNotFound: true);
         m_Menu_Pause = m_Menu.FindAction("Pause", throwIfNotFound: true);
@@ -1620,6 +1829,71 @@ public class @PlayerInput : IInputActionCollection, IDisposable
     }
     public CameraActions @Camera => new CameraActions(this);
 
+    // EagleEye
+    private readonly InputActionMap m_EagleEye;
+    private IEagleEyeActions m_EagleEyeActionsCallbackInterface;
+    private readonly InputAction m_EagleEye_Move;
+    private readonly InputAction m_EagleEye_MoveDelta;
+    private readonly InputAction m_EagleEye_MoveDeltaButton;
+    private readonly InputAction m_EagleEye_Zoom;
+    private readonly InputAction m_EagleEye_Rotate;
+    public struct EagleEyeActions
+    {
+        private @PlayerInput m_Wrapper;
+        public EagleEyeActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Move => m_Wrapper.m_EagleEye_Move;
+        public InputAction @MoveDelta => m_Wrapper.m_EagleEye_MoveDelta;
+        public InputAction @MoveDeltaButton => m_Wrapper.m_EagleEye_MoveDeltaButton;
+        public InputAction @Zoom => m_Wrapper.m_EagleEye_Zoom;
+        public InputAction @Rotate => m_Wrapper.m_EagleEye_Rotate;
+        public InputActionMap Get() { return m_Wrapper.m_EagleEye; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(EagleEyeActions set) { return set.Get(); }
+        public void SetCallbacks(IEagleEyeActions instance)
+        {
+            if (m_Wrapper.m_EagleEyeActionsCallbackInterface != null)
+            {
+                @Move.started -= m_Wrapper.m_EagleEyeActionsCallbackInterface.OnMove;
+                @Move.performed -= m_Wrapper.m_EagleEyeActionsCallbackInterface.OnMove;
+                @Move.canceled -= m_Wrapper.m_EagleEyeActionsCallbackInterface.OnMove;
+                @MoveDelta.started -= m_Wrapper.m_EagleEyeActionsCallbackInterface.OnMoveDelta;
+                @MoveDelta.performed -= m_Wrapper.m_EagleEyeActionsCallbackInterface.OnMoveDelta;
+                @MoveDelta.canceled -= m_Wrapper.m_EagleEyeActionsCallbackInterface.OnMoveDelta;
+                @MoveDeltaButton.started -= m_Wrapper.m_EagleEyeActionsCallbackInterface.OnMoveDeltaButton;
+                @MoveDeltaButton.performed -= m_Wrapper.m_EagleEyeActionsCallbackInterface.OnMoveDeltaButton;
+                @MoveDeltaButton.canceled -= m_Wrapper.m_EagleEyeActionsCallbackInterface.OnMoveDeltaButton;
+                @Zoom.started -= m_Wrapper.m_EagleEyeActionsCallbackInterface.OnZoom;
+                @Zoom.performed -= m_Wrapper.m_EagleEyeActionsCallbackInterface.OnZoom;
+                @Zoom.canceled -= m_Wrapper.m_EagleEyeActionsCallbackInterface.OnZoom;
+                @Rotate.started -= m_Wrapper.m_EagleEyeActionsCallbackInterface.OnRotate;
+                @Rotate.performed -= m_Wrapper.m_EagleEyeActionsCallbackInterface.OnRotate;
+                @Rotate.canceled -= m_Wrapper.m_EagleEyeActionsCallbackInterface.OnRotate;
+            }
+            m_Wrapper.m_EagleEyeActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @Move.started += instance.OnMove;
+                @Move.performed += instance.OnMove;
+                @Move.canceled += instance.OnMove;
+                @MoveDelta.started += instance.OnMoveDelta;
+                @MoveDelta.performed += instance.OnMoveDelta;
+                @MoveDelta.canceled += instance.OnMoveDelta;
+                @MoveDeltaButton.started += instance.OnMoveDeltaButton;
+                @MoveDeltaButton.performed += instance.OnMoveDeltaButton;
+                @MoveDeltaButton.canceled += instance.OnMoveDeltaButton;
+                @Zoom.started += instance.OnZoom;
+                @Zoom.performed += instance.OnZoom;
+                @Zoom.canceled += instance.OnZoom;
+                @Rotate.started += instance.OnRotate;
+                @Rotate.performed += instance.OnRotate;
+                @Rotate.canceled += instance.OnRotate;
+            }
+        }
+    }
+    public EagleEyeActions @EagleEye => new EagleEyeActions(this);
+
     // Menu
     private readonly InputActionMap m_Menu;
     private IMenuActions m_MenuActionsCallbackInterface;
@@ -1753,6 +2027,14 @@ public class @PlayerInput : IInputActionCollection, IDisposable
         void OnLook(InputAction.CallbackContext context);
         void OnLookDelta(InputAction.CallbackContext context);
         void OnZoom(InputAction.CallbackContext context);
+    }
+    public interface IEagleEyeActions
+    {
+        void OnMove(InputAction.CallbackContext context);
+        void OnMoveDelta(InputAction.CallbackContext context);
+        void OnMoveDeltaButton(InputAction.CallbackContext context);
+        void OnZoom(InputAction.CallbackContext context);
+        void OnRotate(InputAction.CallbackContext context);
     }
     public interface IMenuActions
     {

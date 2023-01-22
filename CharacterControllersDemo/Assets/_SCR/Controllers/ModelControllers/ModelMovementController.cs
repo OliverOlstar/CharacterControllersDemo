@@ -14,8 +14,8 @@ public class ModelMovementController : MonoBehaviour
 
 	[SerializeField]
 	private CharacterValues values = null;
-	[SerializeField, DisableInPlayMode]
-	private MonoUtil.UpdateType updateType = default;
+	[SerializeField]
+	private MonoUtil.Updateable updateable = new MonoUtil.Updateable(MonoUtil.UpdateType.Default, MonoUtil.Priorities.ModelController);
 
 	[Header("Tilt")]
 	[SerializeField]
@@ -31,12 +31,12 @@ public class ModelMovementController : MonoBehaviour
 
 	private void Start()
 	{
-		MonoUtil.RegisterUpdate(this, Tick, updateType, MonoUtil.Priorities.ModelControllers);
+		updateable.Register(Tick);
 	}
 
 	private void OnDestroy()
 	{
-		MonoUtil.DeregisterUpdate(this, updateType);
+		updateable.Deregister();
 	}
 
 	private void Tick(float pDeltaTime)

@@ -32,7 +32,7 @@ namespace OliverLoescher.FPS
 		public InputModule_Toggle Primary => primaryInput;
 
 		public override InputActionMap Actions => InputSystem.Instance.FPS.Get();
-		public override IEnumerable<InputModule_Base> GetAllInputModules()
+		public override IEnumerable<IInputModule> GetAllInputModules()
 		{
 			yield return lookInput;
 			yield return lookDeltaInput;

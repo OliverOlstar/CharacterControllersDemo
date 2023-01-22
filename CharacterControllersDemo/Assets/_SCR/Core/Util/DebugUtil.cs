@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,6 +9,25 @@ namespace OliverLoescher
 	public static partial class Util
 	{
 		#region Logs
+		public static void DevException<T>(T exception) where T : Exception
+		{
+#if RELEASE
+			Debug.LogException(exception.Message);
+#else
+			throw exception;
+#endif
+		}
+
+
+		public static void DevException(string formattedString)
+		{
+#if RELEASE
+			Debug.LogException(formattedString);
+#else
+			throw new System.InvalidOperationException(formattedString);
+#endif
+		}
+
 		public static void Log<TKey, TValue>(string pMessage, Dictionary<TKey, TValue> pDictionary)
 		{
 			string message = string.Empty;
@@ -27,7 +47,7 @@ namespace OliverLoescher
 			}
 			Debug.Log($"{pMessage} [{message.Remove(message.Length - 2, 2)}]");
 		}
-		#endregion Logs
+#endregion Logs
 
 		public static string GetPath(Transform transform)
 		{
@@ -38,7 +58,7 @@ namespace OliverLoescher
 			return $"{transform.name}/{GetPath(transform.parent)}";
 		}
 
-		#region Gizmos
+#region Gizmos
 		public static void GizmoCapsule(Vector3 pVectorA, Vector3 pVectorB, float pRadius)
 		{
 			Gizmos.DrawWireSphere(pVectorA, pRadius);
@@ -72,6 +92,6 @@ namespace OliverLoescher
 			GizmoCapsule(pCenter, pRadius, pHeight);
 			Gizmos.matrix = Matrix4x4.identity;
 		}
-		#endregion Gizmos
+#endregion Gizmos
 	}
 }

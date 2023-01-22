@@ -11,7 +11,7 @@ namespace OliverLoescher.Input
 		[BoxGroup]
 		public UnityEventsUtil.Vector2Event onUpdate;
 
-		public override void Update()
+		public override void Update(in float pDeltaTime)
 		{
 			onUpdate?.Invoke(Input);
 		}

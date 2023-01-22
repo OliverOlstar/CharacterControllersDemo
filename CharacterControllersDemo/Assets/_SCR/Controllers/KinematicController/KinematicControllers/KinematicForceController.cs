@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using UnityEngine;
+using static OliverLoescher.MonoUtil;
 
 public class KinematicForceController : KinematicController
 {
@@ -12,8 +13,8 @@ public class KinematicForceController : KinematicController
 	private InputBridge_KinematicController input = null;
 	[SerializeField]
 	private Transform forwardTransform = null;
-	[SerializeField, DisableInPlayMode]
-	private MonoUtil.UpdateType updateType = default;
+	[SerializeField]
+	private MonoUtil.Updateable updateable = new MonoUtil.Updateable(MonoUtil.UpdateType.Fixed, MonoUtil.Priorities.CharacterController);
 
 	[Header("Move")]
 	[SerializeField, Min(0.0f)]
@@ -67,13 +68,13 @@ public class KinematicForceController : KinematicController
 
 	private void Start()
 	{
-		MonoUtil.RegisterUpdate(this, Tick, updateType, MonoUtil.Priorities.CharacterControllers);
+		updateable.Register(Tick);
 		input.Jump.onPerformed.AddListener(DoJump);
 	}
 
 	private void OnDestroy()
 	{
-		MonoUtil.DeregisterUpdate(this, updateType);
+		updateable.Deregister();
 		input.Jump.onPerformed.RemoveListener(DoJump);
 	}
 

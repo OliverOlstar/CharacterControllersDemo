@@ -1,0 +1,16 @@
+{
+    "name": "OliverLoescher.Georama",
+    "rootNamespace": "OliverLoescher.Georama",
+    "references": [
+        "GUID:5b10c1f9ecd537f4dbe3d211152286e8"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

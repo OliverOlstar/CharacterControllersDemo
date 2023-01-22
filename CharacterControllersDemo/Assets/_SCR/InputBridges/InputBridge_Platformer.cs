@@ -21,7 +21,7 @@ namespace OliverLoescher.Link
 		public InputModule_Trigger Roll => rollInput;
 
 		public override InputActionMap Actions => InputSystem.Instance.Link.Get();
-		public override IEnumerable<InputModule_Base> GetAllInputModules()
+		public override IEnumerable<IInputModule> GetAllInputModules()
 		{
 			yield return moveInput;
 			yield return crouchInput;
