@@ -99,6 +99,8 @@ namespace OliverLoescher
 
 		private static void RegisterUpdate(in Updateable pUpdatable)
 		{
+			TryCreate();
+
 			ref List<Updateable> items = ref GetUpdatables(pUpdatable.Type);
 			int index;
 			for (index = 0; index < items.Count; index++)

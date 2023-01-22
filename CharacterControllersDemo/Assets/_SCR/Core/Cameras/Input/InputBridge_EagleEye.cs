@@ -44,7 +44,7 @@ namespace OliverLoescher
 
 		protected override void OnEnable()
 		{
-			Cursor.lockState = CursorLockMode.Locked;
+			Cursor.lockState = CursorLockMode.Confined;
 
 			base.OnEnable();
 		}

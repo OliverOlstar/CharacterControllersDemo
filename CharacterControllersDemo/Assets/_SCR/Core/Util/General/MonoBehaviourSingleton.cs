@@ -11,22 +11,28 @@ namespace OliverLoescher
         {
             get
             {
-                // Create
-                if (!Util.IsApplicationQuitting && _Instance == null)
-                {
-                    _Instance = new GameObject().AddComponent<T>();
-                    _Instance.gameObject.name = _Instance.GetType().Name;
-                    DontDestroyOnLoad(_Instance.gameObject);
-                    _InstanceInterface = (_Instance is ISingleton i) ? i : null;
-                }
-                // Access
-                if (_InstanceInterface != null)
+				// Create
+				TryCreate();
+
+				// Access
+				if (_InstanceInterface != null)
                 {
                     _InstanceInterface.OnAccessed();
                 }
                 return _Instance;
             }
         }
+
+		protected static void TryCreate()
+		{
+			if (!Util.IsApplicationQuitting && _Instance == null)
+			{
+				_Instance = new GameObject().AddComponent<T>();
+				_Instance.gameObject.name = _Instance.GetType().Name;
+				DontDestroyOnLoad(_Instance.gameObject);
+				_InstanceInterface = (_Instance is ISingleton i) ? i : null;
+			}
+		}
 
         protected static void Log(string pMessage) => Debug.Log($"[{typeof(T).Name}] {pMessage}");
         protected static void LogWarning(string pMessage) => Debug.LogWarning($"[{typeof(T).Name}] {pMessage}");

@@ -10,7 +10,7 @@ namespace OliverLoescher.Input
     public class InputModule_Scroll : InputModule_Base
 	{
 		[Space, SerializeField, BoxGroup]
-		private float input = 0.5f;
+		private float input = 0.0f;
 		public float Input => input;
 
 		// Events

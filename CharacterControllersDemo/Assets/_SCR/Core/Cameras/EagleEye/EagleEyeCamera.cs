@@ -17,16 +17,20 @@ namespace OliverLoescher.Camera
 		[SerializeField]
 		private Vector3 childOffset = new Vector3(0.0f, 2.0f, -5.0f);
 
+		[Header("Move")]
+		[SerializeField]
+		private float moveSpeed = 1.0f;
+		[SerializeField]
+		private float moveDeltaSpeed = 1.0f;
+		private Vector3 targetPosition;
+
 		[Header("Look")]
 		[SerializeField]
 		private Transform lookTransform = null;
-		[SerializeField, MinMaxSlider(-90, 90, true)]
-		private Vector2 lookYClamp = new Vector2(-40, 50);
 		[SerializeField]
 		private float sensitivityDelta = 1.0f;
 		[SerializeField]
 		private float sensitivityUpdate = 1.0f;
-		private Vector2 lookInput = new Vector2();
 		private float RotateInput => input.Rotate.Input;
 		[SerializeField]
 		private float rotateSpeed = 1.0f;
@@ -55,13 +59,14 @@ namespace OliverLoescher.Camera
 
 		private void Start()
 		{
+			targetPosition = lookTransform.position;
 			currZoom = childOffset.magnitude;
 			cameraTransform.localPosition = childOffset;
+			cameraTransform.LookAt(transform.position);
 
 			if (input != null)
 			{
-				input.Move.onChanged.AddListener(OnLook);
-				input.MoveDelta.Value.onChanged.AddListener(OnLookDelta);
+				input.MoveDelta.Value.onChanged.AddListener(OnMoveDelta);
 				input.Zoom.onChanged.AddListener(OnZoom);
 			}
 
@@ -75,9 +80,30 @@ namespace OliverLoescher.Camera
 
 		private void Tick(float pDeltaTime)
 		{
+			Move(input.Move.Input * moveSpeed * pDeltaTime);
+			DoMoveUpdate(pDeltaTime);
+			DoZoomUpdate(pDeltaTime);
 			RotateCamera(RotateInput * rotateSpeed * pDeltaTime);
-			DoZoomUpdate();
 			DoCollision();
+		}
+
+		private void DoMoveUpdate(in float pDeltaTime)
+		{
+			lookTransform.position = Vector3.Lerp(lookTransform.position, targetPosition, pDeltaTime * 9.0f);
+		}
+
+		private void Move(Vector2 pInput)
+		{
+			if (pInput.sqrMagnitude > Util.NEARZERO)
+			{
+				targetPosition += pInput.x * Util.Horizontalize(cameraTransform.right);
+				targetPosition += pInput.y * Util.Horizontalize(cameraTransform.forward);
+			}
+		}
+
+		private void DoZoomUpdate(in float pDeltaTime)
+		{
+			cameraTransform.localPosition = Vector3.Lerp(cameraTransform.localPosition, childOffset.normalized * currZoom, pDeltaTime * 15.0f);
 		}
 
 		private void RotateCamera(float pInput)
@@ -87,43 +113,31 @@ namespace OliverLoescher.Camera
 				return;
 			}
 			Vector3 euler = lookTransform.eulerAngles;
-			euler.y += pInput;
+			euler.y -= pInput;
 			lookTransform.rotation = Quaternion.Euler(euler);
-		}
-
-		private void DoZoom(float pInput)
-		{
-			currZoom += (pInput * zoomSpeed);
-			currZoom = Mathf.Clamp(currZoom, zoomDistanceClamp.x, zoomDistanceClamp.y);
-		}
-
-		private void DoZoomUpdate()
-		{
-			cameraTransform.localPosition = Vector3.Lerp(cameraTransform.localPosition, childOffset.normalized * currZoom, Time.deltaTime * 15.0f);
 		}
 
 		private void DoCollision()
 		{
-			if (Physics.Raycast(transform.position, transform.TransformDirection(childOffset.normalized), out RaycastHit hit, cameraTransform.localPosition.magnitude + collisionRadius, collisionLayers))
+			Vector3 direction = lookTransform.TransformDirection(childOffset.normalized);
+			if (Physics.Linecast(lookTransform.position + (direction * zoomDistanceClamp.y), cameraTransform.position - (direction * collisionRadius), out RaycastHit hit, collisionLayers))
 			{
-				cameraTransform.localPosition = childOffset.normalized * (hit.distance - collisionRadius);
+				float magnitude = (zoomDistanceClamp.y - hit.distance) + collisionRadius;
+				cameraTransform.localPosition = childOffset.normalized * magnitude;
+				currZoom = magnitude;
 			}
 		}
 
 		#region Input
-		public void OnLook(Vector2 pInput)
+		public void OnMoveDelta(Vector2 pInput)
 		{
-			lookInput = pInput;
-		}
-
-		public void OnLookDelta(Vector2 pInput)
-		{
-			//RotateCamera(pInput * sensitivityDelta);
+			Move(pInput * moveDeltaSpeed * (1 + currZoom - zoomDistanceClamp.x));
 		}
 
 		public void OnZoom(float pInput)
 		{
-			DoZoom(pInput);
+			currZoom += (pInput * zoomSpeed);
+			currZoom = Mathf.Clamp(currZoom, zoomDistanceClamp.x, zoomDistanceClamp.y);
 		}
 		#endregion
 
@@ -132,6 +146,7 @@ namespace OliverLoescher.Camera
 			if (!Application.isPlaying && cameraTransform != null)
 			{
 				cameraTransform.localPosition = childOffset;
+				cameraTransform.LookAt(transform.position);
 			}
 		}
 
@@ -142,7 +157,7 @@ namespace OliverLoescher.Camera
 				return;
 			}
 			Gizmos.color = Color.green;
-			Gizmos.DrawLine(transform.position, transform.position + transform.TransformDirection(childOffset) * (cameraTransform.localPosition.magnitude + collisionRadius));
+			Gizmos.DrawLine(lookTransform.position, lookTransform.position + lookTransform.TransformDirection(childOffset) * (cameraTransform.localPosition.magnitude + collisionRadius));
 		}
 	}
 }

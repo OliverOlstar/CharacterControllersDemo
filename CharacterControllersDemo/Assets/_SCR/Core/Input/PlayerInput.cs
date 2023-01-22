@@ -1081,7 +1081,7 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": ""Rotate"",
-                    ""type"": ""Value"",
+                    ""type"": ""PassThrough"",
                     ""id"": ""c61cf329-0707-4a7a-bb62-4279bdba83e2"",
                     ""expectedControlType"": ""Analog"",
                     ""processors"": """",

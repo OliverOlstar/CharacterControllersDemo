@@ -84,7 +84,7 @@ namespace OliverLoescher
                 RotateCamera(lookInput * sensitivityUpdate * pDeltaTime);
             }
 
-            DoZoomUpdate();
+            DoZoomUpdate(pDeltaTime);
             DoCollision();
         }
 
@@ -115,9 +115,9 @@ namespace OliverLoescher
             currZoom = Mathf.Clamp(currZoom, zoomDistanceClamp.x, zoomDistanceClamp.y);
         }
 
-        private void DoZoomUpdate()
+        private void DoZoomUpdate(in float pDeltaTime)
         {
-            cameraTransform.localPosition = Vector3.Lerp(cameraTransform.localPosition, childOffset.normalized * currZoom, Time.deltaTime * 15.0f);
+            cameraTransform.localPosition = Vector3.Lerp(cameraTransform.localPosition, childOffset.normalized * currZoom, pDeltaTime * 15.0f);
         }
 
         private void DoCollision()
