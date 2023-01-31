@@ -9,22 +9,30 @@ namespace OliverLoescher
 	public static partial class Util
 	{
 		#region Logs
-		public static void DevException<T>(T exception) where T : Exception
+		public static void DevException<T>(T pException) where T : Exception
 		{
 #if RELEASE
 			Debug.LogException(exception.Message);
 #else
-			throw exception;
+			throw pException;
 #endif
 		}
 
-
-		public static void DevException(string formattedString)
+		public static void DevException(string pFormattedString)
 		{
 #if RELEASE
-			Debug.LogException(formattedString);
+			Debug.LogException(new System.InvalidOperationException(pFormattedString));
 #else
-			throw new System.InvalidOperationException(formattedString);
+			throw new System.InvalidOperationException(pFormattedString);
+#endif
+		}
+
+		public static void DevException(string pFormattedString, UnityEngine.Object pObject)
+		{
+#if RELEASE
+			Debug.LogException(new System.InvalidOperationException(pFormattedString), pObject);
+#else
+			throw new System.InvalidOperationException(pFormattedString);
 #endif
 		}
 

@@ -6,9 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/_SCR/Multiplayer/Menu/Multiplayer Menu.unity
-    guid: baa9bcc9e59d342478003fd962393ad3
+    path: Assets/_SCR/GeoRPG/Scenes/Geo_GameStart.unity
+    guid: e32cd67cab46e2a4287d016b5108ed13
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
-    guid: d1c3109bdb54ad54c8a2b2838528e640
+    path: Assets/_SCR/GeoRPG/Scenes/Empty.unity
+    guid: 5b2a0c29fd0762745beabf873d6dbaf0
   m_configObjects: {}

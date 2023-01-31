@@ -47,12 +47,6 @@ namespace Core
 			{
 				DebugOption.Reset();
 			}
-			GUILayout.Space(2.0f);
-			if (GUILayout.Button("Clear All Editor Prefs"))
-			{
-				EditorPrefs.DeleteAll();
-				DebugOption.Reset();
-			}
 			GUILayout.EndScrollView();
 		}
 

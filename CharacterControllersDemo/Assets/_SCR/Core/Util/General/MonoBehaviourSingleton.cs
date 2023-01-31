@@ -34,9 +34,10 @@ namespace OliverLoescher
 			}
 		}
 
-        protected static void Log(string pMessage) => Debug.Log($"[{typeof(T).Name}] {pMessage}");
-        protected static void LogWarning(string pMessage) => Debug.LogWarning($"[{typeof(T).Name}] {pMessage}");
-        protected static void LogError(string pMessage) => Debug.LogError($"[{typeof(T).Name}] {pMessage}");
-        protected static void LogExeception(string pMessage) => Util.DevException(new System.Exception($"[{typeof(T).Name}] {pMessage}"));
+		private static GameObject LogContext => _Instance != null ? _Instance.gameObject : null;
+        protected static void Log(string pMessage) => Debug.Log($"[{typeof(T).Name}] {pMessage}", LogContext);
+        protected static void LogWarning(string pMessage) => Debug.LogWarning($"[{typeof(T).Name}] {pMessage}", LogContext);
+        protected static void LogError(string pMessage) => Debug.LogError($"[{typeof(T).Name}] {pMessage}", LogContext);
+        protected static void LogExeception(string pMessage) => Util.DevException($"[{typeof(T).Name}] {pMessage}", LogContext);
     }
 }

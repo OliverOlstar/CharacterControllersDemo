@@ -5,13 +5,6 @@ namespace Core
 {
 	public class DebugOptionList : System.Attribute {}
 
-	[DebugOptionList]
-	public class DebugOptions
-	{
-		// Put core debug options here, starting at the opposite end of the bit mask
-		public static readonly DebugOption ABMLogs = new DebugOption.Toggle(DebugOption.Group.Log, "ABM Debug Logs", DebugOption.DefaultSetting.On);
-	}
-
 	public partial class DebugOption : IComparable<DebugOption>
 	{
 		public enum DefaultSetting

@@ -98,7 +98,7 @@ namespace Core
 			}
 			else
 			{
-				Debug.LogError("DebugOptionsManager.RegisterOption() " + option.Name + " is already registered");
+				Debug.LogError($"DebugOptionsManager.RegisterOption() {option.Name} is already registered");
 			}
 		}
 

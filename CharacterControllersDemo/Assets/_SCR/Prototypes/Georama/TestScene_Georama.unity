@@ -1513,12 +1513,12 @@ GameObject:
   - component: {fileID: 1046404549}
   - component: {fileID: 1046404548}
   - component: {fileID: 1046404547}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!64 &1046404547
 MeshCollider:
@@ -1592,7 +1592,7 @@ Transform:
   m_GameObject: {fileID: 1046404546}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 10, y: 5, z: 10}
+  m_LocalScale: {x: 7, y: 5, z: 7}
   m_Children: []
   m_Father: {fileID: 920533959}
   m_RootOrder: 0
@@ -2413,8 +2413,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1623944458}
-  m_LocalRotation: {x: 0.50559044, y: 0, z: 0, w: 0.86277366}
-  m_LocalPosition: {x: 7.41, y: 5.586215, z: -16.70957}
+  m_LocalRotation: {x: 0.5525285, y: 0, z: 0, w: 0.833494}
+  m_LocalPosition: {x: 7.41, y: 10.420586, z: -17.985836}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -3075,9 +3075,6 @@ MonoBehaviour:
     onChanged:
       m_PersistentCalls:
         m_Calls: []
-    onUpdate:
-      m_PersistentCalls:
-        m_Calls: []
   moveDeltaInput:
     toggle:
       isToggle: 0
@@ -3152,7 +3149,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   input: {fileID: 4686210681575072853}
   cameraTransform: {fileID: 7941154303712305661}
-  childOffset: {x: 0, y: 4, z: -5}
+  childOffset: {x: 0, y: 8, z: -8}
   moveSpeed: 20
   moveDeltaSpeed: -0.001
   lookTransform: {fileID: 4686210681575072851}
@@ -3163,8 +3160,9 @@ MonoBehaviour:
   zoomDistanceClamp: {x: 1, y: 25}
   collisionLayers:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 65
   collisionRadius: 0.5
+  collisionZoomSpacing: 5
 --- !u!4 &7941154303712305661
 Transform:
   m_ObjectHideFlags: 0
@@ -3172,8 +3170,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1830369016084231237}
-  m_LocalRotation: {x: 0.33100694, y: 0, z: -0, w: 0.9436283}
-  m_LocalPosition: {x: 0, y: 4, z: -5}
+  m_LocalRotation: {x: 0.3826835, y: 0, z: -0, w: 0.9238795}
+  m_LocalPosition: {x: 0, y: 8, z: -8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 56479530069853739}

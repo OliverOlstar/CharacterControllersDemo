@@ -27,10 +27,6 @@ namespace OliverLoescher.Camera
 		[Header("Look")]
 		[SerializeField]
 		private Transform lookTransform = null;
-		[SerializeField]
-		private float sensitivityDelta = 1.0f;
-		[SerializeField]
-		private float sensitivityUpdate = 1.0f;
 		private float RotateInput => input.Rotate.Input;
 		[SerializeField]
 		private float rotateSpeed = 1.0f;
@@ -47,6 +43,9 @@ namespace OliverLoescher.Camera
 		private LayerMask collisionLayers = new LayerMask();
 		[SerializeField]
 		private float collisionRadius = 0.2f;
+		[SerializeField]
+		private float collisionZoomSpacing = 1.0f;
+
 
 		private void Reset()
 		{
@@ -89,7 +88,7 @@ namespace OliverLoescher.Camera
 
 		private void DoMoveUpdate(in float pDeltaTime)
 		{
-			lookTransform.position = Vector3.Lerp(lookTransform.position, targetPosition, pDeltaTime * 9.0f);
+			lookTransform.position = Vector3.Lerp(lookTransform.position, targetPosition, pDeltaTime * 10.0f);
 		}
 
 		private void Move(Vector2 pInput)
@@ -103,7 +102,7 @@ namespace OliverLoescher.Camera
 
 		private void DoZoomUpdate(in float pDeltaTime)
 		{
-			cameraTransform.localPosition = Vector3.Lerp(cameraTransform.localPosition, childOffset.normalized * currZoom, pDeltaTime * 15.0f);
+			cameraTransform.localPosition = Vector3.Lerp(cameraTransform.localPosition, childOffset.normalized * currZoom, pDeltaTime * 13.0f);
 		}
 
 		private void RotateCamera(float pInput)
@@ -124,7 +123,7 @@ namespace OliverLoescher.Camera
 			{
 				float magnitude = (zoomDistanceClamp.y - hit.distance) + collisionRadius;
 				cameraTransform.localPosition = childOffset.normalized * magnitude;
-				currZoom = magnitude;
+				currZoom = magnitude + collisionZoomSpacing;
 			}
 		}
 
