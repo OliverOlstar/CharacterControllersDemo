@@ -55,7 +55,34 @@ namespace OliverLoescher
 			}
 			Debug.Log($"{pMessage} [{message.Remove(message.Length - 2, 2)}]");
 		}
-#endregion Logs
+
+		public static void Log<TValue>(string pMessage, TValue[,] pValues)
+		{
+			string message = string.Empty;
+			int xLength = pValues.GetLength(0);
+			int yLength = pValues.GetLength(1);
+			for (int x = 0; x < xLength; x++)
+			{
+				message += "{ ";
+				for (int y = 0; y < yLength; y++)
+				{
+					if (y == yLength - 1)
+					{
+						message += $"{pValues[x, y]}" + "}";
+					}
+					else
+					{
+						message += $"{pValues[x, y]}, ";
+					}
+				}
+				if (x < xLength - 1)
+				{
+					message += ", ";
+				}
+			}
+			Debug.Log(pMessage + " { " + message + " }");
+		}
+		#endregion Logs
 
 		public static string GetPath(Transform transform)
 		{
@@ -66,7 +93,7 @@ namespace OliverLoescher
 			return $"{transform.name}/{GetPath(transform.parent)}";
 		}
 
-#region Gizmos
+		#region Gizmos
 		public static void GizmoCapsule(Vector3 pVectorA, Vector3 pVectorB, float pRadius)
 		{
 			Gizmos.DrawWireSphere(pVectorA, pRadius);
@@ -100,6 +127,6 @@ namespace OliverLoescher
 			GizmoCapsule(pCenter, pRadius, pHeight);
 			Gizmos.matrix = Matrix4x4.identity;
 		}
-#endregion Gizmos
+		#endregion Gizmos
 	}
 }

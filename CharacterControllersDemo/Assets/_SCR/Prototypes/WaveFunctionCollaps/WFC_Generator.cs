@@ -6,6 +6,46 @@ using System.Linq;
 
 namespace OliverLoescher.WaveFunctionCollapse
 {
+	[System.Serializable]
+	public class WFC_Module2
+	{
+		public WFC_Module data = null;
+		[Range(0, 3)]
+		public int rotation = 0;
+
+		public int GetEdge(Vector3Int dir)
+		{
+			if (dir == Vector3Int.up)
+			{
+				return data.edges[RotateIndex(0)];
+			}
+			if (dir == Vector3Int.down)
+			{
+				return data.edges[RotateIndex(1)];
+			}
+			if (dir == Vector3Int.right)
+			{
+				return data.edges[RotateIndex(2)];
+			}
+			return data.edges[RotateIndex(3)]; // Left
+		}
+
+		public int RotateIndex(int index)
+		{
+			index += rotation;
+			if (index > 3)
+			{
+				index -= 3;
+			}
+			return index;
+		}
+
+		public int Edge(int index)
+		{
+			return data.edges[RotateIndex(index)];
+		}
+	}
+
 	public class WFC_Generator : MonoBehaviour
 	{
 		private static readonly Vector3Int NULLVector3Int = new Vector3Int(int.MaxValue, int.MaxValue, int.MaxValue);
@@ -16,7 +56,7 @@ namespace OliverLoescher.WaveFunctionCollapse
 		private float PICKDELAY = 0.02f;
 
 		[SerializeField]
-		private List<WFC_Module> modules = new List<WFC_Module>();
+		private List<WFC_Module2> modules = new List<WFC_Module2>();
 		private WFC_Slot[,] slots = null;
 
 		[SerializeField]

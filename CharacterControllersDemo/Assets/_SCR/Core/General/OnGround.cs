@@ -32,21 +32,26 @@ namespace OliverLoescher
             }
         }
 
-        [SerializeField] private Linecast[] lines = new Linecast[1];
-        [SerializeField] private LayerMask layerMask = new LayerMask();
-        [SerializeField, ShowIf("@lines.Length == 1")] private bool childToGround = false;
-        private Transform initalParent;
+        [SerializeField] 
+		private Linecast[] lines = new Linecast[1];
+        [SerializeField] 
+		private LayerMask layerMask = new LayerMask();
+		[SerializeField]
+		private bool followGround = false;
 
         public bool isGrounded { get; private set; }
-        [FoldoutGroup("Events")] public UnityEvent OnEnter;
-        [FoldoutGroup("Events")] public UnityEvent OnExit;
+        [FoldoutGroup("Events")] 
+		public UnityEvent OnEnter;
+        [FoldoutGroup("Events")] 
+		public UnityEvent OnExit;
+
+		private Transform groundFollowTransform = null;
+		private Vector3 groudFollowPosition = Vector3.zero;
+		private Quaternion groudFollowRotation = Quaternion.identity;
 
         private void Start() 
         {
-            initalParent = transform.parent;
-
-            if (lines.Length != 1)
-                childToGround = false;
+            groundFollowTransform = new GameObject($"{gameObject.name}-GroundFollower").transform;
         }
 
         private void FixedUpdate() 
@@ -56,16 +61,10 @@ namespace OliverLoescher
                 isGrounded = !isGrounded;
                 if (isGrounded == true)
                 {
-                    if (childToGround && lines[0].hitInfo.transform.gameObject.isStatic == false)
-                        transform.SetParent(lines[0].hitInfo.transform);
-
                     OnEnter?.Invoke();
                 }
                 else
                 {
-                    if (childToGround)
-                        transform.SetParent(initalParent);
-
                     OnExit?.Invoke();
                 }
             }

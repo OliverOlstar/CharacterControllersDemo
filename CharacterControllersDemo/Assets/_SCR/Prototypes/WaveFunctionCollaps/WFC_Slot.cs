@@ -9,7 +9,7 @@ namespace OliverLoescher.WaveFunctionCollapse
 	{
 		private Vector3 m_Position = Vector3.zero;
 		private Transform container = null;
-		public List<WFC_Module> States;
+		public List<WFC_Module2> States;
 		public bool isSet = false;
 
 		public Dictionary<Vector3Int, int[]> edges = new Dictionary<Vector3Int, int[]>();
@@ -28,10 +28,10 @@ namespace OliverLoescher.WaveFunctionCollapse
 			edges.Add(Vector3Int.left, new int[3]);
 		}
 
-		public WFC_Slot Initialize(List<WFC_Module> states, Vector3 position, Transform transform)
+		public WFC_Slot Initialize(List<WFC_Module2> states, Vector3 position, Transform transform)
 		{
-			States = new List<WFC_Module>(states);
-			foreach (WFC_Module module in States)
+			States = new List<WFC_Module2>(states);
+			foreach (WFC_Module2 module in States)
 			{
 				AddEdges(module);
 			}
@@ -55,20 +55,20 @@ namespace OliverLoescher.WaveFunctionCollapse
 			}
 			Log("PickModule()");
 
-			WFC_Module module = States[Random.Range(0, States.Count)];
-			GameObject.Instantiate(module.gameObject, m_Position, Quaternion.identity, container);
+			WFC_Module2 module = States[Random.Range(0, States.Count)];
+			GameObject.Instantiate(module.data.gameObject, m_Position, Quaternion.Euler(0.0f, 90.0f * module.rotation, 0.0f), container);
 			isSet = true;
 
 			CreateEdgesDictionary();
 			AddEdges(module);
 		}
 
-		private void AddEdges(WFC_Module module)
+		private void AddEdges(WFC_Module2 module)
 		{
-			edges[Vector3Int.up][module.edges[0]]++;
-			edges[Vector3Int.down][module.edges[1]]++;
-			edges[Vector3Int.right][module.edges[2]]++;
-			edges[Vector3Int.left][module.edges[3]]++;
+			edges[Vector3Int.up][module.Edge(0)]++;
+			edges[Vector3Int.down][module.Edge(1)]++;
+			edges[Vector3Int.right][module.Edge(2)]++;
+			edges[Vector3Int.left][module.Edge(3)]++;
 		}
 
 		public List<int> GetValidEdges(Vector3Int dir)
@@ -104,12 +104,12 @@ namespace OliverLoescher.WaveFunctionCollapse
 			return changed;
 		}
 
-		public void RemoveModule(WFC_Module module)
+		public void RemoveModule(WFC_Module2 module)
 		{
-			edges[Vector3Int.up][module.edges[0]]--;
-			edges[Vector3Int.down][module.edges[1]]--;
-			edges[Vector3Int.right][module.edges[2]]--;
-			edges[Vector3Int.left][module.edges[3]]--;
+			edges[Vector3Int.up][module.Edge(0)]--;
+			edges[Vector3Int.down][module.Edge(1)]--;
+			edges[Vector3Int.right][module.Edge(2)]--;
+			edges[Vector3Int.left][module.Edge(3)]--;
 			States.Remove(module);
 		}
 
